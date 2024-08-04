@@ -14,9 +14,9 @@
         android:theme="@style/Theme.SimpleShare"
         tools:targetApi="34">
         <activity
-            android:name=".MainActivity"
+            android:name=".SanitizeActivity"
             android:exported="true"
-            android:label="@string/title_activity_main"
+            android:label="@string/title_activity_sanitize"
             android:theme="@style/Theme.SimpleShare">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

@@ -12,7 +12,7 @@ android {
 
   defaultConfig {
     applicationId = "com.banasiak.android.simpleshare"
-    minSdk = 21
+    minSdk = 24
     targetSdk = 34
     versionCode = 1
     versionName = "1"
@@ -76,6 +76,8 @@ dependencies {
   implementation(platform(libs.okhttp.bom))
   implementation(libs.okhttp)
   implementation(libs.okhttp.logging)
+  implementation(libs.androidx.ui.tooling.preview.android)
+  debugImplementation(libs.androidx.ui.tooling)
   ksp(libs.dagger.compiler)
   ksp(libs.hilt.android.compiler)
 

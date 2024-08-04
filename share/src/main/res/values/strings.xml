@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">SimpleShare</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name">Simple Share</string>
+    <string name="title_activity_sanitize">Sanitize URL</string>
+    <string name="unable_to_parse">Unable to Sanitize URL</string>
+    <string name="copy">Copy</string>
+    <string name="share">Share</string>
+    <string name="url_copied">URL Copied to Clipboard</string>
 </resources>

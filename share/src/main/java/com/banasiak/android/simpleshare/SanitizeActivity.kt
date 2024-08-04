@@ -2,6 +2,7 @@ package com.banasiak.android.simpleshare
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,18 +20,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class SanitizeActivity : ComponentActivity() {
 
   private val viewModel: ShareTargetViewModel by viewModels()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    if (intent?.action==Intent.ACTION_SEND) {
-      intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-        Timber.wtf(it)
-        viewModel.postAction(ShareTargetAction.IntentReceived(it))
-      }
-    }
+    handleIntent(intent)
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         launch { viewModel.effectFlow.collect(::onEffect) }
@@ -44,10 +40,26 @@ class MainActivity : ComponentActivity() {
     }
   }
 
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    handleIntent(intent)
+  }
+
   private fun onEffect(effect: ShareTargetEffect) {
     Timber.d("onEffect(): $effect")
     when (effect) {
+      is ShareTargetEffect.Finish -> finish()
       is ShareTargetEffect.ShareUrl -> launchShareIntent(effect.url)
+      is ShareTargetEffect.ShowToast -> Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
+    }
+  }
+
+  private fun handleIntent(intent: Intent?) {
+    Timber.d("handleIntent(): $intent")
+    if (intent?.action==Intent.ACTION_SEND) {
+      intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+        viewModel.postAction(ShareTargetAction.IntentReceived(it))
+      }
     }
   }
 
@@ -57,7 +69,6 @@ class MainActivity : ComponentActivity() {
       type = "text/plain"
       putExtra(Intent.EXTRA_TEXT, url)
     }
-    Timber.wtf("shareIntent: $shareIntent")
     startActivity(Intent.createChooser(shareIntent, null))
   }
 }
