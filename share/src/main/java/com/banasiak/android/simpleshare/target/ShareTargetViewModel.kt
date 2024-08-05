@@ -8,6 +8,7 @@ import android.os.PersistableBundle
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
 import com.linkedin.urls.detection.UrlDetector
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import timber.log.Timber
@@ -47,22 +49,30 @@ class ShareTargetViewModel @Inject constructor(
     }
 
   fun postAction(action: ShareTargetAction) {
-    when (action) {
-      is ShareTargetAction.CopyUrlTapped -> onCopyUrl(state.sanitizedUrl)
-      is ShareTargetAction.IntentReceived -> onIntentReceived(action.text)
-      is ShareTargetAction.ParamToggled -> onParamToggle(action.param, action.value)
-      is ShareTargetAction.ShareUrlTapped -> onShareUrl(state.sanitizedUrl)
+    viewModelScope.launch {
+      when (action) {
+        is ShareTargetAction.CopyUrlTapped -> onCopyUrl(state.sanitizedUrl)
+        is ShareTargetAction.IntentReceived -> onIntentReceived(action.text)
+        is ShareTargetAction.ParamToggled -> onParamToggle(action.param, action.value)
+        is ShareTargetAction.ShareUrlTapped -> onShareUrl(state.sanitizedUrl)
+      }
     }
   }
 
-  private fun onIntentReceived(text: String) {
+  private suspend fun onIntentReceived(text: String) {
     val url = extractUrl(text)
-    val okHttpUrl = url?.toHttpUrlOrNull()
+    if (url==null) {
+      Timber.w("Unable to extract URL from shared text")
+      _effectFlow.emit(ShareTargetEffect.ShowErrorAndFinish(R.string.url_not_detected))
+      return
+    }
+
+    val okHttpUrl = url.toHttpUrlOrNull()
     val params = buildParameterMap(okHttpUrl)
     state = state.copy(
       originalUrl = okHttpUrl,
       sanitizedUrl = sanitizeUrl(okHttpUrl, params),
-      parameters = buildParameterMap(okHttpUrl)
+      parameters = params
     )
   }
 
@@ -73,20 +83,20 @@ class ShareTargetViewModel @Inject constructor(
     return detector.detect().firstOrNull()?.toString()
   }
 
-  private fun onParamToggle(param: QueryParam, value: Boolean) {
+  private suspend fun onParamToggle(param: QueryParam, value: Boolean) {
     Timber.d("onParamToggle: param = $param, value = $value")
     val updatedParams = state.parameters.toMutableMap()
     updatedParams[param] = value
     state = state.copy(parameters = updatedParams, sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams))
   }
 
-  private fun onShareUrl(url: String?) {
+  private suspend fun onShareUrl(url: String?) {
     if (url==null) return
-    _effectFlow.tryEmit(ShareTargetEffect.ShareUrl(url))
-    _effectFlow.tryEmit(ShareTargetEffect.Finish)
+    _effectFlow.emit(ShareTargetEffect.ShareUrl(url))
+    _effectFlow.emit(ShareTargetEffect.Finish)
   }
 
-  private fun onCopyUrl(url: String?) {
+  private suspend fun onCopyUrl(url: String?) {
     if (url==null) return
 
     val clip = ClipData.newPlainText("url", state.sanitizedUrl)
@@ -96,15 +106,15 @@ class ShareTargetViewModel @Inject constructor(
 
     if (!isTiramisu()) {
       // only show a toast notification for devices < Android 13 (otherwise the system overlays its own UI)
-      _effectFlow.tryEmit(ShareTargetEffect.ShowToast(R.string.url_copied))
+      _effectFlow.emit(ShareTargetEffect.ShowToast(R.string.url_copied))
     }
 
-    _effectFlow.tryEmit(ShareTargetEffect.Finish)
+    _effectFlow.emit(ShareTargetEffect.Finish)
   }
 
-  private fun sanitizeUrl(url: HttpUrl?, params: Map<QueryParam, Boolean>): String? {
+  private suspend fun sanitizeUrl(url: HttpUrl?, params: Map<QueryParam, Boolean>): String? {
     if (url==null) {
-      _effectFlow.tryEmit(ShareTargetEffect.ShowToast(R.string.unable_to_parse))
+      _effectFlow.emit(ShareTargetEffect.ShowToast(R.string.unable_to_parse))
       return null
     }
 

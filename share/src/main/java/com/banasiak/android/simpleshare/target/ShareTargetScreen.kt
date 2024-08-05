@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.ui.theme.SimpleShareTheme
@@ -43,43 +45,54 @@ fun ShareTargetView(state: ShareTargetState, postAction: InputAction = { }) {
       topBar = { AppBar() }
     ) { innerPadding ->
       Column(
-        modifier =
-        Modifier
+        modifier = Modifier
           .padding(innerPadding)
           .verticalScroll(rememberScrollState())
       ) {
-        Row {
+        if (state.parameters.isNotEmpty()) {
           Text(
-            text = "Query Parameters",
+            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
+            text = stringResource(id = R.string.query_parameters),
+            style = MaterialTheme.typography.labelLarge
           )
         }
         for (parameter in state.parameters) {
+          ParameterItem(parameter.key, parameter.value, postAction)
+        }
+        Text(
+          modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+          text = stringResource(id = R.string.sanitized_url),
+          style = MaterialTheme.typography.labelLarge
+        )
+        TextField(
+          modifier = Modifier
+            .padding(4.dp)
+            .fillMaxSize(),
+          value = state.sanitizedUrl ?: "",
+          onValueChange = { }
+        )
+        Column(
+          modifier = Modifier
+            .padding(top = 16.dp)
+            .fillMaxSize(),
+          verticalArrangement = Arrangement.Center,
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
           Row {
-            Item(parameter.key, parameter.value, postAction)
-          }
-        }
-        Row {
-          Text(
-            text = "Sanitized URL"
-          )
-        }
-        Row {
-          Text(
-            text = state.sanitizedUrl ?: ""
-          )
-        }
-        Row {
-          Button(
-            enabled = state.sanitizedUrl!=null,
-            onClick = { postAction(ShareTargetAction.CopyUrlTapped) }
-          ) {
-            Text(text = stringResource(R.string.copy))
-          }
-          Button(
-            enabled = state.sanitizedUrl!=null,
-            onClick = { postAction(ShareTargetAction.ShareUrlTapped) }
-          ) {
-            Text(text = stringResource(R.string.share))
+            Button(
+              modifier = Modifier.padding(end = 16.dp),
+              enabled = state.sanitizedUrl!=null,
+              onClick = { postAction(ShareTargetAction.CopyUrlTapped) }
+            ) {
+              Text(text = stringResource(R.string.copy))
+            }
+            Button(
+              modifier = Modifier.padding(start = 16.dp),
+              enabled = state.sanitizedUrl!=null,
+              onClick = { postAction(ShareTargetAction.ShareUrlTapped) }
+            ) {
+              Text(text = stringResource(R.string.share))
+            }
           }
         }
       }
@@ -88,31 +101,69 @@ fun ShareTargetView(state: ShareTargetState, postAction: InputAction = { }) {
 }
 
 @Composable
-private fun Item(parameter: QueryParam, value: Boolean, postAction: InputAction) {
+private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: InputAction) {
   Column(
+    modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.Start
   ) {
     Row {
-      Text(parameter.name)
-    }
-    Row {
-      Text(parameter.value ?: "")
-    }
+      TextField(
+        modifier = Modifier
+          .padding(4.dp)
+          .fillMaxSize(0.8f),
+        value = parameter.value ?: "",
+        label = { Text(parameter.name) },
+        maxLines = 1,
+        onValueChange = { }
+      )
 
+      val checkedState = remember { mutableStateOf(value) }
+      Checkbox(
+        modifier = Modifier
+          .padding(8.dp)
+          .fillMaxSize(),
+        checked = checkedState.value,
+        onCheckedChange = {
+          checkedState.value = it
+          postAction(ShareTargetAction.ParamToggled(parameter, it))
+        }
+      )
+    }
   }
+}
+
+@Composable
+private fun OutputTextBox(text: String) {
   Column(
     modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.End
+    horizontalAlignment = Alignment.Start
   ) {
-    val checkedState = remember { mutableStateOf(false) }
-    Checkbox(
-      checked = checkedState.value,
-      onCheckedChange = {
-        checkedState.value = it
-        postAction(ShareTargetAction.ParamToggled(parameter, it))
-      }
+    Row {
+      TextField(
+        modifier = Modifier.fillMaxSize(),
+        value = text,
+        maxLines = 1,
+        onValueChange = { }
+      )
+    }
+  }
+}
+
+@Composable
+private fun QueryParamTextBox(param: QueryParam) {
+  Column(
+    modifier = Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    TextField(
+      modifier = Modifier.padding(16.dp),
+      value = param.value ?: "",
+      label = { param.name },
+      maxLines = 1,
+      onValueChange = { }
     )
   }
 }

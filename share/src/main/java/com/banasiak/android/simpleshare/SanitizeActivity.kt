@@ -21,15 +21,16 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class SanitizeActivity : ComponentActivity() {
-
   private val viewModel: ShareTargetViewModel by viewModels()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    handleIntent(intent)
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
-        launch { viewModel.effectFlow.collect(::onEffect) }
+        launch {
+          viewModel.effectFlow.collect(::onEffect)
+        }
+        handleIntent(intent)
       }
     }
     enableEdgeToEdge()
@@ -38,6 +39,7 @@ class SanitizeActivity : ComponentActivity() {
         ShareTargetScreen(viewModel)
       }
     }
+
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -50,7 +52,12 @@ class SanitizeActivity : ComponentActivity() {
     when (effect) {
       is ShareTargetEffect.Finish -> finish()
       is ShareTargetEffect.ShareUrl -> launchShareIntent(effect.url)
+      is ShareTargetEffect.ShowErrorAndFinish -> {
+        Toast.makeText(this, effect.message, Toast.LENGTH_LONG).show()
+        finish()
+      }
       is ShareTargetEffect.ShowToast -> Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
+
     }
   }
 

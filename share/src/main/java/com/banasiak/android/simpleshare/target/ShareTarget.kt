@@ -19,6 +19,7 @@ sealed class ShareTargetAction {
 sealed class ShareTargetEffect {
   data object Finish : ShareTargetEffect()
   data class ShareUrl(val url: String) : ShareTargetEffect()
+  data class ShowErrorAndFinish(@StringRes val message: Int) : ShareTargetEffect()
   data class ShowToast(@StringRes val message: Int) : ShareTargetEffect()
 }
 
