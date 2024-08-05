@@ -16,7 +16,12 @@ object AppModule {
 
   @Provides
   fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo {
-    return BuildInfo(Build.VERSION.SDK_INT, context.packageName, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+    return BuildInfo(
+      Build.VERSION.SDK_INT,
+      context.packageName,
+      BuildConfig.VERSION_NAME,
+      BuildConfig.VERSION_CODE
+    )
   }
 
   @Provides

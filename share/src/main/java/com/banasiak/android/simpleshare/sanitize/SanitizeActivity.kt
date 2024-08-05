@@ -100,7 +100,7 @@ class SanitizeActivity : ComponentActivity() {
   }
 
   private fun returnToSender(url: String) {
-    val returnIntent = Intent().apply {
+    val returnIntent = intent.apply {
       putExtra(Intent.EXTRA_PROCESS_TEXT, url)
     }
     setResult(RESULT_OK, returnIntent)

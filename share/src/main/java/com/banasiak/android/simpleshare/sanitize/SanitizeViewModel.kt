@@ -52,6 +52,7 @@ class SanitizeViewModel @Inject constructor(
     viewModelScope.launch {
       when (action) {
         is SanitizeAction.ButtonTapped -> onButtonTapped(action.type, state.sanitizedUrl)
+        is SanitizeAction.Dismiss -> _effectFlow.emit(SanitizeEffect.Finish)
         is SanitizeAction.IntentReceived -> onIntentReceived(action.text, action.readOnly)
         is SanitizeAction.ParamToggled -> onParamToggle(action.param, action.value)
       }
@@ -60,7 +61,7 @@ class SanitizeViewModel @Inject constructor(
 
   private suspend fun onIntentReceived(text: String, readOnly: Boolean) {
     val url = extractUrl(text)
-    if (url==null) {
+    if (url == null) {
       Timber.w("Unable to extract URL from shared text")
       _effectFlow.emit(SanitizeEffect.ShowErrorAndFinish(R.string.url_not_detected))
       return
@@ -87,7 +88,10 @@ class SanitizeViewModel @Inject constructor(
     Timber.d("onParamToggle: param=$param, value=$value")
     val updatedParams = state.parameters.toMutableMap()
     updatedParams[param] = value
-    state = state.copy(parameters = updatedParams, sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams))
+    state = state.copy(
+      parameters = updatedParams,
+      sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams)
+    )
   }
 
   private suspend fun onButtonTapped(type: ButtonType, sanitizedUrl: String) {
@@ -115,7 +119,7 @@ class SanitizeViewModel @Inject constructor(
   }
 
   private suspend fun sanitizeUrl(url: HttpUrl?, params: Map<QueryParam, Boolean>): String {
-    if (url==null) {
+    if (url == null) {
       _effectFlow.emit(SanitizeEffect.ShowToast(R.string.unable_to_parse))
       return ""
     }
@@ -135,7 +139,7 @@ class SanitizeViewModel @Inject constructor(
   }
 
   private fun buildParameterMap(url: HttpUrl?): Map<QueryParam, Boolean> {
-    if (url==null) return emptyMap()
+    if (url == null) return emptyMap()
 
     val map = mutableMapOf<QueryParam, Boolean>()
     for (name in url.queryParameterNames) {
