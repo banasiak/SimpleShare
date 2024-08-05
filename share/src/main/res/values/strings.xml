@@ -1,11 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Sanitize URL</string>
-    <string name="title_activity_sanitize">Simple URL Sanitizer</string>
-    <string name="unable_to_parse">Unable to Sanitize URL</string>
-    <string name="copy">Copy</string>
-    <string name="share">Share</string>
-    <string name="url_copied">URL Copied to Clipboard</string>
-    <string name="url_not_detected">Unable to Detect URL</string>
+    <string name="button_copy">Copy</string>
+    <string name="button_open">Open</string>
+    <string name="button_sanitize">Sanitize Selected URL</string>
+    <string name="button_share">Share</string>
     <string name="query_parameters">Query Parameters</string>
     <string name="sanitized_url">Sanitized URL</string>
+    <string name="share_sanitized">Share Sanitized URL</string>
+    <string name="title_activity_sanitize">Simple URL Sanitizer</string>
+    <string name="unable_to_parse">Unable to Sanitize URL</string>
+    <string name="url_copied">URL Copied to Clipboard</string>
+    <string name="url_not_detected">Unable to Detect URL</string>
 </resources>

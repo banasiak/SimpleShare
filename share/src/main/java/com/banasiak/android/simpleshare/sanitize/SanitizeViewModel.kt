@@ -1,4 +1,4 @@
-package com.banasiak.android.simpleshare.target
+package com.banasiak.android.simpleshare.sanitize
 
 import android.content.ClipData
 import android.content.ClipDescription
@@ -25,7 +25,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ShareTargetViewModel @Inject constructor(
+class SanitizeViewModel @Inject constructor(
   private val buildInfo: BuildInfo,
   private val clipboardManager: ClipboardManager,
   private val savedState: SavedStateHandle
@@ -35,35 +35,34 @@ class ShareTargetViewModel @Inject constructor(
     const val EXTRA_IS_SENSITIVE = "android.content.extra.IS_SENSITIVE"
   }
 
-  private val _stateFlow = MutableStateFlow(ShareTargetState())
+  private val _stateFlow = MutableStateFlow(SanitizeState())
   val stateFlow = _stateFlow.asStateFlow()
 
-  private val _effectFlow = MutableSharedFlow<ShareTargetEffect>(extraBufferCapacity = 1)
+  private val _effectFlow = MutableSharedFlow<SanitizeEffect>(extraBufferCapacity = 1)
   val effectFlow = _effectFlow.asSharedFlow()
 
-  private var state: ShareTargetState = ShareTargetState()
+  private var state: SanitizeState = SanitizeState()
     set(value) {
       field = value
       Timber.v("state: $value")
       _stateFlow.tryEmit(value)
     }
 
-  fun postAction(action: ShareTargetAction) {
+  fun postAction(action: SanitizeAction) {
     viewModelScope.launch {
       when (action) {
-        is ShareTargetAction.CopyUrlTapped -> onCopyUrl(state.sanitizedUrl)
-        is ShareTargetAction.IntentReceived -> onIntentReceived(action.text)
-        is ShareTargetAction.ParamToggled -> onParamToggle(action.param, action.value)
-        is ShareTargetAction.ShareUrlTapped -> onShareUrl(state.sanitizedUrl)
+        is SanitizeAction.ButtonTapped -> onButtonTapped(action.type, state.sanitizedUrl)
+        is SanitizeAction.IntentReceived -> onIntentReceived(action.text, action.readOnly)
+        is SanitizeAction.ParamToggled -> onParamToggle(action.param, action.value)
       }
     }
   }
 
-  private suspend fun onIntentReceived(text: String) {
+  private suspend fun onIntentReceived(text: String, readOnly: Boolean) {
     val url = extractUrl(text)
     if (url==null) {
       Timber.w("Unable to extract URL from shared text")
-      _effectFlow.emit(ShareTargetEffect.ShowErrorAndFinish(R.string.url_not_detected))
+      _effectFlow.emit(SanitizeEffect.ShowErrorAndFinish(R.string.url_not_detected))
       return
     }
 
@@ -72,7 +71,8 @@ class ShareTargetViewModel @Inject constructor(
     state = state.copy(
       originalUrl = okHttpUrl,
       sanitizedUrl = sanitizeUrl(okHttpUrl, params),
-      parameters = params
+      parameters = params,
+      readOnly = readOnly
     )
   }
 
@@ -84,38 +84,40 @@ class ShareTargetViewModel @Inject constructor(
   }
 
   private suspend fun onParamToggle(param: QueryParam, value: Boolean) {
-    Timber.d("onParamToggle: param = $param, value = $value")
+    Timber.d("onParamToggle: param=$param, value=$value")
     val updatedParams = state.parameters.toMutableMap()
     updatedParams[param] = value
     state = state.copy(parameters = updatedParams, sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams))
   }
 
-  private suspend fun onShareUrl(url: String?) {
-    if (url==null) return
-    _effectFlow.emit(ShareTargetEffect.ShareUrl(url))
-    _effectFlow.emit(ShareTargetEffect.Finish)
+  private suspend fun onButtonTapped(type: ButtonType, sanitizedUrl: String) {
+    Timber.d("onButtonTapped: $type")
+    when (type) {
+      ButtonType.COPY -> onCopyUrl(sanitizedUrl)
+      ButtonType.OPEN -> _effectFlow.emit(SanitizeEffect.OpenUrl(sanitizedUrl))
+      ButtonType.SANITIZE -> _effectFlow.emit(SanitizeEffect.ReturnUrl(sanitizedUrl))
+      ButtonType.SHARE -> _effectFlow.emit(SanitizeEffect.ShareUrl(sanitizedUrl))
+    }
   }
 
-  private suspend fun onCopyUrl(url: String?) {
-    if (url==null) return
-
-    val clip = ClipData.newPlainText("url", state.sanitizedUrl)
+  private suspend fun onCopyUrl(url: String) {
+    val clip = ClipData.newPlainText("url", url)
     val isSensitive = if (isTiramisu()) ClipDescription.EXTRA_IS_SENSITIVE else EXTRA_IS_SENSITIVE
+
     clip.apply { description.extras = PersistableBundle().apply { putBoolean(isSensitive, false) } }
     clipboardManager.setPrimaryClip(clip)
 
     if (!isTiramisu()) {
       // only show a toast notification for devices < Android 13 (otherwise the system overlays its own UI)
-      _effectFlow.emit(ShareTargetEffect.ShowToast(R.string.url_copied))
+      _effectFlow.emit(SanitizeEffect.ShowToast(R.string.url_copied))
     }
-
-    _effectFlow.emit(ShareTargetEffect.Finish)
+    _effectFlow.emit(SanitizeEffect.Finish)
   }
 
-  private suspend fun sanitizeUrl(url: HttpUrl?, params: Map<QueryParam, Boolean>): String? {
+  private suspend fun sanitizeUrl(url: HttpUrl?, params: Map<QueryParam, Boolean>): String {
     if (url==null) {
-      _effectFlow.emit(ShareTargetEffect.ShowToast(R.string.unable_to_parse))
-      return null
+      _effectFlow.emit(SanitizeEffect.ShowToast(R.string.unable_to_parse))
+      return ""
     }
 
     val builder = HttpUrl.Builder()

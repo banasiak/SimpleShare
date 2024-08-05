@@ -12,15 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SimpleShare"
-        tools:targetApi="34">
+            tools:targetApi="34"
+            >
         <activity
-            android:name=".SanitizeActivity"
+                android:name=".sanitize.SanitizeActivity"
             android:exported="true"
-            android:theme="@style/Theme.SimpleShare">
+                android:theme="@style/Theme.SimpleShare"
+                >
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/*" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
     </application>

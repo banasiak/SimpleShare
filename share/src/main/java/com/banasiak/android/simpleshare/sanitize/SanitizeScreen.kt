@@ -1,4 +1,4 @@
-package com.banasiak.android.simpleshare.target
+package com.banasiak.android.simpleshare.sanitize
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,16 +29,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.ui.theme.SimpleShareTheme
 
-private typealias InputAction = (ShareTargetAction) -> Unit
+private typealias InputAction = (SanitizeAction) -> Unit
 
 @Composable
-fun ShareTargetScreen(viewModel: ShareTargetViewModel) {
-  val state: ShareTargetState by viewModel.stateFlow.collectAsStateWithLifecycle()
-  ShareTargetView(state, viewModel::postAction)
+fun SanitizeScreen(viewModel: SanitizeViewModel) {
+  val state: SanitizeState by viewModel.stateFlow.collectAsStateWithLifecycle()
+  SanitizeView(state, viewModel::postAction)
 }
 
 @Composable
-fun ShareTargetView(state: ShareTargetState, postAction: InputAction = { }) {
+fun SanitizeView(state: SanitizeState, postAction: InputAction = { }) {
   SimpleShareTheme {
     Scaffold(
       modifier = Modifier.fillMaxSize(),
@@ -47,6 +47,7 @@ fun ShareTargetView(state: ShareTargetState, postAction: InputAction = { }) {
       Column(
         modifier = Modifier
           .padding(innerPadding)
+          .padding(horizontal = 8.dp)
           .verticalScroll(rememberScrollState())
       ) {
         if (state.parameters.isNotEmpty()) {
@@ -68,7 +69,7 @@ fun ShareTargetView(state: ShareTargetState, postAction: InputAction = { }) {
           modifier = Modifier
             .padding(4.dp)
             .fillMaxSize(),
-          value = state.sanitizedUrl ?: "",
+          value = state.sanitizedUrl,
           onValueChange = { }
         )
         Column(
@@ -79,19 +80,36 @@ fun ShareTargetView(state: ShareTargetState, postAction: InputAction = { }) {
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
           Row {
-            Button(
-              modifier = Modifier.padding(end = 16.dp),
-              enabled = state.sanitizedUrl!=null,
-              onClick = { postAction(ShareTargetAction.CopyUrlTapped) }
-            ) {
-              Text(text = stringResource(R.string.copy))
-            }
-            Button(
-              modifier = Modifier.padding(start = 16.dp),
-              enabled = state.sanitizedUrl!=null,
-              onClick = { postAction(ShareTargetAction.ShareUrlTapped) }
-            ) {
-              Text(text = stringResource(R.string.share))
+            if (state.readOnly) {
+              Button(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                enabled = state.sanitizedUrl.isNotEmpty(),
+                onClick = { postAction(SanitizeAction.ButtonTapped(ButtonType.COPY)) }
+              ) {
+                Text(text = stringResource(R.string.button_copy))
+              }
+              Button(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                enabled = state.sanitizedUrl.isNotEmpty(),
+                onClick = { postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN)) }
+              ) {
+                Text(text = stringResource(R.string.button_open))
+              }
+              Button(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                enabled = state.sanitizedUrl.isNotEmpty(),
+                onClick = { postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE)) }
+              ) {
+                Text(text = stringResource(R.string.button_share))
+              }
+            } else {
+              Button(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                enabled = state.sanitizedUrl.isNotEmpty(),
+                onClick = { postAction(SanitizeAction.ButtonTapped(ButtonType.SANITIZE)) }
+              ) {
+                Text(text = stringResource(R.string.button_sanitize))
+              }
             }
           }
         }
@@ -126,47 +144,13 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
         checked = checkedState.value,
         onCheckedChange = {
           checkedState.value = it
-          postAction(ShareTargetAction.ParamToggled(parameter, it))
+          postAction(SanitizeAction.ParamToggled(parameter, it))
         }
       )
     }
   }
 }
 
-@Composable
-private fun OutputTextBox(text: String) {
-  Column(
-    modifier = Modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.Start
-  ) {
-    Row {
-      TextField(
-        modifier = Modifier.fillMaxSize(),
-        value = text,
-        maxLines = 1,
-        onValueChange = { }
-      )
-    }
-  }
-}
-
-@Composable
-private fun QueryParamTextBox(param: QueryParam) {
-  Column(
-    modifier = Modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    TextField(
-      modifier = Modifier.padding(16.dp),
-      value = param.value ?: "",
-      label = { param.name },
-      maxLines = 1,
-      onValueChange = { }
-    )
-  }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -187,8 +171,8 @@ private fun AppBar() {
 
 @Preview
 @Composable
-fun ShareTargetViewPreview() {
-  val state = ShareTargetState(
+fun SanitizeViewPreview() {
+  val state = SanitizeState(
     // https://www.banasiak.com/share?utm_source=AAAAA&utm_medium=BBBBBB&utm_campaign=CCCCCC&utm_term=DDDDDD&utm_content=EEEEEE
     sanitizedUrl = "https://www.banasiak.com/share?utm_source=AAAAA&utm_campaign=CCCCCC&utm_content=EEEEEE",
     parameters = mapOf(
@@ -197,7 +181,8 @@ fun ShareTargetViewPreview() {
       QueryParam("utm_campaign", "CCCCCC") to true,
       QueryParam("utm_term", "DDDDDD") to false,
       QueryParam("utm_content", "EEEEEE") to true
-    )
+    ),
+    readOnly = true
   )
-  ShareTargetView(state)
+  SanitizeView(state)
 }
