@@ -18,6 +18,7 @@ okhttp = "4.12.0"
 runtimeAndroid = "1.6.8"
 timber = "5.0.1"
 uiTooling = "1.6.8"
+urldetector = "0.1.17"
 
 [libraries]
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
@@ -44,6 +45,7 @@ okhttp = { module = "com.squareup.okhttp3:okhttp" }
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+urldetector = { module = "com.linkedin.urls:url-detector", version.ref = "urldetector"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

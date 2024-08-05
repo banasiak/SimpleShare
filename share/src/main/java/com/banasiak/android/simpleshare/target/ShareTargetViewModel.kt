@@ -10,6 +10,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
+import com.linkedin.urls.detection.UrlDetector
+import com.linkedin.urls.detection.UrlDetectorOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,13 +56,21 @@ class ShareTargetViewModel @Inject constructor(
   }
 
   private fun onIntentReceived(text: String) {
-    val okHttpUrl = text.toHttpUrlOrNull()
+    val url = extractUrl(text)
+    val okHttpUrl = url?.toHttpUrlOrNull()
     val params = buildParameterMap(okHttpUrl)
     state = state.copy(
       originalUrl = okHttpUrl,
       sanitizedUrl = sanitizeUrl(okHttpUrl, params),
       parameters = buildParameterMap(okHttpUrl)
     )
+  }
+
+  private fun extractUrl(text: String): String? {
+    // attempt to extract the first URL found in the string using this ancient library from LinkedIn
+    // https://github.com/linkedin/URL-Detector
+    val detector = UrlDetector(text, UrlDetectorOptions.Default)
+    return detector.detect().firstOrNull()?.toString()
   }
 
   private fun onParamToggle(param: QueryParam, value: Boolean) {
