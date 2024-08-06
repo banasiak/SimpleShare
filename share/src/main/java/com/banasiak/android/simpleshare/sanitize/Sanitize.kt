@@ -32,5 +32,8 @@ data class QueryParam(
 )
 
 enum class ButtonType {
-  COPY, OPEN, SANITIZE, SHARE
+  COPY,
+  OPEN,
+  SANITIZE,
+  SHARE
 }

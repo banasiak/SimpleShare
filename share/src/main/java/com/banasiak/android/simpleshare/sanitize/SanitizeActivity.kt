@@ -39,7 +39,6 @@ class SanitizeActivity : ComponentActivity() {
         SanitizeScreen(viewModel)
       }
     }
-
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -85,11 +84,12 @@ class SanitizeActivity : ComponentActivity() {
   }
 
   private fun launchShareIntent(url: String) {
-    val shareIntent = Intent().apply {
-      action = Intent.ACTION_SEND
-      type = "text/plain"
-      putExtra(Intent.EXTRA_TEXT, url)
-    }
+    val shareIntent =
+      Intent().apply {
+        action = Intent.ACTION_SEND
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, url)
+      }
     startActivity(Intent.createChooser(shareIntent, getString(R.string.share_sanitized)))
     finish()
   }
@@ -102,9 +102,10 @@ class SanitizeActivity : ComponentActivity() {
   }
 
   private fun returnToSender(url: String) {
-    val returnIntent = intent.apply {
-      putExtra(Intent.EXTRA_PROCESS_TEXT, url)
-    }
+    val returnIntent =
+      intent.apply {
+        putExtra(Intent.EXTRA_PROCESS_TEXT, url)
+      }
     setResult(RESULT_OK, returnIntent)
     finish()
   }

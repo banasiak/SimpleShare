@@ -35,7 +35,6 @@ class SanitizeViewModel @Inject constructor(
   private val repository: Repository,
   private val savedState: SavedStateHandle
 ) : ViewModel(), LifecycleEventObserver {
-
   companion object {
     const val EXTRA_IS_SENSITIVE = "android.content.extra.IS_SENSITIVE"
   }
@@ -87,12 +86,13 @@ class SanitizeViewModel @Inject constructor(
 
     val okHttpUrl = url.toHttpUrlOrNull()
     val params = buildParameterMap(okHttpUrl)
-    state = state.copy(
-      originalUrl = okHttpUrl,
-      sanitizedUrl = sanitizeUrl(okHttpUrl, params),
-      parameters = params,
-      readOnly = readOnly
-    )
+    state =
+      state.copy(
+        originalUrl = okHttpUrl,
+        sanitizedUrl = sanitizeUrl(okHttpUrl, params),
+        parameters = params,
+        readOnly = readOnly
+      )
   }
 
   private fun extractUrl(text: String): String? {
@@ -106,10 +106,11 @@ class SanitizeViewModel @Inject constructor(
     Timber.d("onParamToggle: param=$param, value=$value")
     val updatedParams = state.parameters.toMutableMap()
     updatedParams[param] = value
-    state = state.copy(
-      parameters = updatedParams,
-      sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams)
-    )
+    state =
+      state.copy(
+        parameters = updatedParams,
+        sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams)
+      )
   }
 
   private suspend fun onButtonTapped(type: ButtonType, sanitizedUrl: String) {
@@ -142,10 +143,11 @@ class SanitizeViewModel @Inject constructor(
       return ""
     }
 
-    val builder = HttpUrl.Builder()
-      .scheme(url.scheme)
-      .host(url.host)
-      .encodedPath(url.encodedPath)
+    val builder =
+      HttpUrl.Builder()
+        .scheme(url.scheme)
+        .host(url.host)
+        .encodedPath(url.encodedPath)
 
     for (item in params) {
       if (item.value) {
@@ -177,5 +179,4 @@ class SanitizeViewModel @Inject constructor(
 
   @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.TIRAMISU)
   private fun isTiramisu(): Boolean = buildInfo.apiLevel >= Build.VERSION_CODES.TIRAMISU
-
 }

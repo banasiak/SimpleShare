@@ -51,11 +51,13 @@ fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
   SimpleShareTheme {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
-      modifier = Modifier.padding(
-        bottom = WindowInsets.navigationBars
-          .asPaddingValues()
-          .calculateBottomPadding()
-      ),
+      modifier =
+        Modifier.padding(
+          bottom =
+            WindowInsets.navigationBars
+              .asPaddingValues()
+              .calculateBottomPadding()
+        ),
       sheetState = sheetState,
       onDismissRequest = {
         postAction(SanitizeAction.Dismiss)
@@ -75,9 +77,10 @@ private fun BottomSheetContent(
 ) {
   Surface {
     Column(
-      modifier = Modifier
-        .padding(horizontal = 8.dp)
-        .verticalScroll(rememberScrollState())
+      modifier =
+        Modifier
+          .padding(horizontal = 8.dp)
+          .verticalScroll(rememberScrollState())
     ) {
       AppBar()
       if (state.parameters.isNotEmpty()) {
@@ -96,9 +99,10 @@ private fun BottomSheetContent(
         style = MaterialTheme.typography.labelLarge
       )
       TextField(
-        modifier = Modifier
-          .padding(4.dp)
-          .fillMaxSize(),
+        modifier =
+          Modifier
+            .padding(4.dp)
+            .fillMaxSize(),
         value = state.sanitizedUrl,
         onValueChange = { }
       )
@@ -118,9 +122,10 @@ private fun AppBar() {
   CenterAlignedTopAppBar(
     title = {
       Text(
-        modifier = Modifier
-          .fillMaxSize()
-          .wrapContentSize(Alignment.Center),
+        modifier =
+          Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center),
         text = stringResource(id = R.string.title_activity_sanitize),
         color = MaterialTheme.colorScheme.primary
       )
@@ -137,9 +142,10 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
   ) {
     Row {
       TextField(
-        modifier = Modifier
-          .padding(4.dp)
-          .fillMaxSize(0.8f),
+        modifier =
+          Modifier
+            .padding(4.dp)
+            .fillMaxSize(0.8f),
         value = parameter.value ?: "",
         label = { Text(parameter.name) },
         maxLines = 1,
@@ -148,9 +154,10 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
 
       val checkedState = remember { mutableStateOf(value) }
       Checkbox(
-        modifier = Modifier
-          .padding(8.dp)
-          .fillMaxSize(),
+        modifier =
+          Modifier
+            .padding(8.dp)
+            .fillMaxSize(),
         checked = checkedState.value,
         onCheckedChange = {
           checkedState.value = it
@@ -171,9 +178,10 @@ private fun Buttons(
 ) {
   val scope = rememberCoroutineScope()
   Column(
-    modifier = Modifier
-      .padding(vertical = 16.dp)
-      .fillMaxSize(),
+    modifier =
+      Modifier
+        .padding(vertical = 16.dp)
+        .fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -237,17 +245,19 @@ private fun Buttons(
 @Preview
 @Composable
 fun SanitizeViewPreview() {
-  val state = SanitizeState(
-    // https://www.banasiak.com/share?utm_source=AAAAA&utm_medium=BBBBBB&utm_campaign=CCCCCC&utm_term=DDDDDD&utm_content=EEEEEE
-    sanitizedUrl = "https://www.banasiak.com/share?utm_source=AAAAA&utm_campaign=CCCCCC&utm_content=EEEEEE",
-    parameters = mapOf(
-      QueryParam("utm_source", "AAAAAA") to true,
-      QueryParam("utm_medium", "BBBBBB") to false,
-      QueryParam("utm_campaign", "CCCCCC") to true,
-      QueryParam("utm_term", "DDDDDD") to false,
-      QueryParam("utm_content", "EEEEEE") to true
-    ),
-    readOnly = true
-  )
+  val state =
+    SanitizeState(
+      // https://www.banasiak.com/share?utm_source=AAAAA&utm_medium=BBBBBB&utm_campaign=CCCCCC&utm_term=DDDDDD&utm_content=EEEEEE
+      sanitizedUrl = "https://www.banasiak.com/share?utm_source=AAAAA&utm_campaign=CCCCCC&utm_content=EEEEEE",
+      parameters =
+        mapOf(
+          QueryParam("utm_source", "AAAAAA") to true,
+          QueryParam("utm_medium", "BBBBBB") to false,
+          QueryParam("utm_campaign", "CCCCCC") to true,
+          QueryParam("utm_term", "DDDDDD") to false,
+          QueryParam("utm_content", "EEEEEE") to true
+        ),
+      readOnly = true
+    )
   BottomSheetContent(state = state, sheetState = rememberModalBottomSheetState(), postAction = { })
 }

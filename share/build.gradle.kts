@@ -41,8 +41,6 @@ android {
     jvmTarget = JavaVersion.VERSION_17.majorVersion
   }
 
-
-
   packaging {
     resources {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -54,6 +52,8 @@ composeCompiler {
   enableStrongSkippingMode = true
   reportsDestination = layout.buildDirectory.dir("compose_compiler")
 }
+
+val ktlint: Configuration by configurations.creating
 
 dependencies {
   implementation(libs.androidx.activity)
@@ -83,5 +83,41 @@ dependencies {
   ksp(libs.dagger.compiler)
   ksp(libs.hilt.android.compiler)
 
+  ktlint(libs.ktlint) {
+    attributes {
+      attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+    }
+  }
+}
 
+val ktlintCheck by tasks.registering(JavaExec::class) {
+  group = LifecycleBasePlugin.VERIFICATION_GROUP
+  description = "Check Kotlin code style"
+  classpath = ktlint
+  mainClass.set("com.pinterest.ktlint.Main")
+  // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+  args(
+    "**/src/**/*.kt",
+    "**.kts",
+    "!**/build/**"
+  )
+}
+
+tasks.check {
+  dependsOn(ktlintCheck)
+}
+
+tasks.register<JavaExec>("format") {
+  group = LifecycleBasePlugin.VERIFICATION_GROUP
+  description = "Check Kotlin code style and format"
+  classpath = ktlint
+  mainClass.set("com.pinterest.ktlint.Main")
+  jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
+  // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+  args(
+    "-F",
+    "**/src/**/*.kt",
+    "**.kts",
+    "!**/build/**"
+  )
 }

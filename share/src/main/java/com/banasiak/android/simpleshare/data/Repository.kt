@@ -14,7 +14,6 @@ import javax.inject.Singleton
 class Repository @Inject constructor(
   private val dataStore: DataStore<Preferences>
 ) {
-
   suspend fun setEnabledParamsForHost(host: String, params: List<String>) {
     Timber.d("Persist enabled params for '$host': $params")
     val key = stringSetPreferencesKey(host)
@@ -29,5 +28,4 @@ class Repository @Inject constructor(
     Timber.d("Retrieve enabled params for '$host': $params")
     return params
   }
-
 }
