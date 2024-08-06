@@ -5,10 +5,11 @@ agp = "8.5.1"
 androidx-hilt = "1.2.0"
 composeBom = "2024.06.00"
 coreKtx = "1.13.1"
+datastore = "1.1.1"
 foundationLayoutAndroid = "1.6.8"
-hilt-android = "2.50"
+hilt-android = "2.51.1"
 kotlin = "2.0.0"
-kotlinx-coroutines = "1.7.3"
+kotlinx-coroutines = "1.8.1"
 ksp = "2.0.0-1.0.24"
 lifecycle-viewmodel = "2.8.4"
 lifecycleRuntimeKtx = "2.8.4"
@@ -25,6 +26,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-viewmodel" }

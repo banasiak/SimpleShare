@@ -17,8 +17,8 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -45,93 +45,17 @@ fun SanitizeScreen(viewModel: SanitizeViewModel) {
   SanitizeViewBottomSheet(state, viewModel::postAction)
 }
 
-@Composable
-fun SanitizeView(state: SanitizeState, postAction: InputAction = { }) {
-  SimpleShareTheme {
-    Scaffold(
-      modifier = Modifier.fillMaxSize(),
-      topBar = { AppBar() }
-    ) { innerPadding ->
-      Column(
-        modifier = Modifier
-          .padding(innerPadding)
-          .padding(horizontal = 8.dp)
-          .verticalScroll(rememberScrollState())
-      ) {
-        if (state.parameters.isNotEmpty()) {
-          Text(
-            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
-            text = stringResource(id = R.string.query_parameters),
-            style = MaterialTheme.typography.labelLarge
-          )
-          for (parameter in state.parameters) {
-            ParameterItem(parameter.key, parameter.value, postAction)
-          }
-        }
-        Text(
-          modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
-          text = stringResource(id = R.string.sanitized_url),
-          style = MaterialTheme.typography.labelLarge
-        )
-        TextField(
-          modifier = Modifier
-            .padding(4.dp)
-            .fillMaxSize(),
-          value = state.sanitizedUrl,
-          onValueChange = { }
-        )
-        Column(
-          modifier = Modifier
-            .padding(top = 16.dp)
-            .fillMaxSize(),
-          verticalArrangement = Arrangement.Center,
-          horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-          Row {
-            if (state.readOnly) {
-              Button(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                enabled = state.sanitizedUrl.isNotEmpty(),
-                onClick = { postAction(SanitizeAction.ButtonTapped(ButtonType.COPY)) }
-              ) {
-                Text(text = stringResource(R.string.button_copy))
-              }
-              Button(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                enabled = state.sanitizedUrl.isNotEmpty(),
-                onClick = { postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN)) }
-              ) {
-                Text(text = stringResource(R.string.button_open))
-              }
-              Button(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                enabled = state.sanitizedUrl.isNotEmpty(),
-                onClick = { postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE)) }
-              ) {
-                Text(text = stringResource(R.string.button_share))
-              }
-            } else {
-              Button(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                enabled = state.sanitizedUrl.isNotEmpty(),
-                onClick = { postAction(SanitizeAction.ButtonTapped(ButtonType.SANITIZE)) }
-              ) {
-                Text(text = stringResource(R.string.button_sanitize))
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
   SimpleShareTheme {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
+      modifier = Modifier.padding(
+        bottom = WindowInsets.navigationBars
+          .asPaddingValues()
+          .calculateBottomPadding()
+      ),
       sheetState = sheetState,
       onDismissRequest = {
         postAction(SanitizeAction.Dismiss)
@@ -149,103 +73,59 @@ private fun BottomSheetContent(
   postAction: InputAction,
   sheetState: SheetState
 ) {
-  val scope = rememberCoroutineScope()
-  Column(
-    modifier = Modifier
-      .padding(
-        start = 8.dp,
-        end = 8.dp,
-        bottom = WindowInsets.navigationBars
-          .asPaddingValues()
-          .calculateBottomPadding()
-      )
-      .verticalScroll(rememberScrollState())
-  ) {
-    AppBar()
-    if (state.parameters.isNotEmpty()) {
-      Text(
-        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
-        text = stringResource(id = R.string.query_parameters),
-        style = MaterialTheme.typography.labelLarge
-      )
-      for (parameter in state.parameters) {
-        ParameterItem(parameter.key, parameter.value, postAction)
-      }
-    }
-    Text(
-      modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
-      text = stringResource(id = R.string.sanitized_url),
-      style = MaterialTheme.typography.labelLarge
-    )
-    TextField(
-      modifier = Modifier
-        .padding(4.dp)
-        .fillMaxSize(),
-      value = state.sanitizedUrl,
-      onValueChange = { }
-    )
+  Surface {
     Column(
       modifier = Modifier
-        .padding(top = 16.dp)
-        .fillMaxSize(),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally
+        .padding(horizontal = 8.dp)
+        .verticalScroll(rememberScrollState())
     ) {
-      Row {
-        if (state.readOnly) {
-          Button(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            enabled = state.sanitizedUrl.isNotEmpty(),
-            onClick = {
-              scope.launch {
-                sheetState.hide()
-                postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
-              }
-            }
-          ) {
-            Text(text = stringResource(R.string.button_copy))
-          }
-          Button(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            enabled = state.sanitizedUrl.isNotEmpty(),
-            onClick = {
-              scope.launch {
-                sheetState.hide()
-                postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN))
-              }
-            }
-          ) {
-            Text(text = stringResource(R.string.button_open))
-          }
-          Button(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            enabled = state.sanitizedUrl.isNotEmpty(),
-            onClick = {
-              scope.launch {
-                sheetState.hide()
-                postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
-              }
-            }
-          ) {
-            Text(text = stringResource(R.string.button_share))
-          }
-        } else {
-          Button(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            enabled = state.sanitizedUrl.isNotEmpty(),
-            onClick = {
-              scope.launch {
-                sheetState.hide()
-                postAction(SanitizeAction.ButtonTapped(ButtonType.SANITIZE))
-              }
-            }
-          ) {
-            Text(text = stringResource(R.string.button_sanitize))
-          }
+      AppBar()
+      if (state.parameters.isNotEmpty()) {
+        Text(
+          modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
+          text = stringResource(id = R.string.query_parameters),
+          style = MaterialTheme.typography.labelLarge
+        )
+        for (parameter in state.parameters) {
+          ParameterItem(parameter.key, parameter.value, postAction)
         }
       }
+      Text(
+        modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+        text = stringResource(id = R.string.sanitized_url),
+        style = MaterialTheme.typography.labelLarge
+      )
+      TextField(
+        modifier = Modifier
+          .padding(4.dp)
+          .fillMaxSize(),
+        value = state.sanitizedUrl,
+        onValueChange = { }
+      )
+      Buttons(
+        enabled = state.sanitizedUrl.isNotEmpty(),
+        readOnly = state.readOnly,
+        sheetState = sheetState,
+        postAction = postAction
+      )
     }
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AppBar() {
+  CenterAlignedTopAppBar(
+    title = {
+      Text(
+        modifier = Modifier
+          .fillMaxSize()
+          .wrapContentSize(Alignment.Center),
+        text = stringResource(id = R.string.title_activity_sanitize),
+        color = MaterialTheme.colorScheme.primary
+      )
+    }
+  )
 }
 
 @Composable
@@ -283,19 +163,74 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppBar() {
-  CenterAlignedTopAppBar(
-    title = {
-      Text(
-        modifier =
-        Modifier
-          .fillMaxSize()
-          .wrapContentSize(Alignment.Center),
-        text = stringResource(id = R.string.title_activity_sanitize),
-        color = MaterialTheme.colorScheme.primary
-      )
+private fun Buttons(
+  enabled: Boolean,
+  readOnly: Boolean,
+  sheetState: SheetState,
+  postAction: InputAction
+) {
+  val scope = rememberCoroutineScope()
+  Column(
+    modifier = Modifier
+      .padding(vertical = 16.dp)
+      .fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Row {
+      if (readOnly) {
+        Button(
+          modifier = Modifier.padding(horizontal = 8.dp),
+          enabled = enabled,
+          onClick = {
+            scope.launch {
+              sheetState.hide()
+              postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
+            }
+          }
+        ) {
+          Text(text = stringResource(R.string.button_copy))
+        }
+        Button(
+          modifier = Modifier.padding(horizontal = 8.dp),
+          enabled = enabled,
+          onClick = {
+            scope.launch {
+              sheetState.hide()
+              postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN))
+            }
+          }
+        ) {
+          Text(text = stringResource(R.string.button_open))
+        }
+        Button(
+          modifier = Modifier.padding(horizontal = 8.dp),
+          enabled = enabled,
+          onClick = {
+            scope.launch {
+              sheetState.hide()
+              postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
+            }
+          }
+        ) {
+          Text(text = stringResource(R.string.button_share))
+        }
+      } else {
+        Button(
+          modifier = Modifier.padding(horizontal = 8.dp),
+          enabled = enabled,
+          onClick = {
+            scope.launch {
+              sheetState.hide()
+              postAction(SanitizeAction.ButtonTapped(ButtonType.SANITIZE))
+            }
+          }
+        ) {
+          Text(text = stringResource(R.string.button_sanitize))
+        }
+      }
     }
-  )
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

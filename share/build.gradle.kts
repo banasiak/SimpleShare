@@ -59,6 +59,7 @@ dependencies {
   implementation(libs.androidx.activity)
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.datastore)
   implementation(libs.androidx.foundation.layout.android)
   implementation(libs.androidx.hilt.navigation.compose)
   implementation(libs.androidx.lifecycle.runtime.compose)

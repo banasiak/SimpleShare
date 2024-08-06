@@ -6,11 +6,15 @@ import android.content.ClipboardManager
 import android.os.Build
 import android.os.PersistableBundle
 import androidx.annotation.ChecksSdkIntAtLeast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
+import com.banasiak.android.simpleshare.data.Repository
 import com.linkedin.urls.detection.UrlDetector
 import com.linkedin.urls.detection.UrlDetectorOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +32,9 @@ import javax.inject.Inject
 class SanitizeViewModel @Inject constructor(
   private val buildInfo: BuildInfo,
   private val clipboardManager: ClipboardManager,
+  private val repository: Repository,
   private val savedState: SavedStateHandle
-) : ViewModel() {
+) : ViewModel(), LifecycleEventObserver {
 
   companion object {
     const val EXTRA_IS_SENSITIVE = "android.content.extra.IS_SENSITIVE"
@@ -47,6 +52,19 @@ class SanitizeViewModel @Inject constructor(
       Timber.v("state: $value")
       _stateFlow.tryEmit(value)
     }
+
+  override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+    Timber.v("Lifecycle onStateChanged(): $event")
+    when (event) {
+      Lifecycle.Event.ON_PAUSE -> {
+        viewModelScope.launch {
+          persistEnabledParameters()
+        }
+      }
+
+      else -> {}
+    }
+  }
 
   fun postAction(action: SanitizeAction) {
     viewModelScope.launch {
@@ -138,17 +156,26 @@ class SanitizeViewModel @Inject constructor(
     return builder.build().toString()
   }
 
-  private fun buildParameterMap(url: HttpUrl?): Map<QueryParam, Boolean> {
+  private suspend fun buildParameterMap(url: HttpUrl?): Map<QueryParam, Boolean> {
     if (url == null) return emptyMap()
 
     val map = mutableMapOf<QueryParam, Boolean>()
+    val enabledParamNames = repository.getEnabledParamsForHost(url.host)
     for (name in url.queryParameterNames) {
-      map[QueryParam(name = name, value = url.queryParameter(name))] = false
+      map[QueryParam(name = name, value = url.queryParameter(name))] =
+        enabledParamNames.contains(name)
     }
+    return map
+  }
 
-    return map.toMap()
+  private suspend fun persistEnabledParameters() {
+    val url = state.originalUrl ?: return
+
+    val enabledParams = state.parameters.filter { it.value }.map { it.key.name }
+    repository.setEnabledParamsForHost(url.host, enabledParams)
   }
 
   @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.TIRAMISU)
   private fun isTiramisu(): Boolean = buildInfo.apiLevel >= Build.VERSION_CODES.TIRAMISU
+
 }
