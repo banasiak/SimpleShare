@@ -60,8 +60,7 @@ class SanitizeViewModel @Inject constructor(
           persistEnabledParameters()
         }
       }
-
-      else -> {}
+      else -> { /* NO-OP */ }
     }
   }
 
@@ -143,31 +142,25 @@ class SanitizeViewModel @Inject constructor(
       return ""
     }
 
-    val builder =
-      HttpUrl.Builder()
-        .scheme(url.scheme)
-        .host(url.host)
-        .encodedPath(url.encodedPath)
-
-    for (item in params) {
-      if (item.value) {
-        builder.addQueryParameter(name = item.key.name, value = item.key.value)
-      }
-    }
-
-    return builder.build().toString()
+    return HttpUrl.Builder()
+      .scheme(url.scheme)
+      .host(url.host)
+      .encodedPath(url.encodedPath)
+      .apply {
+        params.filter { item -> item.value }
+          .forEach { item -> addQueryParameter(name = item.key.name, value = item.key.value) }
+      }.build().toString()
   }
 
   private suspend fun buildParameterMap(url: HttpUrl?): Map<QueryParam, Boolean> {
     if (url == null) return emptyMap()
 
-    val map = mutableMapOf<QueryParam, Boolean>()
+    val paramMap = mutableMapOf<QueryParam, Boolean>()
     val enabledParamNames = repository.getEnabledParamsForHost(url.host)
     for (name in url.queryParameterNames) {
-      map[QueryParam(name = name, value = url.queryParameter(name))] =
-        enabledParamNames.contains(name)
+      paramMap[QueryParam(name = name, value = url.queryParameter(name))] = enabledParamNames.contains(name)
     }
-    return map
+    return paramMap
   }
 
   private suspend fun persistEnabledParameters() {
