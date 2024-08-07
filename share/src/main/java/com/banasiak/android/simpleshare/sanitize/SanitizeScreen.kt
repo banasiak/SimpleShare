@@ -1,5 +1,6 @@
 package com.banasiak.android.simpleshare.sanitize
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -82,29 +82,22 @@ private fun BottomSheetContent(
           .padding(horizontal = 8.dp)
           .verticalScroll(rememberScrollState())
     ) {
-      AppBar()
+      TopHeader(title = R.string.title_activity_sanitize)
       if (state.parameters.isNotEmpty()) {
-        Text(
-          modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
-          text = stringResource(id = R.string.query_parameters),
-          style = MaterialTheme.typography.labelLarge
-        )
+        SectionHeader(title = R.string.query_parameters)
         for (parameter in state.parameters) {
           ParameterItem(parameter.key, parameter.value, postAction)
         }
       }
-      Text(
-        modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
-        text = stringResource(id = R.string.sanitized_url),
-        style = MaterialTheme.typography.labelLarge
-      )
+      SectionHeader(title = R.string.sanitized_url)
       TextField(
         modifier =
           Modifier
             .padding(4.dp)
             .fillMaxSize(),
         value = state.sanitizedUrl,
-        onValueChange = { }
+        readOnly = true,
+        onValueChange = { /* NO-OP */ }
       )
       Buttons(
         enabled = state.sanitizedUrl.isNotEmpty(),
@@ -116,20 +109,29 @@ private fun BottomSheetContent(
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppBar() {
-  CenterAlignedTopAppBar(
-    title = {
-      Text(
-        modifier =
-          Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center),
-        text = stringResource(id = R.string.title_activity_sanitize),
-        color = MaterialTheme.colorScheme.primary
-      )
-    }
+private fun TopHeader(@StringRes title: Int) {
+  Row(
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .padding(bottom = 16.dp)
+        .wrapContentSize(Alignment.Center)
+  ) {
+    Text(
+      text = stringResource(id = title),
+      style = MaterialTheme.typography.titleLarge,
+      color = MaterialTheme.colorScheme.primary
+    )
+  }
+}
+
+@Composable
+private fun SectionHeader(@StringRes title: Int) {
+  Text(
+    modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
+    text = stringResource(id = title),
+    style = MaterialTheme.typography.labelLarge
   )
 }
 
@@ -149,7 +151,8 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
         value = parameter.value ?: "",
         label = { Text(parameter.name) },
         maxLines = 1,
-        onValueChange = { }
+        readOnly = true,
+        onValueChange = { /* NO-OP */ }
       )
 
       val checkedState = remember { mutableStateOf(value) }
@@ -187,57 +190,44 @@ private fun Buttons(
   ) {
     Row {
       if (readOnly) {
-        Button(
-          modifier = Modifier.padding(horizontal = 8.dp),
-          enabled = enabled,
-          onClick = {
-            scope.launch {
-              sheetState.hide()
-              postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
-            }
+        ActionButton(title = R.string.button_copy, enabled = enabled) {
+          scope.launch {
+            sheetState.hide()
+            postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
           }
-        ) {
-          Text(text = stringResource(R.string.button_copy))
         }
-        Button(
-          modifier = Modifier.padding(horizontal = 8.dp),
-          enabled = enabled,
-          onClick = {
-            scope.launch {
-              sheetState.hide()
-              postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN))
-            }
+        ActionButton(title = R.string.button_open, enabled = enabled) {
+          scope.launch {
+            sheetState.hide()
+            postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN))
           }
-        ) {
-          Text(text = stringResource(R.string.button_open))
         }
-        Button(
-          modifier = Modifier.padding(horizontal = 8.dp),
-          enabled = enabled,
-          onClick = {
-            scope.launch {
-              sheetState.hide()
-              postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
-            }
+        ActionButton(title = R.string.button_share, enabled = enabled) {
+          scope.launch {
+            sheetState.hide()
+            postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
           }
-        ) {
-          Text(text = stringResource(R.string.button_share))
         }
       } else {
-        Button(
-          modifier = Modifier.padding(horizontal = 8.dp),
-          enabled = enabled,
-          onClick = {
-            scope.launch {
-              sheetState.hide()
-              postAction(SanitizeAction.ButtonTapped(ButtonType.SANITIZE))
-            }
+        ActionButton(title = R.string.button_sanitize, enabled = enabled) {
+          scope.launch {
+            sheetState.hide()
+            postAction(SanitizeAction.ButtonTapped(ButtonType.SANITIZE))
           }
-        ) {
-          Text(text = stringResource(R.string.button_sanitize))
         }
       }
     }
+  }
+}
+
+@Composable
+private fun ActionButton(@StringRes title: Int, enabled: Boolean, onClick: () -> Unit) {
+  Button(
+    modifier = Modifier.padding(horizontal = 8.dp),
+    enabled = enabled,
+    onClick = onClick
+  ) {
+    Text(text = stringResource(title))
   }
 }
 
