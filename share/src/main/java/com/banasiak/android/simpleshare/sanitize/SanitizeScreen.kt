@@ -60,10 +60,10 @@ fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
       sheetState = sheetState,
+      windowInsets = WindowInsets.navigationBars,
       onDismissRequest = {
         postAction(SanitizeAction.Dismiss)
-      },
-      windowInsets = WindowInsets.navigationBars
+      }
     ) {
       BottomSheetContent(state, postAction, sheetState)
     }
@@ -80,9 +80,9 @@ private fun BottomSheetContent(
   Surface {
     Column(
       modifier =
-      Modifier
-        .padding(horizontal = 8.dp)
-        .verticalScroll(rememberScrollState())
+        Modifier
+          .padding(horizontal = 8.dp)
+          .verticalScroll(rememberScrollState())
     ) {
       TopHeader(title = R.string.title_activity_sanitize)
       if (state.parameters.isNotEmpty()) {
@@ -94,9 +94,9 @@ private fun BottomSheetContent(
       SectionHeader(title = R.string.sanitized_url)
       TextField(
         modifier =
-        Modifier
-          .padding(4.dp)
-          .fillMaxSize(),
+          Modifier
+            .padding(4.dp)
+            .fillMaxSize(),
         value = state.sanitizedUrl,
         readOnly = true,
         trailingIcon = {
@@ -116,18 +116,18 @@ private fun BottomSheetContent(
       if (state.loading) {
         LinearProgressIndicator(
           modifier =
-          Modifier
-            .fillMaxWidth()
-            .height(2.dp),
+            Modifier
+              .fillMaxWidth()
+              .height(2.dp),
           color = MaterialTheme.colorScheme.secondary,
           trackColor = MaterialTheme.colorScheme.surfaceVariant
         )
       } else {
         Spacer(
           modifier =
-          Modifier
-            .fillMaxWidth()
-            .height(2.dp)
+            Modifier
+              .fillMaxWidth()
+              .height(2.dp)
         )
       }
       Buttons(
@@ -144,10 +144,10 @@ private fun BottomSheetContent(
 private fun TopHeader(@StringRes title: Int) {
   Row(
     modifier =
-    Modifier
-      .fillMaxSize()
-      .padding(bottom = 16.dp)
-      .wrapContentSize(Alignment.Center)
+      Modifier
+        .fillMaxSize()
+        .padding(bottom = 16.dp)
+        .wrapContentSize(Alignment.Center)
   ) {
     Text(
       text = stringResource(id = title),
@@ -176,9 +176,9 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
     Row {
       TextField(
         modifier =
-        Modifier
-          .padding(4.dp)
-          .fillMaxSize(0.8f),
+          Modifier
+            .padding(4.dp)
+            .fillMaxSize(0.8f),
         value = parameter.value ?: "",
         label = { Text(parameter.name) },
         maxLines = 1,
@@ -189,9 +189,9 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
       val checkedState = remember { mutableStateOf(value) }
       Checkbox(
         modifier =
-        Modifier
-          .padding(8.dp)
-          .fillMaxSize(),
+          Modifier
+            .padding(8.dp)
+            .fillMaxSize(),
         checked = checkedState.value,
         onCheckedChange = {
           checkedState.value = it
@@ -213,9 +213,9 @@ private fun Buttons(
   val scope = rememberCoroutineScope()
   Column(
     modifier =
-    Modifier
-      .padding(vertical = 16.dp)
-      .fillMaxSize(),
+      Modifier
+        .padding(vertical = 16.dp)
+        .fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {

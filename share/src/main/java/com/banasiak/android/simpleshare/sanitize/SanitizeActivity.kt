@@ -57,7 +57,6 @@ class SanitizeActivity : ComponentActivity() {
         Toast.makeText(this, effect.message, Toast.LENGTH_LONG).show()
         finish()
       }
-
       is SanitizeEffect.ShowToast -> {
         Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
       }
@@ -72,7 +71,6 @@ class SanitizeActivity : ComponentActivity() {
           viewModel.postAction(SanitizeAction.IntentReceived(text = it, readOnly = true))
         }
       }
-
       Intent.ACTION_PROCESS_TEXT -> {
         intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.let {
           val text = it.toString() // discard any spannable markup, only want the text
