@@ -3,9 +3,11 @@ package com.banasiak.android.simpleshare.data
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -37,6 +39,13 @@ class Repository @Inject constructor(
     val params = dataStore.data.map { it[key] }.map { it?.toList() ?: emptyList() }.first()
     Timber.d("Retrieve enabled params for '$host': $params")
     return params
+  }
+
+  suspend fun getLaunchCountThenIncrement(): Int {
+    val key = intPreferencesKey("launchCount")
+    val count = dataStore.data.map { it[key] }.firstOrNull() ?: 1
+    dataStore.edit { it[key] = count + 1 }
+    return count
   }
 
   @OptIn(ExperimentalCoroutinesApi::class)

@@ -14,6 +14,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.ui.theme.SimpleShareTheme
+import com.google.android.play.core.ktx.launchReview
+import com.google.android.play.core.ktx.requestReview
+import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -57,6 +60,7 @@ class SanitizeActivity : ComponentActivity() {
         Toast.makeText(this, effect.message, Toast.LENGTH_LONG).show()
         finish()
       }
+      is SanitizeEffect.ShowRateAppDialog -> showRateAppDialog()
       is SanitizeEffect.ShowToast -> {
         Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
       }
@@ -106,5 +110,18 @@ class SanitizeActivity : ComponentActivity() {
       }
     setResult(RESULT_OK, returnIntent)
     finish()
+  }
+
+  private fun showRateAppDialog() {
+    lifecycleScope.launch {
+      try {
+        val context = this@SanitizeActivity
+        val reviewManager = ReviewManagerFactory.create(context)
+        val reviewInfo = reviewManager.requestReview()
+        reviewManager.launchReview(context, reviewInfo)
+      } catch (e: Exception) {
+        Timber.e(e, "Unable to show Google Play rate app dialog")
+      }
+    }
   }
 }

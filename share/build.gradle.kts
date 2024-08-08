@@ -75,6 +75,7 @@ dependencies {
   implementation(libs.material)
   implementation(libs.okhttp)
   implementation(libs.okhttp.coroutines)
+  implementation(libs.review.ktx)
   implementation(libs.timber)
   implementation(libs.urldetector)
   implementation(platform(libs.androidx.compose.bom))

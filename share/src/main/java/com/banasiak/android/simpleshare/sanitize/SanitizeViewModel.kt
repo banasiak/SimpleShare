@@ -87,12 +87,17 @@ class SanitizeViewModel @Inject constructor(
     val okHttpUrl = url.toHttpUrlOrNull()
     val params = buildParameterMap(okHttpUrl)
 
+    val launchCount = repository.getLaunchCountThenIncrement()
+    // potentially prompt for a review every 10 app launches
+    if (launchCount % 10 == 0) _effectFlow.emit(SanitizeEffect.ShowRateAppDialog)
+
     state =
       state.copy(
         originalUrl = okHttpUrl,
         sanitizedUrl = sanitizeUrl(okHttpUrl, params),
         parameters = params,
-        readOnly = readOnly
+        readOnly = readOnly,
+        launchCount = launchCount
       )
   }
 

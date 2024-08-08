@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import okhttp3.HttpUrl
 
 data class SanitizeState(
+  val launchCount: Int = 0,
   val loading: Boolean = false,
   val originalUrl: HttpUrl? = null,
   val parameters: Map<QueryParam, Boolean> = emptyMap(),
@@ -26,6 +27,7 @@ sealed class SanitizeEffect {
   data class ShowErrorAndFinish(@StringRes val message: Int) : SanitizeEffect()
   data class ShowToast(@StringRes val message: Int) : SanitizeEffect()
   data object Finish : SanitizeEffect()
+  data object ShowRateAppDialog : SanitizeEffect()
 }
 
 data class QueryParam(
