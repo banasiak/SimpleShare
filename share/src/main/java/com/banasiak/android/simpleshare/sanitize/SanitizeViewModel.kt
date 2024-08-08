@@ -68,6 +68,7 @@ class SanitizeViewModel @Inject constructor(
     viewModelScope.launch {
       when (action) {
         is SanitizeAction.ButtonTapped -> onButtonTapped(action.type, state.sanitizedUrl)
+        is SanitizeAction.FetchRedirect -> onFetchRedirect(state.originalUrl)
         is SanitizeAction.Dismiss -> _effectFlow.emit(SanitizeEffect.Finish)
         is SanitizeAction.IntentReceived -> onIntentReceived(action.text, action.readOnly)
         is SanitizeAction.ParamToggled -> onParamToggle(action.param, action.value)
@@ -85,6 +86,7 @@ class SanitizeViewModel @Inject constructor(
 
     val okHttpUrl = url.toHttpUrlOrNull()
     val params = buildParameterMap(okHttpUrl)
+
     state =
       state.copy(
         originalUrl = okHttpUrl,
@@ -110,6 +112,28 @@ class SanitizeViewModel @Inject constructor(
         parameters = updatedParams,
         sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams)
       )
+  }
+
+  private suspend fun onFetchRedirect(originalUrl: HttpUrl?) {
+    if (originalUrl == null) return
+
+    state = state.copy(loading = true)
+
+    repository.fetchRedirectUrl(originalUrl)?.let { newUrl ->
+      val parameters = buildParameterMap(newUrl)
+      val sanitizedUrl = sanitizeUrl(newUrl, parameters)
+      state =
+        state.copy(
+          originalUrl = newUrl,
+          parameters = parameters,
+          sanitizedUrl = sanitizedUrl,
+          loading = false
+        )
+      return
+    }
+
+    _effectFlow.emit(SanitizeEffect.ShowToast(R.string.redirect_not_detected))
+    state = state.copy(loading = false)
   }
 
   private suspend fun onButtonTapped(type: ButtonType, sanitizedUrl: String) {

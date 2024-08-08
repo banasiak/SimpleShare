@@ -74,7 +74,7 @@ dependencies {
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.material)
   implementation(libs.okhttp)
-  implementation(libs.okhttp.logging)
+  implementation(libs.okhttp.coroutines)
   implementation(libs.timber)
   implementation(libs.urldetector)
   implementation(platform(libs.androidx.compose.bom))

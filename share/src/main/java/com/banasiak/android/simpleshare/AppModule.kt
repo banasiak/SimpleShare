@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.banasiak.android.simpleshare.common.BuildInfo
+import com.banasiak.android.simpleshare.data.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -20,6 +21,8 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -53,5 +56,22 @@ object AppModule {
       scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
       produceFile = { context.preferencesDataStoreFile(DATASTORE_NAME) }
     )
+  }
+
+  @Provides
+  @Singleton
+  fun provideOkHttpClient(): OkHttpClient {
+    return OkHttpClient.Builder()
+      .callTimeout(10, TimeUnit.SECONDS)
+      .followRedirects(true)
+      .addNetworkInterceptor { chain ->
+        chain.proceed(
+          chain.request()
+            .newBuilder()
+            .header("User-Agent", Repository.USER_AGENT)
+            .build()
+        )
+      }
+      .build()
   }
 }

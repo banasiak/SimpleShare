@@ -4,10 +4,11 @@ import androidx.annotation.StringRes
 import okhttp3.HttpUrl
 
 data class SanitizeState(
+  val loading: Boolean = false,
   val originalUrl: HttpUrl? = null,
-  val sanitizedUrl: String = "",
   val parameters: Map<QueryParam, Boolean> = emptyMap(),
-  val readOnly: Boolean = true // if false, URL can be passed back to caller via setResult()
+  val readOnly: Boolean = true, // if false, URL can be passed back to caller via setResult()
+  val sanitizedUrl: String = ""
 )
 
 sealed class SanitizeAction {
@@ -15,6 +16,7 @@ sealed class SanitizeAction {
   data class IntentReceived(val text: String, val readOnly: Boolean) : SanitizeAction()
   data class ParamToggled(val param: QueryParam, val value: Boolean) : SanitizeAction()
   data object Dismiss : SanitizeAction()
+  data object FetchRedirect : SanitizeAction()
 }
 
 sealed class SanitizeEffect {
