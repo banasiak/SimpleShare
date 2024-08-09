@@ -6,8 +6,11 @@
   <string name="button_sanitize">Sanitize Selected URL</string>
   <string name="button_share">Share</string>
   <string name="follow_redirect">Follow Redirects</string>
+  <string name="hint_body">You can also share text from any app by using the Android Sharesheet.</string>
+  <string name="hint_title">Did You Know?</string>
   <string name="query_parameters">Query Parameters</string>
   <string name="redirect_not_detected">No Redirect Detected</string>
+  <string name="remove_tracking">Remove Tracking Parameters</string>
   <string name="sanitized_url">Sanitized URL</string>
   <string name="share_sanitized">Share Sanitized URL</string>
   <string name="title_activity_sanitize">Simple URL Sanitizer</string>
