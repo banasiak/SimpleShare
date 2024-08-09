@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +37,8 @@ class SanitizeActivity : ComponentActivity() {
       }
     }
     enableEdgeToEdge()
+    // handle NavigationBar window insets manually in the BottomSheet so this transparent activity cleanly overlays the app that calls our intent
+    WindowCompat.setDecorFitsSystemWindows(window, true)
     setContent {
       LocalLifecycleOwner.current.lifecycle.addObserver(viewModel)
       SimpleShareTheme {

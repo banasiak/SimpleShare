@@ -100,6 +100,7 @@ fun MainScreen() {
       Button(
         modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+        enabled = textValue.isNotEmpty(),
         onClick = {
           focus.clearFocus(force = true)
           launchIntent(context, textValue)
@@ -107,12 +108,14 @@ fun MainScreen() {
       ) {
         Text(text = stringResource(id = R.string.remove_tracking))
       }
-      Button(
-        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
-        onClick = { textValue = feelingLucky() }
-      ) {
-        Text(text = stringResource(id = R.string.feeling_lucky))
+      AnimatedVisibility(visible = !WindowInsets.isImeVisible) {
+        Button(
+          modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
+          onClick = { textValue = feelingLucky() }
+        ) {
+          Text(text = stringResource(id = R.string.feeling_lucky))
+        }
       }
       AnimatedVisibility(visible = WindowInsets.isImeVisible) {
         Column(

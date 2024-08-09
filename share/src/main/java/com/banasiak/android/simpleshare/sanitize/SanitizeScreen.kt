@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -60,7 +61,6 @@ fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
       sheetState = sheetState,
-      windowInsets = WindowInsets.navigationBars,
       onDismissRequest = {
         postAction(SanitizeAction.Dismiss)
       }
@@ -81,7 +81,7 @@ private fun BottomSheetContent(
     Column(
       modifier =
         Modifier
-          .padding(horizontal = 8.dp)
+          .padding(start = 8.dp, end = 8.dp, bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
           .verticalScroll(rememberScrollState())
     ) {
       TopHeader(title = R.string.title_activity_sanitize)
