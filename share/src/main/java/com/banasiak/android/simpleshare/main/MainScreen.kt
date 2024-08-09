@@ -57,21 +57,21 @@ fun MainScreen() {
   SimpleShareTheme {
     Column(
       modifier =
-      Modifier
-        .consumeWindowInsets(WindowInsets.systemBars)
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.primaryContainer)
-        .padding(top = 64.dp)
-        .verticalScroll(rememberScrollState()),
+        Modifier
+          .consumeWindowInsets(WindowInsets.systemBars)
+          .fillMaxSize()
+          .background(color = MaterialTheme.colorScheme.primaryContainer)
+          .padding(top = 64.dp)
+          .verticalScroll(rememberScrollState()),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Top
     ) {
       AnimatedVisibility(visible = !WindowInsets.isImeVisible) {
         Icon(
           modifier =
-          Modifier
-            .fillMaxWidth(0.5f)
-            .aspectRatio(1.0f),
+            Modifier
+              .fillMaxWidth(0.5f)
+              .aspectRatio(1.0f),
           painter = painterResource(id = R.drawable.sanitize),
           tint = MaterialTheme.colorScheme.primary,
           contentDescription = null
@@ -79,18 +79,18 @@ fun MainScreen() {
       }
       TextField(
         modifier =
-        Modifier
-          .fillMaxWidth()
-          .padding(start = 16.dp, end = 16.dp, top = 64.dp, bottom = 16.dp)
-          .onFocusChanged { focusValue = it.isFocused },
+          Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 64.dp, bottom = 16.dp)
+            .onFocusChanged { focusValue = it.isFocused },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
         keyboardActions =
-        KeyboardActions(
-          onGo = {
-            focus.clearFocus(force = true)
-            launchIntent(context, textValue)
-          }
-        ),
+          KeyboardActions(
+            onGo = {
+              focus.clearFocus(force = true)
+              launchIntent(context, textValue)
+            }
+          ),
         minLines = 4,
         maxLines = 4,
         label = { Text(stringResource(id = R.string.title_activity_sanitize)) },
@@ -106,6 +106,13 @@ fun MainScreen() {
         }
       ) {
         Text(text = stringResource(id = R.string.remove_tracking))
+      }
+      Button(
+        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
+        onClick = { textValue = feelingLucky() }
+      ) {
+        Text(text = stringResource(id = R.string.feeling_lucky))
       }
       AnimatedVisibility(visible = WindowInsets.isImeVisible) {
         Column(
@@ -130,6 +137,16 @@ fun MainScreen() {
       }
     }
   }
+}
+
+private fun feelingLucky(): String {
+  return listOf(
+    "PURELL Advanced Hand Sanitizer Refreshing Gel, Clean Scent, 1 Liter Pump Bottle\nhttps://a.co/d/hkteY4t",
+    "Lysol Disinfectant Spray, Sanitizing and Antibacterial Spray, For Disinfecting and Deodorizing\nhttps://a.co/d/0ZV7xf0",
+    "Clorox Disinfecting Wipes Value Pack, Household Essentials, 75 Count, Pack of 3\nhttps://a.co/d/9xKu4bV",
+    "Mr. Clean 2X Concentrated Multi Surface Cleaner with Unstopables Fresh Scent\nhttps://a.co/d/6G5uQeb",
+    "Dial Antibacterial Foaming Hand Wash, Spring Water, 7.5 fl oz (Pack of 6)\nhttps://a.co/d/b2zLzd2"
+  ).random()
 }
 
 private fun launchIntent(context: Context, text: String) {

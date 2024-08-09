@@ -6,6 +6,7 @@
   <string name="button_sanitize">Sanitize Selected URL</string>
   <string name="button_share">Share</string>
   <string name="follow_redirect">Follow Redirects</string>
+  <string name="feeling_lucky">I\'m Feeling Lucky</string>
   <string name="hint_body">You can also share text from any app by using the Android Sharesheet.</string>
   <string name="hint_title">Did You Know?</string>
   <string name="query_parameters">Query Parameters</string>
