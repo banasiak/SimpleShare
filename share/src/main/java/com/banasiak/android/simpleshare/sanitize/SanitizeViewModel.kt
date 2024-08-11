@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
+import com.banasiak.android.simpleshare.common.Constants
 import com.banasiak.android.simpleshare.data.Repository
 import com.linkedin.urls.detection.UrlDetector
 import com.linkedin.urls.detection.UrlDetectorOptions
@@ -35,10 +36,6 @@ class SanitizeViewModel @Inject constructor(
   private val repository: Repository,
   private val savedState: SavedStateHandle
 ) : ViewModel(), LifecycleEventObserver {
-  companion object {
-    const val EXTRA_IS_SENSITIVE = "android.content.extra.IS_SENSITIVE"
-  }
-
   private val _stateFlow = MutableStateFlow(SanitizeState())
   val stateFlow = _stateFlow.asStateFlow()
 
@@ -137,8 +134,7 @@ class SanitizeViewModel @Inject constructor(
       return
     }
 
-    _effectFlow.emit(SanitizeEffect.ShowToast(R.string.redirect_not_detected))
-    state = state.copy(loading = false)
+    state = state.copy(hint = HintType.NO_REDIRECT, loading = false)
   }
 
   private suspend fun onButtonTapped(type: ButtonType, sanitizedUrl: String) {
@@ -153,7 +149,7 @@ class SanitizeViewModel @Inject constructor(
 
   private suspend fun onCopyUrl(url: String) {
     val clip = ClipData.newPlainText("url", url)
-    val isSensitive = if (isTiramisu()) ClipDescription.EXTRA_IS_SENSITIVE else EXTRA_IS_SENSITIVE
+    val isSensitive = if (isTiramisu()) ClipDescription.EXTRA_IS_SENSITIVE else Constants.EXTRA_IS_SENSITIVE
 
     clip.apply { description.extras = PersistableBundle().apply { putBoolean(isSensitive, false) } }
     clipboardManager.setPrimaryClip(clip)

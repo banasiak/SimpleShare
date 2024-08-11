@@ -1,6 +1,9 @@
 package com.banasiak.android.simpleshare.sanitize
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,7 +48,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.ui.theme.SimpleShareTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 private typealias InputAction = (SanitizeAction) -> Unit
 
@@ -57,13 +64,17 @@ fun SanitizeScreen(viewModel: SanitizeViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
+  val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+  val scope = rememberCoroutineScope()
+
+  BackHandler {
+    dismissScreen(scope, sheetState, postAction)
+  }
+
   SimpleShareTheme {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
       sheetState = sheetState,
-      onDismissRequest = {
-        postAction(SanitizeAction.Dismiss)
-      }
+      onDismissRequest = { dismissScreen(scope, sheetState, postAction) }
     ) {
       BottomSheetContent(state, postAction, sheetState)
     }
@@ -81,16 +92,18 @@ private fun BottomSheetContent(
     Column(
       modifier =
         Modifier
-          .padding(start = 8.dp, end = 8.dp, bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
+          .padding(
+            start = 8.dp,
+            end = 8.dp,
+            bottom =
+              WindowInsets.navigationBars
+                .asPaddingValues()
+                .calculateBottomPadding()
+          )
           .verticalScroll(rememberScrollState())
     ) {
       TopHeader(title = R.string.title_activity_sanitize)
-      if (state.parameters.isNotEmpty()) {
-        SectionHeader(title = R.string.query_parameters)
-        for (parameter in state.parameters) {
-          ParameterItem(parameter.key, parameter.value, postAction)
-        }
-      }
+      AnimatedQueryParameters(state, postAction)
       SectionHeader(title = R.string.sanitized_url)
       TextField(
         modifier =
@@ -98,16 +111,20 @@ private fun BottomSheetContent(
             .padding(4.dp)
             .fillMaxSize(),
         value = state.sanitizedUrl,
+        supportingText = {
+          Text(text = stringResource(id = state.hint.string))
+        },
+        isError = state.hint.isError,
         readOnly = true,
         trailingIcon = {
           IconButton(
-            enabled = !state.loading,
+            enabled = !state.loading && state.hint == HintType.DEFAULT,
             onClick = { postAction(SanitizeAction.FetchRedirect) }
           ) {
             Icon(
               painter = painterResource(id = R.drawable.cloud_download),
               contentDescription = stringResource(id = R.string.follow_redirect),
-              tint = MaterialTheme.colorScheme.secondary
+              tint = if (state.hint.isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary
             )
           }
         },
@@ -154,6 +171,34 @@ private fun TopHeader(@StringRes title: Int) {
       style = MaterialTheme.typography.titleLarge,
       color = MaterialTheme.colorScheme.primary
     )
+  }
+}
+
+@Composable
+private fun AnimatedQueryParameters(state: SanitizeState, postAction: InputAction) {
+  // everything is going to listen to this flag
+  var visible: Boolean by remember { mutableStateOf(false) }
+
+  // add the query parameters SectionHeader, so far so good...
+  AnimatedVisibility(
+    visible = visible,
+    enter = expandIn()
+  ) {
+    SectionHeader(title = R.string.query_parameters)
+  }
+
+  // this is gross, but it basically adds each ParameterItem in the map, but only animates them into existence just before the final one is composed and visible
+  state.parameters.toList().forEachIndexed { i: Int, pair: Pair<QueryParam, Boolean> ->
+    AnimatedVisibility(
+      visible = visible,
+      enter = expandIn()
+    ) {
+      ParameterItem(parameter = pair.first, value = pair.second, postAction = postAction)
+    }
+
+    // trigger the visible flag on the second-to-last item
+    // therefore, when the final one is added, that will be the final recompose and the measurements will be correct
+    if (i == state.parameters.size - 1) visible = true
   }
 }
 
@@ -283,4 +328,14 @@ fun SanitizeViewPreview() {
       loading = false
     )
   BottomSheetContent(state = state, sheetState = rememberModalBottomSheetState(), postAction = { })
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+private fun dismissScreen(scope: CoroutineScope, sheetState: SheetState, postAction: InputAction) {
+  scope.launch {
+    // trigger the hide sheet animation, then post the Dismiss action to finish the activity
+    sheetState.hide()
+    delay(500.milliseconds)
+    postAction(SanitizeAction.Dismiss)
+  }
 }

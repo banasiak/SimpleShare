@@ -1,9 +1,11 @@
 package com.banasiak.android.simpleshare.sanitize
 
 import androidx.annotation.StringRes
+import com.banasiak.android.simpleshare.R
 import okhttp3.HttpUrl
 
 data class SanitizeState(
+  val hint: HintType = HintType.DEFAULT,
   val launchCount: Int = 0,
   val loading: Boolean = false,
   val originalUrl: HttpUrl? = null,
@@ -40,4 +42,12 @@ enum class ButtonType {
   OPEN,
   SANITIZE,
   SHARE
+}
+
+enum class HintType(
+  @StringRes val string: Int,
+  val isError: Boolean
+) {
+  DEFAULT(R.string.hint_decode_short_url, false),
+  NO_REDIRECT(R.string.redirect_not_detected, true)
 }

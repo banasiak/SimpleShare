@@ -3,6 +3,9 @@ package com.banasiak.android.simpleshare.main
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.banasiak.android.simpleshare.R
+import com.banasiak.android.simpleshare.common.Constants
 import com.banasiak.android.simpleshare.sanitize.SanitizeActivity
 import com.banasiak.android.simpleshare.ui.theme.SimpleShareTheme
 
@@ -94,6 +98,7 @@ fun MainScreen() {
         minLines = 4,
         maxLines = 4,
         label = { Text(stringResource(id = R.string.title_activity_sanitize)) },
+        supportingText = { Text(stringResource(id = R.string.hint_paste_text_here)) },
         value = textValue,
         onValueChange = { textValue = it }
       )
@@ -108,11 +113,15 @@ fun MainScreen() {
       ) {
         Text(text = stringResource(id = R.string.remove_tracking))
       }
-      AnimatedVisibility(visible = !WindowInsets.isImeVisible) {
+      AnimatedVisibility(
+        visible = !WindowInsets.isImeVisible,
+        enter = fadeIn() + slideInVertically { 1 },
+        exit = slideOutVertically { -1 }
+      ) {
         Button(
           modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
           colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
-          onClick = { textValue = feelingLucky() }
+          onClick = { textValue = Constants.DEMO_URL_LIST.random() }
         ) {
           Text(text = stringResource(id = R.string.feeling_lucky))
         }
@@ -124,14 +133,14 @@ fun MainScreen() {
         ) {
           Text(
             modifier = Modifier.padding(top = 8.dp),
-            text = stringResource(id = R.string.hint_title),
+            text = stringResource(id = R.string.hint_did_you_know),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer
           )
           Text(
             modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp),
-            text = stringResource(id = R.string.hint_body),
+            text = stringResource(id = R.string.hint_use_sharesheet_instead),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -140,16 +149,6 @@ fun MainScreen() {
       }
     }
   }
-}
-
-private fun feelingLucky(): String {
-  return listOf(
-    "PURELL Advanced Hand Sanitizer Refreshing Gel, Clean Scent, 1 Liter Pump Bottle\nhttps://a.co/d/hkteY4t",
-    "Lysol Disinfectant Spray, Sanitizing and Antibacterial Spray, For Disinfecting and Deodorizing\nhttps://a.co/d/0ZV7xf0",
-    "Clorox Disinfecting Wipes Value Pack, Household Essentials, 75 Count, Pack of 3\nhttps://a.co/d/9xKu4bV",
-    "Mr. Clean 2X Concentrated Multi Surface Cleaner with Unstopables Fresh Scent\nhttps://a.co/d/6G5uQeb",
-    "Dial Antibacterial Foaming Hand Wash, Spring Water, 7.5 fl oz (Pack of 6)\nhttps://a.co/d/b2zLzd2"
-  ).random()
 }
 
 private fun launchIntent(context: Context, text: String) {
