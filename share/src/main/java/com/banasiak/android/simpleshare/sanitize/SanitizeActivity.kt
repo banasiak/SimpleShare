@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -59,14 +60,9 @@ class SanitizeActivity : ComponentActivity() {
       is SanitizeEffect.OpenUrl -> launchOpenIntent(effect.url)
       is SanitizeEffect.ReturnUrl -> returnToSender(effect.url)
       is SanitizeEffect.ShareUrl -> launchShareIntent(effect.url)
-      is SanitizeEffect.ShowErrorAndFinish -> {
-        Toast.makeText(this, effect.message, Toast.LENGTH_LONG).show()
-        finish()
-      }
+      is SanitizeEffect.ShowErrorAndFinish -> showErrorAndFinish(effect.message)
       is SanitizeEffect.ShowRateAppDialog -> showRateAppDialog()
-      is SanitizeEffect.ShowToast -> {
-        Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
-      }
+      is SanitizeEffect.ShowToast -> Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
     }
   }
 
@@ -74,17 +70,15 @@ class SanitizeActivity : ComponentActivity() {
     Timber.d("handleIntent(): $intent")
     when (intent?.action) {
       Intent.ACTION_SEND -> {
-        intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-          viewModel.postAction(SanitizeAction.IntentReceived(text = it, readOnly = true))
-        }
+        val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+        viewModel.postAction(SanitizeAction.IntentReceived(text = text, readOnly = true))
       }
       Intent.ACTION_PROCESS_TEXT -> {
-        intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.let {
-          val text = it.toString() // discard any spannable markup, only want the text
-          val readOnly = intent.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, true)
-          viewModel.postAction(SanitizeAction.IntentReceived(text = text, readOnly = readOnly))
-        }
+        val text = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString() // discard any spannable markup
+        val readOnly = intent.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, true)
+        viewModel.postAction(SanitizeAction.IntentReceived(text = text, readOnly = readOnly))
       }
+      else -> showErrorAndFinish(R.string.url_not_detected)
     }
   }
 
@@ -126,5 +120,10 @@ class SanitizeActivity : ComponentActivity() {
         Timber.e(e, "Unable to show Google Play rate app dialog")
       }
     }
+  }
+
+  private fun showErrorAndFinish(@StringRes message: Int) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    finish()
   }
 }

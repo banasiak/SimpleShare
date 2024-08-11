@@ -73,9 +73,9 @@ class SanitizeViewModel @Inject constructor(
     }
   }
 
-  private suspend fun onIntentReceived(text: String, readOnly: Boolean) {
-    val url = extractUrl(text)
-    if (url == null) {
+  private suspend fun onIntentReceived(text: String?, readOnly: Boolean) {
+    val url = text?.let { extractUrl(it) }
+    if (text == null || url == null) {
       Timber.w("Unable to extract URL from shared text")
       _effectFlow.emit(SanitizeEffect.ShowErrorAndFinish(R.string.url_not_detected))
       return

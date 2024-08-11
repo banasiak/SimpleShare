@@ -16,7 +16,7 @@ data class SanitizeState(
 
 sealed class SanitizeAction {
   data class ButtonTapped(val type: ButtonType) : SanitizeAction()
-  data class IntentReceived(val text: String, val readOnly: Boolean) : SanitizeAction()
+  data class IntentReceived(val text: String?, val readOnly: Boolean) : SanitizeAction()
   data class ParamToggled(val param: QueryParam, val value: Boolean) : SanitizeAction()
   data object Dismiss : SanitizeAction()
   data object FetchRedirect : SanitizeAction()
