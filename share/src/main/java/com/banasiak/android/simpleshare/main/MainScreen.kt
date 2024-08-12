@@ -61,21 +61,21 @@ fun MainScreen() {
   SimpleShareTheme {
     Column(
       modifier =
-      Modifier
-        .consumeWindowInsets(WindowInsets.systemBars)
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.primaryContainer)
-        .padding(top = 64.dp)
-        .verticalScroll(rememberScrollState()),
+        Modifier
+          .consumeWindowInsets(WindowInsets.systemBars)
+          .fillMaxSize()
+          .background(color = MaterialTheme.colorScheme.primaryContainer)
+          .padding(top = 64.dp)
+          .verticalScroll(rememberScrollState()),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Top
     ) {
       AnimatedVisibility(visible = !WindowInsets.isImeVisible) {
         Icon(
           modifier =
-          Modifier
-            .fillMaxWidth(0.5f)
-            .aspectRatio(1.0f),
+            Modifier
+              .fillMaxWidth(0.5f)
+              .aspectRatio(1.0f),
           painter = painterResource(id = R.drawable.sanitize),
           tint = MaterialTheme.colorScheme.primary,
           contentDescription = null
@@ -83,10 +83,10 @@ fun MainScreen() {
       }
       TextField(
         modifier =
-        Modifier
-          .fillMaxWidth()
-          .padding(start = 16.dp, end = 16.dp, top = 64.dp, bottom = 16.dp)
-          .onFocusChanged { focusValue = it.isFocused },
+          Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 64.dp, bottom = 16.dp)
+            .onFocusChanged { focusValue = it.isFocused },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
         keyboardActions =
           KeyboardActions(

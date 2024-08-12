@@ -57,21 +57,22 @@ composeCompiler {
 val ktlint: Configuration by configurations.creating
 
 dependencies {
+  debugImplementation(libs.androidx.compose.ui.tooling)
   implementation(libs.androidx.activity)
   implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.compose.foundation.layout.android)
+  implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.compose.runtime.android)
+  implementation(libs.androidx.compose.ui.tooling.preview.android)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.datastore)
-  implementation(libs.androidx.foundation.layout.android)
   implementation(libs.androidx.hilt.navigation.compose)
   implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
-  implementation(libs.androidx.material3)
   implementation(libs.androidx.navigation.compose)
-  implementation(libs.androidx.runtime.android)
-  implementation(libs.androidx.ui.tooling.preview.android)
-  implementation(libs.hilt.android)
+  implementation(libs.dagger.hilt.android)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.material)
   implementation(libs.okhttp)
@@ -81,9 +82,8 @@ dependencies {
   implementation(libs.urldetector)
   implementation(platform(libs.androidx.compose.bom))
   implementation(platform(libs.okhttp.bom))
-  debugImplementation(libs.androidx.ui.tooling)
   ksp(libs.dagger.compiler)
-  ksp(libs.hilt.android.compiler)
+  ksp(libs.dagger.hilt.android.compiler)
 
   ktlint(libs.ktlint) {
     attributes {
