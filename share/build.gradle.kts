@@ -1,7 +1,8 @@
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.jetbrains.kotlin.android)
-  alias(libs.plugins.jetbrains.kotlin.compose)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.hilt.android)
   alias(libs.plugins.ksp)
 }

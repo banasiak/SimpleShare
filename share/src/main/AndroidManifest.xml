@@ -14,7 +14,6 @@
     android:label="@string/app_name"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
-    android:theme="@style/Theme.SimpleShare"
     tools:targetApi="34">
     <activity
       android:name=".main.MainActivity"
@@ -30,7 +29,7 @@
       android:name=".sanitize.SanitizeActivity"
       android:exported="true"
       android:excludeFromRecents="true"
-      android:theme="@style/Theme.SimpleShare">
+      android:theme="@style/Theme.SimpleShare.Transparent">
       <intent-filter>
         <action android:name="android.intent.action.PROCESS_TEXT" />
         <category android:name="android.intent.category.DEFAULT" />

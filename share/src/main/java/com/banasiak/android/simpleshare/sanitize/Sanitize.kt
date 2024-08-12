@@ -1,9 +1,15 @@
 package com.banasiak.android.simpleshare.sanitize
 
+import android.os.Parcelable
 import androidx.annotation.StringRes
 import com.banasiak.android.simpleshare.R
+import com.banasiak.android.simpleshare.data.HttpUrlParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
 import okhttp3.HttpUrl
 
+@Parcelize
+@TypeParceler<HttpUrl?, HttpUrlParceler>
 data class SanitizeState(
   val hint: HintType = HintType.DEFAULT,
   val launchCount: Int = 0,
@@ -12,7 +18,7 @@ data class SanitizeState(
   val parameters: Map<QueryParam, Boolean> = emptyMap(),
   val readOnly: Boolean = true, // if false, URL can be passed back to caller via setResult()
   val sanitizedUrl: String = ""
-)
+) : Parcelable
 
 sealed class SanitizeAction {
   data class ButtonTapped(val type: ButtonType) : SanitizeAction()
@@ -32,10 +38,11 @@ sealed class SanitizeEffect {
   data object ShowRateAppDialog : SanitizeEffect()
 }
 
+@Parcelize
 data class QueryParam(
   val name: String,
   val value: String?
-)
+) : Parcelable
 
 enum class ButtonType {
   COPY,

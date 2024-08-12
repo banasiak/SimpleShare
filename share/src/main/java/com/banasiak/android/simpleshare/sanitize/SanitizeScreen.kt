@@ -67,6 +67,8 @@ fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   val scope = rememberCoroutineScope()
 
+  // debatable whether or not this works correctly
+  // https://issuetracker.google.com/issues/281967264
   BackHandler {
     dismissScreen(scope, sheetState, postAction)
   }
@@ -91,25 +93,25 @@ private fun BottomSheetContent(
   Surface {
     Column(
       modifier =
-        Modifier
-          .padding(
-            start = 8.dp,
-            end = 8.dp,
-            bottom =
-              WindowInsets.navigationBars
-                .asPaddingValues()
-                .calculateBottomPadding()
-          )
-          .verticalScroll(rememberScrollState())
+      Modifier
+        .padding(
+          start = 8.dp,
+          end = 8.dp,
+          bottom =
+          WindowInsets.navigationBars
+            .asPaddingValues()
+            .calculateBottomPadding()
+        )
+        .verticalScroll(rememberScrollState())
     ) {
       TopHeader(title = R.string.title_activity_sanitize)
       AnimatedQueryParameters(state, postAction)
       SectionHeader(title = R.string.sanitized_url)
       TextField(
         modifier =
-          Modifier
-            .padding(4.dp)
-            .fillMaxSize(),
+        Modifier
+          .padding(4.dp)
+          .fillMaxSize(),
         value = state.sanitizedUrl,
         supportingText = {
           Text(text = stringResource(id = state.hint.string))
@@ -133,18 +135,18 @@ private fun BottomSheetContent(
       if (state.loading) {
         LinearProgressIndicator(
           modifier =
-            Modifier
-              .fillMaxWidth()
-              .height(2.dp),
+          Modifier
+            .fillMaxWidth()
+            .height(2.dp),
           color = MaterialTheme.colorScheme.secondary,
           trackColor = MaterialTheme.colorScheme.surfaceVariant
         )
       } else {
         Spacer(
           modifier =
-            Modifier
-              .fillMaxWidth()
-              .height(2.dp)
+          Modifier
+            .fillMaxWidth()
+            .height(2.dp)
         )
       }
       Buttons(
@@ -161,10 +163,10 @@ private fun BottomSheetContent(
 private fun TopHeader(@StringRes title: Int) {
   Row(
     modifier =
-      Modifier
-        .fillMaxSize()
-        .padding(bottom = 16.dp)
-        .wrapContentSize(Alignment.Center)
+    Modifier
+      .fillMaxSize()
+      .padding(bottom = 16.dp)
+      .wrapContentSize(Alignment.Center)
   ) {
     Text(
       text = stringResource(id = title),
@@ -197,7 +199,7 @@ private fun AnimatedQueryParameters(state: SanitizeState, postAction: InputActio
     }
 
     // trigger the visible flag on the second-to-last item
-    // therefore, when the final one is added, that will be the final recompose and the measurements will be correct
+    // therefore, when the last one is added, that will be the final recompose and the measurements will be correct
     if (i == state.parameters.size - 1) visible = true
   }
 }
@@ -221,9 +223,9 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
     Row {
       TextField(
         modifier =
-          Modifier
-            .padding(4.dp)
-            .fillMaxSize(0.8f),
+        Modifier
+          .padding(4.dp)
+          .fillMaxSize(0.8f),
         value = parameter.value ?: "",
         label = { Text(parameter.name) },
         maxLines = 1,
@@ -234,9 +236,9 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
       val checkedState = remember { mutableStateOf(value) }
       Checkbox(
         modifier =
-          Modifier
-            .padding(8.dp)
-            .fillMaxSize(),
+        Modifier
+          .padding(8.dp)
+          .fillMaxSize(),
         checked = checkedState.value,
         onCheckedChange = {
           checkedState.value = it
@@ -258,9 +260,9 @@ private fun Buttons(
   val scope = rememberCoroutineScope()
   Column(
     modifier =
-      Modifier
-        .padding(vertical = 16.dp)
-        .fillMaxSize(),
+    Modifier
+      .padding(vertical = 16.dp)
+      .fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -309,6 +311,16 @@ private fun ActionButton(@StringRes title: Int, enabled: Boolean, color: Color =
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+private fun dismissScreen(scope: CoroutineScope, sheetState: SheetState, postAction: InputAction) {
+  scope.launch {
+    // trigger the hide sheet animation, then post the Dismiss action to finish the activity
+    sheetState.hide()
+    delay(500.milliseconds)
+    postAction(SanitizeAction.Dismiss)
+  }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun SanitizeViewPreview() {
@@ -328,14 +340,4 @@ fun SanitizeViewPreview() {
       loading = false
     )
   BottomSheetContent(state = state, sheetState = rememberModalBottomSheetState(), postAction = { })
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-private fun dismissScreen(scope: CoroutineScope, sheetState: SheetState, postAction: InputAction) {
-  scope.launch {
-    // trigger the hide sheet animation, then post the Dismiss action to finish the activity
-    sheetState.hide()
-    delay(500.milliseconds)
-    postAction(SanitizeAction.Dismiss)
-  }
 }

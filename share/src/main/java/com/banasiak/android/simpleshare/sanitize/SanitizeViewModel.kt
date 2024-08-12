@@ -15,6 +15,8 @@ import androidx.lifecycle.viewModelScope
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
 import com.banasiak.android.simpleshare.common.Constants
+import com.banasiak.android.simpleshare.common.restore
+import com.banasiak.android.simpleshare.common.save
 import com.banasiak.android.simpleshare.data.Repository
 import com.linkedin.urls.detection.UrlDetector
 import com.linkedin.urls.detection.UrlDetectorOptions
@@ -42,7 +44,7 @@ class SanitizeViewModel @Inject constructor(
   private val _effectFlow = MutableSharedFlow<SanitizeEffect>(extraBufferCapacity = 1)
   val effectFlow = _effectFlow.asSharedFlow()
 
-  private var state: SanitizeState = SanitizeState()
+  private var state: SanitizeState = savedState.restore() ?: SanitizeState()
     set(value) {
       field = value
       Timber.v("state: $value")
@@ -55,8 +57,14 @@ class SanitizeViewModel @Inject constructor(
       Lifecycle.Event.ON_PAUSE -> {
         viewModelScope.launch {
           persistEnabledParameters()
+          savedState.save(state)
         }
       }
+      // Not necessary, because if this ViewModel is recreated, the state will be restored when SanitizeState is instantiated
+      // Lifecycle.Event.ON_RESUME -> {
+      //   viewModelScope.launch {
+      //   state = savedState.restore<SanitizeState>() ?: SanitizeState()
+      // }
       else -> { /* NO-OP */ }
     }
   }

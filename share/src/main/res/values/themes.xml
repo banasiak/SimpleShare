@@ -3,7 +3,9 @@
 
   <style name="Base.Theme.SimpleShare" parent="Theme.Material3.DayNight.NoActionBar" />
 
-  <style name="Theme.SimpleShare" parent="Base.Theme.SimpleShare">
+  <style name="Theme.SimpleShare" parent="Base.Theme.SimpleShare" />
+
+  <style name="Theme.SimpleShare.Transparent" parent="Theme.SimpleShare">
     <item name="android:colorBackgroundCacheHint">@null</item>
     <item name="android:windowAnimationStyle">@android:style/Animation</item>
     <item name="android:windowBackground">#00000000</item>

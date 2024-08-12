@@ -34,7 +34,6 @@ class SanitizeActivity : ComponentActivity() {
         launch {
           viewModel.effectFlow.collect(::onEffect)
         }
-        handleIntent(intent)
       }
     }
     enableEdgeToEdge()
@@ -46,6 +45,7 @@ class SanitizeActivity : ComponentActivity() {
         SanitizeScreen(viewModel)
       }
     }
+    handleIntent(intent)
   }
 
   override fun onNewIntent(intent: Intent) {

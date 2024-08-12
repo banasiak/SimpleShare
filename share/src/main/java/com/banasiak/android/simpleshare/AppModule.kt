@@ -11,7 +11,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.banasiak.android.simpleshare.common.BuildInfo
-import com.banasiak.android.simpleshare.data.Repository
+import com.banasiak.android.simpleshare.common.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -68,7 +68,7 @@ object AppModule {
         chain.proceed(
           chain.request()
             .newBuilder()
-            .header("User-Agent", Repository.USER_AGENT)
+            .header("User-Agent", Constants.USER_AGENT)
             .build()
         )
       }

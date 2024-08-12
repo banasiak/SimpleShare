@@ -22,10 +22,6 @@ class Repository @Inject constructor(
   private val dataStore: DataStore<Preferences>,
   private val httpClient: OkHttpClient
 ) {
-  companion object {
-    const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
-  }
-
   suspend fun setEnabledParamsForHost(host: String, params: List<String>) {
     Timber.d("Persist enabled params for '$host': $params")
     val key = stringSetPreferencesKey(host)
