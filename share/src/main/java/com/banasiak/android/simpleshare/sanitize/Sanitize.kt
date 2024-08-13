@@ -12,6 +12,7 @@ import okhttp3.HttpUrl
 @TypeParceler<HttpUrl?, HttpUrlParceler>
 data class SanitizeState(
   val hint: HintType = HintType.DEFAULT,
+  val intentProcessed: Boolean = false,
   val launchCount: Int = 0,
   val loading: Boolean = false,
   val originalUrl: HttpUrl? = null,
