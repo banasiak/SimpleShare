@@ -17,6 +17,7 @@ import com.banasiak.android.simpleshare.common.BuildInfo
 import com.banasiak.android.simpleshare.common.Constants
 import com.banasiak.android.simpleshare.common.restore
 import com.banasiak.android.simpleshare.common.save
+import com.banasiak.android.simpleshare.common.toHttpsUrlOrNull
 import com.banasiak.android.simpleshare.data.Repository
 import com.linkedin.urls.detection.UrlDetector
 import com.linkedin.urls.detection.UrlDetectorOptions
@@ -27,7 +28,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -89,7 +89,7 @@ class SanitizeViewModel @Inject constructor(
       return
     }
 
-    val okHttpUrl = url.toHttpUrlOrNull()
+    val okHttpUrl = url.toHttpsUrlOrNull()
     val params = buildParameterMap(okHttpUrl)
 
     val launchCount = repository.getLaunchCountThenIncrement()
