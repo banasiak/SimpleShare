@@ -82,6 +82,11 @@ class SanitizeViewModel @Inject constructor(
   }
 
   private suspend fun onIntentReceived(text: String?, readOnly: Boolean) {
+    if (state.intentProcessed) {
+      Timber.w("Intent already processed")
+      return
+    }
+
     val url = text?.let { extractUrl(it) }
     if (text == null || url == null) {
       Timber.w("Unable to extract URL from shared text")
@@ -102,7 +107,8 @@ class SanitizeViewModel @Inject constructor(
         sanitizedUrl = sanitizeUrl(okHttpUrl, params),
         parameters = params,
         readOnly = readOnly,
-        launchCount = launchCount
+        launchCount = launchCount,
+        intentProcessed = true
       )
   }
 
@@ -130,6 +136,7 @@ class SanitizeViewModel @Inject constructor(
     state = state.copy(loading = true)
 
     repository.fetchRedirectUrl(originalUrl)?.let { newUrl ->
+      Timber.d("URL redirect detected: $newUrl")
       val parameters = buildParameterMap(newUrl)
       val sanitizedUrl = sanitizeUrl(newUrl, parameters)
       state =
