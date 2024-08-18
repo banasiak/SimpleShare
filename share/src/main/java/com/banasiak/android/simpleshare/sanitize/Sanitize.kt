@@ -47,7 +47,7 @@ data class QueryParam(
 enum class ButtonType {
   COPY,
   OPEN,
-  SANITIZE,
+  RETURN,
   SHARE
 }
 

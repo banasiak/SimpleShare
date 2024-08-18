@@ -290,7 +290,7 @@ private fun Buttons(
         ActionButton(title = R.string.button_sanitize, enabled = enabled) {
           scope.launch {
             sheetState.hide()
-            postAction(SanitizeAction.ButtonTapped(ButtonType.SANITIZE))
+            postAction(SanitizeAction.ButtonTapped(ButtonType.RETURN))
           }
         }
       }

@@ -150,7 +150,7 @@ class SanitizeViewModel @Inject constructor(
     when (type) {
       ButtonType.COPY -> onCopyUrl(sanitizedUrl)
       ButtonType.OPEN -> _effectFlow.emit(SanitizeEffect.OpenUrl(sanitizedUrl))
-      ButtonType.SANITIZE -> _effectFlow.emit(SanitizeEffect.ReturnUrl(sanitizedUrl))
+      ButtonType.RETURN -> _effectFlow.emit(SanitizeEffect.ReturnUrl(sanitizedUrl))
       ButtonType.SHARE -> _effectFlow.emit(SanitizeEffect.ShareUrl(sanitizedUrl))
     }
   }
