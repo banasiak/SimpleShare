@@ -1,15 +1,15 @@
 [versions]
-agp = "8.5.2"
-androidx-activity = "1.9.1"
-androidx-compose = "2024.06.00"
+agp = "8.6.1"
+androidx-activity = "1.9.2"
+androidx-compose = "2024.09.02"
 androidx-core = "1.13.1"
 androidx-datastore = "1.1.1"
 androidx-hilt = "1.2.0"
-androidx-lifecycle = "2.8.4"
-androidx-navigation = "2.7.7"
-dagger-hilt-android = "2.51.1"
+androidx-lifecycle = "2.8.6"
+androidx-navigation = "2.8.1"
+dagger-hilt-android = "2.52"
 kotlin = "2.0.10"
-kotlinx-coroutines = "1.8.1"
+kotlinx-coroutines = "1.9.0"
 ksp = "2.0.10-1.0.24"
 ktlint = "1.1.0"
 material = "1.12.0"
@@ -17,6 +17,7 @@ okhttp = "5.0.0-alpha.14"
 review = "2.0.1"
 timber = "5.0.1"
 urldetector = "0.1.17"
+versions = "0.51.0"
 
 [libraries]
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
@@ -55,3 +56,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
