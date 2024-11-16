@@ -54,9 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.ui.theme.SimpleShareTheme
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 private typealias InputAction = (SanitizeAction) -> Unit
 
@@ -166,7 +164,6 @@ private fun BottomSheetContent(
     }
     Buttons(
       enabled = state.sanitizedUrl.isNotEmpty(),
-      readOnly = state.readOnly,
       sheetState = sheetState,
       postAction = postAction
     )
@@ -267,7 +264,6 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
 @Composable
 private fun Buttons(
   enabled: Boolean,
-  readOnly: Boolean,
   sheetState: SheetState,
   postAction: InputAction
 ) {
@@ -281,31 +277,22 @@ private fun Buttons(
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Row {
-      if (readOnly) {
-        ActionButton(title = R.string.button_share, enabled = enabled) {
-          scope.launch {
-            sheetState.hide()
-            postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
-          }
+      ActionButton(title = R.string.button_share, enabled = enabled) {
+        scope.launch {
+          sheetState.hide()
+          postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
         }
-        ActionButton(title = R.string.button_copy, enabled = enabled) {
-          scope.launch {
-            sheetState.hide()
-            postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
-          }
+      }
+      ActionButton(title = R.string.button_copy, enabled = enabled) {
+        scope.launch {
+          sheetState.hide()
+          postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
         }
-        ActionButton(title = R.string.button_open, enabled = enabled, color = MaterialTheme.colorScheme.tertiary) {
-          scope.launch {
-            sheetState.hide()
-            postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN))
-          }
-        }
-      } else {
-        ActionButton(title = R.string.button_sanitize, enabled = enabled) {
-          scope.launch {
-            sheetState.hide()
-            postAction(SanitizeAction.ButtonTapped(ButtonType.RETURN))
-          }
+      }
+      ActionButton(title = R.string.button_open, enabled = enabled, color = MaterialTheme.colorScheme.tertiary) {
+        scope.launch {
+          sheetState.hide()
+          postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN))
         }
       }
     }
@@ -327,9 +314,8 @@ private fun ActionButton(@StringRes title: Int, enabled: Boolean, color: Color =
 @OptIn(ExperimentalMaterial3Api::class)
 private fun dismissScreen(scope: CoroutineScope, sheetState: SheetState, postAction: InputAction) {
   scope.launch {
-    // trigger the hide sheet animation, then post the Dismiss action to finish the activity
+    // trigger the hide sheet animation, then post the Dismiss action to finish the activity once the animation completes
     sheetState.hide()
-    delay(500.milliseconds)
     postAction(SanitizeAction.Dismiss)
   }
 }
@@ -350,7 +336,6 @@ fun SanitizeViewPreview() {
           QueryParam("utm_term", "DDDDDD") to false,
           QueryParam("utm_content", "EEEEEE") to true
         ),
-      readOnly = true,
       loading = false
     )
   Surface {

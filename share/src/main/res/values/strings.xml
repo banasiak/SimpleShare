@@ -3,7 +3,6 @@
   <string name="app_name">Sanitize URL</string>
   <string name="button_copy">Copy</string>
   <string name="button_open">Open</string>
-  <string name="button_sanitize">Sanitize Selected URL</string>
   <string name="button_share">Share</string>
   <string name="feeling_lucky">I\'m Feeling Lucky</string>
   <string name="follow_redirect">Decode Short URL</string>

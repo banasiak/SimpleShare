@@ -31,11 +31,6 @@
       android:excludeFromRecents="true"
       android:theme="@style/Theme.SimpleShare.Transparent">
       <intent-filter>
-        <action android:name="android.intent.action.PROCESS_TEXT" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <data android:mimeType="text/*" />
-      </intent-filter>
-      <intent-filter>
         <action android:name="android.intent.action.SEND" />
         <category android:name="android.intent.category.DEFAULT" />
         <data android:mimeType="text/*" />
@@ -43,13 +38,4 @@
       </intent-filter>
     </activity>
   </application>
-
-  <!-- maybe one day Compose will support this in version 1.8.0-pre-alpha-01-go-fuck-yourself -->
-  <!-- https://issuetracker.google.com/issues/243264763 -->
-  <queries>
-    <intent>
-      <action android:name="android.intent.action.PROCESS_TEXT" />
-      <data android:mimeType="text/plain" />
-    </intent>
-  </queries>
 </manifest>

@@ -53,7 +53,6 @@ class SanitizeActivity : ComponentActivity() {
     when (effect) {
       is SanitizeEffect.Finish -> finish()
       is SanitizeEffect.OpenUrl -> launchOpenIntent(effect.url)
-      is SanitizeEffect.ReturnUrl -> returnToSender(effect.url)
       is SanitizeEffect.ShareUrl -> launchShareIntent(effect.url)
       is SanitizeEffect.ShowErrorAndFinish -> showErrorAndFinish(effect.message)
       is SanitizeEffect.ShowRateAppDialog -> showRateAppDialog()
@@ -66,12 +65,7 @@ class SanitizeActivity : ComponentActivity() {
     when (intent?.action) {
       Intent.ACTION_SEND -> {
         val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-        viewModel.postAction(SanitizeAction.IntentReceived(text = text, readOnly = true))
-      }
-      Intent.ACTION_PROCESS_TEXT -> {
-        val text = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString() // discard any spannable markup
-        val readOnly = intent.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, true)
-        viewModel.postAction(SanitizeAction.IntentReceived(text = text, readOnly = readOnly))
+        viewModel.postAction(SanitizeAction.IntentReceived(text = text))
       }
       else -> showErrorAndFinish(R.string.url_not_detected)
     }
@@ -85,23 +79,14 @@ class SanitizeActivity : ComponentActivity() {
         putExtra(Intent.EXTRA_TEXT, url)
       }
     startActivity(Intent.createChooser(shareIntent, getString(R.string.share_sanitized)))
-    finish()
+    finishAffinity()
   }
 
   private fun launchOpenIntent(url: String) {
     val uri = Uri.parse(url)
     val openIntent = Intent(Intent.ACTION_VIEW, uri)
     startActivity(openIntent)
-    finish()
-  }
-
-  private fun returnToSender(url: String) {
-    val returnIntent =
-      intent.apply {
-        putExtra(Intent.EXTRA_PROCESS_TEXT, url)
-      }
-    setResult(RESULT_OK, returnIntent)
-    finish()
+    finishAffinity()
   }
 
   private fun showRateAppDialog() {

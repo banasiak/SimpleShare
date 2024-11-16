@@ -75,13 +75,13 @@ class SanitizeViewModel @Inject constructor(
         is SanitizeAction.ButtonTapped -> onButtonTapped(action.type, state.sanitizedUrl)
         is SanitizeAction.FetchRedirect -> onFetchRedirect(state.originalUrl)
         is SanitizeAction.Dismiss -> _effectFlow.emit(SanitizeEffect.Finish)
-        is SanitizeAction.IntentReceived -> onIntentReceived(action.text, action.readOnly)
+        is SanitizeAction.IntentReceived -> onIntentReceived(action.text)
         is SanitizeAction.ParamToggled -> onParamToggle(action.param, action.value)
       }
     }
   }
 
-  private suspend fun onIntentReceived(text: String?, readOnly: Boolean) {
+  private suspend fun onIntentReceived(text: String?) {
     if (state.intentProcessed) {
       Timber.w("Intent already processed")
       return
@@ -106,7 +106,6 @@ class SanitizeViewModel @Inject constructor(
         originalUrl = okHttpUrl,
         sanitizedUrl = sanitizeUrl(okHttpUrl, params),
         parameters = params,
-        readOnly = readOnly,
         launchCount = launchCount,
         intentProcessed = true
       )
@@ -157,7 +156,6 @@ class SanitizeViewModel @Inject constructor(
     when (type) {
       ButtonType.COPY -> onCopyUrl(sanitizedUrl)
       ButtonType.OPEN -> _effectFlow.emit(SanitizeEffect.OpenUrl(sanitizedUrl))
-      ButtonType.RETURN -> _effectFlow.emit(SanitizeEffect.ReturnUrl(sanitizedUrl))
       ButtonType.SHARE -> _effectFlow.emit(SanitizeEffect.ShareUrl(sanitizedUrl))
     }
   }
