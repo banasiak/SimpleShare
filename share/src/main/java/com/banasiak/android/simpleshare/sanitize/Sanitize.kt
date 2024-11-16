@@ -11,7 +11,7 @@ import okhttp3.HttpUrl
 @Parcelize
 @TypeParceler<HttpUrl?, HttpUrlParceler>
 data class SanitizeState(
-  val hint: HintType = HintType.DEFAULT,
+  @StringRes val hint: Int = R.string.hint_decode_short_url,
   val intentProcessed: Boolean = false,
   val launchCount: Int = 0,
   val loading: Boolean = false,
@@ -50,12 +50,4 @@ enum class ButtonType {
   OPEN,
   RETURN,
   SHARE
-}
-
-enum class HintType(
-  @StringRes val string: Int,
-  val isError: Boolean
-) {
-  DEFAULT(R.string.hint_decode_short_url, false),
-  NO_REDIRECT(R.string.redirect_not_detected, true)
 }

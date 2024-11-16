@@ -149,7 +149,7 @@ class SanitizeViewModel @Inject constructor(
       return
     }
 
-    state = state.copy(hint = HintType.NO_REDIRECT, loading = false)
+    state = state.copy(hint = R.string.hint_redirect_not_detected, loading = false)
   }
 
   private suspend fun onButtonTapped(type: ButtonType, sanitizedUrl: String) {

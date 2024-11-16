@@ -7,12 +7,12 @@
   <string name="button_share">Share</string>
   <string name="feeling_lucky">I\'m Feeling Lucky</string>
   <string name="follow_redirect">Decode Short URL</string>
-  <string name="hint_decode_short_url">Tap the Cloud Download icon to decode short URLs.</string>
+  <string name="hint_decode_short_url">Tap the Cloud Download icon to decode short URLs &#x261D;</string>
   <string name="hint_did_you_know">Did You Know?</string>
-  <string name="hint_paste_text_here">Paste text containing a URL here.</string>
-  <string name="hint_use_sharesheet_instead">You can also share text from any app by using the Android Sharesheet.</string>
+  <string name="hint_paste_text_here">Paste text containing a URL here</string>
+  <string name="hint_redirect_not_detected">No Redirect Detected &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">You can also share text from any app by using the Android Sharesheet</string>
   <string name="query_parameters">Query Parameters</string>
-  <string name="redirect_not_detected">No Redirect Detected &#x1F44D;</string>
   <string name="remove_tracking">Remove Tracking Parameters</string>
   <string name="sanitized_url">Sanitized URL</string>
   <string name="share_sanitized">Share Sanitized URL</string>

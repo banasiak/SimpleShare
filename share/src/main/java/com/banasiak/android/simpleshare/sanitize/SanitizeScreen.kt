@@ -3,6 +3,10 @@ package com.banasiak.android.simpleshare.sanitize
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -110,22 +115,33 @@ private fun BottomSheetContent(
       modifier =
         Modifier
           .padding(4.dp)
-          .fillMaxSize(),
+          .fillMaxSize()
+          .animateContentSize(
+            animationSpec =
+              spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+              )
+          ),
       value = state.sanitizedUrl,
       supportingText = {
-        Text(text = stringResource(id = state.hint.string))
+        Crossfade(targetState = state.hint, label = "hint") { hint ->
+          Text(
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.End,
+            text = stringResource(id = hint)
+          )
+        }
       },
-      isError = state.hint.isError,
       readOnly = true,
       trailingIcon = {
         IconButton(
-          enabled = !state.loading && state.hint == HintType.DEFAULT,
+          enabled = !state.loading && state.hint == R.string.hint_decode_short_url,
           onClick = { postAction(SanitizeAction.FetchRedirect) }
         ) {
           Icon(
             painter = painterResource(id = R.drawable.cloud_download),
-            contentDescription = stringResource(id = R.string.follow_redirect),
-            tint = if (state.hint.isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary
+            contentDescription = stringResource(id = R.string.follow_redirect)
           )
         }
       },
