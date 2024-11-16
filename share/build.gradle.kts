@@ -82,7 +82,6 @@ dependencies {
   implementation(libs.urldetector)
   implementation(platform(libs.androidx.compose.bom))
   implementation(platform(libs.okhttp.bom))
-  ksp(libs.dagger.compiler)
   ksp(libs.dagger.hilt.android.compiler)
 
   ktlint(libs.ktlint) {

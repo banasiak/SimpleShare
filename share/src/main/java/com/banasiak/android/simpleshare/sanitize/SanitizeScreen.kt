@@ -90,72 +90,70 @@ private fun BottomSheetContent(
   postAction: InputAction,
   sheetState: SheetState
 ) {
-  Surface {
-    Column(
+  Column(
+    modifier =
+      Modifier
+        .padding(
+          start = 8.dp,
+          end = 8.dp,
+          bottom =
+            WindowInsets.navigationBars
+              .asPaddingValues()
+              .calculateBottomPadding()
+        )
+        .verticalScroll(rememberScrollState())
+  ) {
+    TopHeader(title = R.string.title_activity_sanitize)
+    AnimatedQueryParameters(state, postAction)
+    SectionHeader(title = R.string.sanitized_url)
+    TextField(
       modifier =
         Modifier
-          .padding(
-            start = 8.dp,
-            end = 8.dp,
-            bottom =
-              WindowInsets.navigationBars
-                .asPaddingValues()
-                .calculateBottomPadding()
+          .padding(4.dp)
+          .fillMaxSize(),
+      value = state.sanitizedUrl,
+      supportingText = {
+        Text(text = stringResource(id = state.hint.string))
+      },
+      isError = state.hint.isError,
+      readOnly = true,
+      trailingIcon = {
+        IconButton(
+          enabled = !state.loading && state.hint == HintType.DEFAULT,
+          onClick = { postAction(SanitizeAction.FetchRedirect) }
+        ) {
+          Icon(
+            painter = painterResource(id = R.drawable.cloud_download),
+            contentDescription = stringResource(id = R.string.follow_redirect),
+            tint = if (state.hint.isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary
           )
-          .verticalScroll(rememberScrollState())
-    ) {
-      TopHeader(title = R.string.title_activity_sanitize)
-      AnimatedQueryParameters(state, postAction)
-      SectionHeader(title = R.string.sanitized_url)
-      TextField(
+        }
+      },
+      onValueChange = { /* NO-OP */ }
+    )
+    if (state.loading) {
+      LinearProgressIndicator(
         modifier =
           Modifier
-            .padding(4.dp)
-            .fillMaxSize(),
-        value = state.sanitizedUrl,
-        supportingText = {
-          Text(text = stringResource(id = state.hint.string))
-        },
-        isError = state.hint.isError,
-        readOnly = true,
-        trailingIcon = {
-          IconButton(
-            enabled = !state.loading && state.hint == HintType.DEFAULT,
-            onClick = { postAction(SanitizeAction.FetchRedirect) }
-          ) {
-            Icon(
-              painter = painterResource(id = R.drawable.cloud_download),
-              contentDescription = stringResource(id = R.string.follow_redirect),
-              tint = if (state.hint.isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary
-            )
-          }
-        },
-        onValueChange = { /* NO-OP */ }
+            .fillMaxWidth()
+            .height(2.dp),
+        color = MaterialTheme.colorScheme.secondary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant
       )
-      if (state.loading) {
-        LinearProgressIndicator(
-          modifier =
-            Modifier
-              .fillMaxWidth()
-              .height(2.dp),
-          color = MaterialTheme.colorScheme.secondary,
-          trackColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-      } else {
-        Spacer(
-          modifier =
-            Modifier
-              .fillMaxWidth()
-              .height(2.dp)
-        )
-      }
-      Buttons(
-        enabled = state.sanitizedUrl.isNotEmpty(),
-        readOnly = state.readOnly,
-        sheetState = sheetState,
-        postAction = postAction
+    } else {
+      Spacer(
+        modifier =
+          Modifier
+            .fillMaxWidth()
+            .height(2.dp)
       )
     }
+    Buttons(
+      enabled = state.sanitizedUrl.isNotEmpty(),
+      readOnly = state.readOnly,
+      sheetState = sheetState,
+      postAction = postAction
+    )
   }
 }
 
@@ -339,5 +337,7 @@ fun SanitizeViewPreview() {
       readOnly = true,
       loading = false
     )
-  BottomSheetContent(state = state, sheetState = rememberModalBottomSheetState(), postAction = { })
+  Surface {
+    BottomSheetContent(state = state, sheetState = rememberModalBottomSheetState(), postAction = { })
+  }
 }
