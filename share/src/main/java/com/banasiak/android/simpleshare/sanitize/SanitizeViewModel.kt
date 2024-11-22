@@ -30,6 +30,8 @@ import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @HiltViewModel
 class SanitizeViewModel @Inject constructor(
@@ -63,7 +65,8 @@ class SanitizeViewModel @Inject constructor(
       // Not necessary, because if this ViewModel is recreated, the state will be restored when SanitizeState is instantiated
       // Lifecycle.Event.ON_RESUME -> {
       //   viewModelScope.launch {
-      //   state = savedState.restore<SanitizeState>() ?: SanitizeState()
+      //     state = savedState.restore<SanitizeState>() ?: SanitizeState()
+      //   }
       // }
       else -> { /* NO-OP */ }
     }
@@ -89,7 +92,7 @@ class SanitizeViewModel @Inject constructor(
 
     val url = text?.let { extractUrl(it) }
     if (text == null || url == null) {
-      Timber.w("Unable to extract URL from shared text")
+      Timber.e("Unable to detect URL in received intent data: $text")
       _effectFlow.emit(SanitizeEffect.ShowErrorAndFinish(R.string.url_not_detected))
       return
     }
@@ -134,7 +137,7 @@ class SanitizeViewModel @Inject constructor(
 
     state = state.copy(loading = true)
 
-    repository.fetchRedirectUrl(originalUrl)?.let { newUrl ->
+    repository.fetchRedirectUrl(originalUrl, minimumDuration = 1000.toDuration(DurationUnit.MILLISECONDS))?.let { newUrl ->
       Timber.d("URL redirect detected: $newUrl")
       val parameters = buildParameterMap(newUrl)
       val sanitizedUrl = sanitizeUrl(newUrl, parameters)
@@ -176,7 +179,8 @@ class SanitizeViewModel @Inject constructor(
 
   private suspend fun sanitizeUrl(url: HttpUrl?, params: Map<QueryParam, Boolean>): String {
     if (url == null) {
-      _effectFlow.emit(SanitizeEffect.ShowToast(R.string.unable_to_parse))
+      Timber.e("Unable to parse URL")
+      _effectFlow.emit(SanitizeEffect.ShowErrorAndFinish(R.string.unable_to_parse))
       return ""
     }
 

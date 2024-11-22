@@ -5,7 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.banasiak.android.simpleshare.common.DurationClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -16,10 +18,14 @@ import okhttp3.coroutines.executeAsync
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @Singleton
 class Repository @Inject constructor(
   private val dataStore: DataStore<Preferences>,
+  private val durationClock: DurationClock,
   private val httpClient: OkHttpClient
 ) {
   suspend fun setEnabledParamsForHost(host: String, params: List<String>) {
@@ -45,10 +51,20 @@ class Repository @Inject constructor(
   }
 
   @OptIn(ExperimentalCoroutinesApi::class)
-  suspend fun fetchRedirectUrl(url: HttpUrl): HttpUrl? {
+  suspend fun fetchRedirectUrl(url: HttpUrl, minimumDuration: Duration = 0.toDuration(DurationUnit.MILLISECONDS)): HttpUrl? {
+    val start = durationClock.now()
+
     val request = Request.Builder().url(url).build()
     val response = httpClient.newCall(request).executeAsync()
     val newUrl = response.request.url
+
+    val duration = durationClock.now() - start
+    if (duration < minimumDuration) {
+      val delay = minimumDuration - duration
+      Timber.d("Delaying fetchRedirectUrl() for: $delay")
+      delay(delay)
+    }
+
     return if (newUrl != url) newUrl else null
   }
 }

@@ -12,6 +12,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.banasiak.android.simpleshare.common.BuildInfo
 import com.banasiak.android.simpleshare.common.Constants
+import com.banasiak.android.simpleshare.common.DurationClock
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -24,6 +25,7 @@ import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import kotlin.time.DurationUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -73,5 +75,11 @@ object AppModule {
         )
       }
       .build()
+  }
+
+  @Provides
+  @Singleton
+  fun provideDurationClock(): DurationClock {
+    return DurationClock(DurationUnit.MILLISECONDS)
   }
 }

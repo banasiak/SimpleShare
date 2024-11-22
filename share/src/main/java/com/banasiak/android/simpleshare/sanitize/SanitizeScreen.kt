@@ -145,23 +145,7 @@ private fun BottomSheetContent(
       },
       onValueChange = { /* NO-OP */ }
     )
-    if (state.loading) {
-      LinearProgressIndicator(
-        modifier =
-          Modifier
-            .fillMaxWidth()
-            .height(2.dp),
-        color = MaterialTheme.colorScheme.secondary,
-        trackColor = MaterialTheme.colorScheme.surfaceVariant
-      )
-    } else {
-      Spacer(
-        modifier =
-          Modifier
-            .fillMaxWidth()
-            .height(2.dp)
-      )
-    }
+    LoadingIndicator(isLoading = state.loading)
     Buttons(
       enabled = state.sanitizedUrl.isNotEmpty(),
       sheetState = sheetState,
@@ -257,6 +241,30 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: Inp
         }
       )
     }
+  }
+}
+
+@Composable
+private fun LoadingIndicator(isLoading: Boolean) {
+  AnimatedVisibility(
+    visible = isLoading
+  ) {
+    LinearProgressIndicator(
+      modifier =
+        Modifier
+          .fillMaxWidth()
+          .height(2.dp),
+      color = MaterialTheme.colorScheme.secondary,
+      trackColor = MaterialTheme.colorScheme.surfaceVariant
+    )
+  }
+  AnimatedVisibility(visible = !isLoading) {
+    Spacer(
+      modifier =
+        Modifier
+          .fillMaxWidth()
+          .height(2.dp)
+    )
   }
 }
 
