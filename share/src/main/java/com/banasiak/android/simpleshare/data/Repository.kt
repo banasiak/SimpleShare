@@ -55,8 +55,12 @@ class Repository @Inject constructor(
     val start = durationClock.now()
 
     val request = Request.Builder().url(url).build()
-    val response = httpClient.newCall(request).executeAsync()
-    val newUrl = response.request.url
+    val response =
+      runCatching {
+        // catch and ignore any exceptions, such as java.net.UnknownHostException
+        httpClient.newCall(request).executeAsync()
+      }.getOrNull()
+    val newUrl = response?.request?.url
 
     val duration = durationClock.now() - start
     if (duration < minimumDuration) {

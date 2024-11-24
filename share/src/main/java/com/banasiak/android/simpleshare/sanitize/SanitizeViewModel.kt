@@ -115,10 +115,14 @@ class SanitizeViewModel @Inject constructor(
   }
 
   private fun extractUrl(text: String): String? {
-    // attempt to extract the first URL found in the string using this ancient library from LinkedIn
+    // attempt to extract the URL found in the string using this ancient library from LinkedIn
     // https://github.com/linkedin/URL-Detector
     val detector = UrlDetector(text, UrlDetectorOptions.Default)
-    return detector.detect().firstOrNull()?.toString()
+    return detector
+      .detect()
+      .map { it.toString() }
+      .sortedByDescending { it.length } // if the detector returns multiple URLs, the longest is probably the correct one
+      .firstOrNull()
   }
 
   private suspend fun onParamToggle(param: QueryParam, value: Boolean) {
