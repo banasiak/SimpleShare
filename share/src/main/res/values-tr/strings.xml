@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">URL\'yi temizle</string>
+  <string name="button_copy">Kopyala</string>
+  <string name="button_open">Açık</string>
+  <string name="button_share">Paylaşmak</string>
+  <string name="feeling_lucky">Kendimi şanslı hissediyorum</string>
+  <string name="follow_redirect">Kısa URL\'yi Çöz</string>
+  <string name="hint_decode_short_url">Kısa URL\'leri çözmek için Bulut İndirme simgesine dokunun &#x261D;</string>
+  <string name="hint_did_you_know">Biliyor musun?</string>
+  <string name="hint_paste_text_here">URL içeren metni buraya yapıştırın &#x261D;</string>
+  <string name="hint_redirect_not_detected">Yönlendirme Algılanmadı &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">Android Sharesheet\'i kullanarak herhangi bir uygulamadan metin de paylaşabilirsiniz</string>
+  <string name="query_parameters">Sorgu Parametreleri</string>
+  <string name="remove_tracking">İzleme Parametrelerini Kaldır</string>
+  <string name="sanitized_url">Temizlenmiş URL</string>
+  <string name="share_sanitized">Temizlenmiş URL\'yi Paylaş</string>
+  <string name="title_activity_sanitize">Basit URL Temizleyici</string>
+  <string name="unable_to_parse">URL Temizlenemiyor</string>
+  <string name="url_copied">URL Panoya Kopyalandı</string>
+  <string name="url_not_detected">URL Algılanamıyor</string>
+</resources>

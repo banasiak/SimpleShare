@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">Oczyść adres URL</string>
+  <string name="button_copy">Kopia</string>
+  <string name="button_open">Otwarte</string>
+  <string name="button_share">Udział</string>
+  <string name="feeling_lucky">Czuję się szczęściarzem</string>
+  <string name="follow_redirect">Dekodowanie krótkiego adresu URL</string>
+  <string name="hint_decode_short_url">Kliknij ikonę pobierania w chmurze, aby zdekodować krótkie adresy URL &#x261D;</string>
+  <string name="hint_did_you_know">Czy wiesz?</string>
+  <string name="hint_paste_text_here">Wklej tutaj tekst zawierający adres URL &#x261D;</string>
+  <string name="hint_redirect_not_detected">Nie wykryto przekierowania &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">Tekst można również udostępniać z dowolnej aplikacji za pomocą funkcji Android Sharesheet</string>
+  <string name="query_parameters">Parametry zapytania</string>
+  <string name="remove_tracking">Usuń parametry śledzenia</string>
+  <string name="sanitized_url">Wyczyszczony adres URL</string>
+  <string name="share_sanitized">Udostępnij oczyszczony adres URL</string>
+  <string name="title_activity_sanitize">Prosty oczyszczacz adresów URL</string>
+  <string name="unable_to_parse">Nie można oczyścić adresu URL</string>
+  <string name="url_copied">Skopiowano adres URL do schowka</string>
+  <string name="url_not_detected">Nie można wykryć adresu URL</string>
+</resources>

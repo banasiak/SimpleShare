@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">Désinfecter l\'URL</string>
+  <string name="button_copy">Copie</string>
+  <string name="button_open">Ouvrir</string>
+  <string name="button_share">Partager</string>
+  <string name="feeling_lucky">Je me sens chanceux</string>
+  <string name="follow_redirect">Décoder l\'URL courte</string>
+  <string name="hint_decode_short_url">Appuyez sur l\'icône Cloud Download pour décoder les URL courtes &#x261D;</string>
+  <string name="hint_did_you_know">Saviez-vous?</string>
+  <string name="hint_paste_text_here">Collez ici le texte contenant une URL &#x261D;</string>
+  <string name="hint_redirect_not_detected">Aucune redirection détectée &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">Vous pouvez également partager du texte à partir de n\'importe quelle application en utilisant Android Sharesheet</string>
+  <string name="query_parameters">Paramètres de la requête</string>
+  <string name="remove_tracking">Supprimer les paramètres de suivi</string>
+  <string name="sanitized_url">URL nettoyée</string>
+  <string name="share_sanitized">Partager l\'URL assainie</string>
+  <string name="title_activity_sanitize">Désinfectant d\'URL simple</string>
+  <string name="unable_to_parse">Impossible de nettoyer l\'URL</string>
+  <string name="url_copied">URL copiée dans le presse-papiers</string>
+  <string name="url_not_detected">Impossible de détecter l\'URL</string>
+</resources>

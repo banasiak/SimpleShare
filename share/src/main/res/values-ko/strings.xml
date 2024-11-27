@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">URL을 살균합니다</string>
+  <string name="button_copy">복사</string>
+  <string name="button_open">열려 있는</string>
+  <string name="button_share">공유하다</string>
+  <string name="feeling_lucky">나는 행운을 느낀다</string>
+  <string name="follow_redirect">짧은 URL 디코딩</string>
+  <string name="hint_decode_short_url">클라우드 다운로드 아이콘을 탭하여 짧은 URL을 디코딩하세요 ☝</string>
+  <string name="hint_did_you_know">알고 계셨나요?</string>
+  <string name="hint_paste_text_here">URL이 포함된 텍스트를 여기에 붙여넣으세요 ☝</string>
+  <string name="hint_redirect_not_detected">리디렉션이 감지되지 않았습니다 &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">Android Sharesheet를 사용하면 모든 앱에서 텍스트를 공유할 수도 있습니다.</string>
+  <string name="query_parameters">쿼리 매개변수</string>
+  <string name="remove_tracking">추적 매개변수 제거</string>
+  <string name="sanitized_url">살균된 URL</string>
+  <string name="share_sanitized">살균된 URL 공유</string>
+  <string name="title_activity_sanitize">간단한 URL 살균기</string>
+  <string name="unable_to_parse">URL을 정리할 수 없습니다</string>
+  <string name="url_copied">URL이 클립보드에 복사되었습니다</string>
+  <string name="url_not_detected">URL을 감지할 수 없습니다</string>
+</resources>

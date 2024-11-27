@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">ฆ่าเชื้อ URL</string>
+  <string name="button_copy">สำเนา</string>
+  <string name="button_open">เปิด</string>
+  <string name="button_share">แบ่งปัน</string>
+  <string name="feeling_lucky">ฉันรู้สึกโชคดี</string>
+  <string name="follow_redirect">ถอดรหัส URL สั้น</string>
+  <string name="hint_decode_short_url">แตะไอคอนดาวน์โหลดบนคลาวด์เพื่อถอดรหัส URL สั้น ☝</string>
+  <string name="hint_did_you_know">คุณรู้หรือไม่?</string>
+  <string name="hint_paste_text_here">วางข้อความที่มี URL ที่นี่ ☝</string>
+  <string name="hint_redirect_not_detected">ไม่พบการเปลี่ยนเส้นทาง &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">คุณสามารถแชร์ข้อความจากแอปใดๆ ได้ด้วยการใช้ Android Sharesheet</string>
+  <string name="query_parameters">พารามิเตอร์การค้นหา</string>
+  <string name="remove_tracking">ลบพารามิเตอร์การติดตาม</string>
+  <string name="sanitized_url">URL ที่ผ่านการฆ่าเชื้อแล้ว</string>
+  <string name="share_sanitized">แบ่งปัน URL ที่ผ่านการฆ่าเชื้อ</string>
+  <string name="title_activity_sanitize">โปรแกรมทำความสะอาด URL แบบง่าย</string>
+  <string name="unable_to_parse">ไม่สามารถฆ่าเชื้อ URL ได้</string>
+  <string name="url_copied">คัดลอก URL ไปยังคลิปบอร์ดแล้ว</string>
+  <string name="url_not_detected">ไม่สามารถตรวจจับ URL ได้</string>
+</resources>

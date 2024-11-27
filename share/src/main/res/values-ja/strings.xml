@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">URL をサニタイズする</string>
+  <string name="button_copy">コピー</string>
+  <string name="button_open">開ける</string>
+  <string name="button_share">共有</string>
+  <string name="feeling_lucky">幸運を感じています</string>
+  <string name="follow_redirect">短縮 URL をデコードする</string>
+  <string name="hint_decode_short_url">クラウドダウンロードアイコンをタップして短縮 URL をデコードします☝</string>
+  <string name="hint_did_you_know">知っていましたか？</string>
+  <string name="hint_paste_text_here">URL を含むテキストをここに貼り付けます☝</string>
+  <string name="hint_redirect_not_detected">リダイレクトは検出されませんでした&#x1F44D;?</string>
+  <string name="hint_use_sharesheet_instead">Android Sharesheet を使用して、どのアプリからでもテキストを共有できます。</string>
+  <string name="query_parameters">クエリパラメータ</string>
+  <string name="remove_tracking">追跡パラメータを削除する</string>
+  <string name="sanitized_url">サニタイズされた URL</string>
+  <string name="share_sanitized">サニタイズされた URL を共有する</string>
+  <string name="title_activity_sanitize">シンプルな URL サニタイザー</string>
+  <string name="unable_to_parse">URL をサニタイズできません</string>
+  <string name="url_copied">URL をクリップボードにコピーしました</string>
+  <string name="url_not_detected">URL を検出できません</string>
+</resources>

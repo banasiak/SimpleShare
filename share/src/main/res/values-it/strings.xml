@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">Sanifica URL</string>
+  <string name="button_copy">Copia</string>
+  <string name="button_open">Aprire</string>
+  <string name="button_share">Condividere</string>
+  <string name="feeling_lucky">Mi sento fortunato</string>
+  <string name="follow_redirect">Decodifica URL breve</string>
+  <string name="hint_decode_short_url">Tocca l\'icona Download Cloud per decodificare gli URL brevi &#x261D;</string>
+  <string name="hint_did_you_know">Lo sapevate?</string>
+  <string name="hint_paste_text_here">Incolla qui il testo contenente un URL &#x261D;</string>
+  <string name="hint_redirect_not_detected">Nessun reindirizzamento rilevato &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">Puoi anche condividere testo da qualsiasi app utilizzando Android Sharesheet</string>
+  <string name="query_parameters">Parametri di query</string>
+  <string name="remove_tracking">Rimuovi parametri di tracciamento</string>
+  <string name="sanitized_url">URL sanificato</string>
+  <string name="share_sanitized">Condividi URL sanificato</string>
+  <string name="title_activity_sanitize">Semplice sanificatore URL</string>
+  <string name="unable_to_parse">Impossibile sanificare l\'URL</string>
+  <string name="url_copied">URL copiato negli appunti</string>
+  <string name="url_not_detected">Impossibile rilevare l\'URL</string>
+</resources>

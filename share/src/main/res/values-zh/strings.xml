@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">净化 网址</string>
+  <string name="button_copy">复制</string>
+  <string name="button_open">打开</string>
+  <string name="button_share">分享</string>
+  <string name="feeling_lucky">我感觉很幸运</string>
+  <string name="follow_redirect">解码短网址</string>
+  <string name="hint_decode_short_url">点击云下载图标来解码短网址☝</string>
+  <string name="hint_did_you_know">你可知道？</string>
+  <string name="hint_paste_text_here">在此处粘贴包含 网址 的文本 ☝</string>
+  <string name="hint_redirect_not_detected">未检测到重定向&#x1F44D;?</string>
+  <string name="hint_use_sharesheet_instead">您还可以使用 Android Sharesheet 分享任何应用中的文本</string>
+  <string name="query_parameters">查询参数</string>
+  <string name="remove_tracking">删除跟踪参数</string>
+  <string name="sanitized_url">已清理的 网址</string>
+  <string name="share_sanitized">分享已清理的 网址</string>
+  <string name="title_activity_sanitize">简单的 网址 清理器</string>
+  <string name="unable_to_parse">无法清理 网址</string>
+  <string name="url_copied">网址 已复制到剪贴板</string>
+  <string name="url_not_detected">无法检测 网址</string>
+</resources>

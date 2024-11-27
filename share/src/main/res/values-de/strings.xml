@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">URL bereinigen</string>
+  <string name="button_copy">Kopie</string>
+  <string name="button_open">Offen</string>
+  <string name="button_share">Aktie</string>
+  <string name="feeling_lucky">Ich fühle mich glücklich</string>
+  <string name="follow_redirect">Kurze URL dekodieren</string>
+  <string name="hint_decode_short_url">Tippen Sie auf das Cloud-Download-Symbol, um kurze URLs zu dekodieren &#x261D;</string>
+  <string name="hint_did_you_know">Wussten Sie?</string>
+  <string name="hint_paste_text_here">Fügen Sie hier Text mit einer URL ein &#x261D;</string>
+  <string name="hint_redirect_not_detected">Keine Weiterleitung erkannt &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">Sie können auch Text aus jeder App teilen, indem Sie das Android Sharesheet verwenden</string>
+  <string name="query_parameters">Abfrageparameter</string>
+  <string name="remove_tracking">Tracking-Parameter entfernen</string>
+  <string name="sanitized_url">Bereinigter URL</string>
+  <string name="share_sanitized">Bereinigte URL freigeben</string>
+  <string name="title_activity_sanitize">Einfacher URL-Sanitizer</string>
+  <string name="unable_to_parse">URL kann nicht bereinigt werden</string>
+  <string name="url_copied">URL in die Zwischenablage kopiert</string>
+  <string name="url_not_detected">URL konnte nicht erkannt werden</string>
+</resources>
