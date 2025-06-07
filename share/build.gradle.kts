@@ -9,14 +9,13 @@ plugins {
 
 android {
   namespace = "com.banasiak.android.simpleshare"
-  compileSdk = 35
-
+  compileSdk = 36
   defaultConfig {
     applicationId = "com.banasiak.android.simpleshare"
     minSdk = 24
-    targetSdk = 35
-    versionCode = 5
-    versionName = "FIVE"
+    targetSdk = 36
+    versionCode = 6
+    versionName = "SIX"
     vectorDrawables {
       useSupportLibrary = true
     }
