@@ -6,16 +6,15 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import timber.log.Timber
 
-fun <T> SavedStateHandle.save(state: T) {
+private const val KEY_STATE = "state"
+
+fun <T : Parcelable> SavedStateHandle.save(state: T) {
   Timber.d("Persisting state to SavedStateHandle: $state")
-  if (state !is Parcelable) {
-    throw IllegalArgumentException("Unable to save state because it is not Parcelable")
-  }
-  this.set("state", state)
+  this[KEY_STATE] = state
 }
 
-fun <T> SavedStateHandle.restore(): T? {
-  val state = this.get<T>("state")
+fun <T : Parcelable> SavedStateHandle.restore(): T? {
+  val state = this.get<T>(KEY_STATE)
   Timber.d("Loaded state from SavedStateHandle: $state")
   return state
 }
