@@ -1,7 +1,6 @@
 package com.banasiak.android.simpleshare.sanitize
 
 import android.content.ClipData
-import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.os.Build
 import android.os.PersistableBundle
@@ -88,7 +87,7 @@ class SanitizeViewModel @Inject constructor(
     }
 
     val url = text?.let { extractUrl(it) }
-    if (text == null || url == null) {
+    if (url == null) {
       Timber.e("Unable to detect URL in received intent data: $text")
       _effectFlow.send(SanitizeEffect.ShowErrorAndFinish(R.string.url_not_detected))
       return
@@ -118,8 +117,7 @@ class SanitizeViewModel @Inject constructor(
     return detector
       .detect()
       .map { it.toString() }
-      .sortedByDescending { it.length } // if the detector returns multiple URLs, the longest is probably the correct one
-      .firstOrNull()
+      .maxByOrNull { it.length } // if the detector returns multiple URLs, the longest is probably the correct one
   }
 
   private suspend fun onParamToggle(param: QueryParam, value: Boolean) {
@@ -173,9 +171,7 @@ class SanitizeViewModel @Inject constructor(
 
   private suspend fun onCopyUrl(url: String) {
     val clip = ClipData.newPlainText("url", url)
-    val isSensitive = if (isTiramisu()) ClipDescription.EXTRA_IS_SENSITIVE else Constants.EXTRA_IS_SENSITIVE
-
-    clip.apply { description.extras = PersistableBundle().apply { putBoolean(isSensitive, false) } }
+    clip.apply { description.extras = PersistableBundle().apply { putBoolean(Constants.EXTRA_IS_SENSITIVE, false) } }
     clipboardManager.setPrimaryClip(clip)
 
     if (!isTiramisu()) {
