@@ -97,7 +97,6 @@ dependencies {
   testImplementation(libs.mockk.android)
   testImplementation(libs.okhttp.mockwebserver)
   testImplementation(libs.turbine)
-  testImplementation(platform(libs.okhttp.bom))
   testRuntimeOnly(libs.junit.platform.launcher)
 
   ktlint(libs.ktlint) {
