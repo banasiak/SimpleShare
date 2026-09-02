@@ -9,6 +9,7 @@
   <string name="hint_decode_short_url">클라우드 다운로드 아이콘을 탭하여 짧은 URL을 디코딩하세요 ☝</string>
   <string name="hint_did_you_know">알고 계셨나요?</string>
   <string name="hint_paste_text_here">URL이 포함된 텍스트를 여기에 붙여넣으세요 ☝</string>
+  <string name="hint_redirect_failed">네트워크 오류, 다시 시도하려면 탭하세요 &#x261D;</string>
   <string name="hint_redirect_not_detected">리디렉션이 감지되지 않았습니다 &#x1F44D;</string>
   <string name="hint_use_sharesheet_instead">Android Sharesheet를 사용하면 모든 앱에서 텍스트를 공유할 수도 있습니다.</string>
   <string name="query_parameters">쿼리 매개변수</string>

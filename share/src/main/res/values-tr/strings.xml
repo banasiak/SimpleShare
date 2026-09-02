@@ -9,6 +9,7 @@
   <string name="hint_decode_short_url">Kısa URL\'leri çözmek için Bulut İndirme simgesine dokunun &#x261D;</string>
   <string name="hint_did_you_know">Biliyor musun?</string>
   <string name="hint_paste_text_here">URL içeren metni buraya yapıştırın &#x261D;</string>
+  <string name="hint_redirect_failed">Ağ hatası, yeniden denemek için dokunun &#x261D;</string>
   <string name="hint_redirect_not_detected">Yönlendirme Algılanmadı &#x1F44D;</string>
   <string name="hint_use_sharesheet_instead">Android Sharesheet\'i kullanarak herhangi bir uygulamadan metin de paylaşabilirsiniz</string>
   <string name="query_parameters">Sorgu Parametreleri</string>

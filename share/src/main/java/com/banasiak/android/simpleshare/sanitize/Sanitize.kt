@@ -12,6 +12,7 @@ import okhttp3.HttpUrl
 @TypeParceler<HttpUrl?, HttpUrlParceler>
 data class SanitizeState(
   @StringRes val hint: Int = R.string.hint_decode_short_url,
+  val canFetchRedirect: Boolean = true,
   val intentProcessed: Boolean = false,
   val launchCount: Int = 0,
   val loading: Boolean = false,

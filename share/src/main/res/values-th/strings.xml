@@ -9,6 +9,7 @@
   <string name="hint_decode_short_url">แตะไอคอนดาวน์โหลดบนคลาวด์เพื่อถอดรหัส URL สั้น ☝</string>
   <string name="hint_did_you_know">คุณรู้หรือไม่?</string>
   <string name="hint_paste_text_here">วางข้อความที่มี URL ที่นี่ ☝</string>
+  <string name="hint_redirect_failed">เครือข่ายผิดพลาด แตะเพื่อลองใหม่ &#x261D;</string>
   <string name="hint_redirect_not_detected">ไม่พบการเปลี่ยนเส้นทาง &#x1F44D;</string>
   <string name="hint_use_sharesheet_instead">คุณสามารถแชร์ข้อความจากแอปใดๆ ได้ด้วยการใช้ Android Sharesheet</string>
   <string name="query_parameters">พารามิเตอร์การค้นหา</string>

@@ -22,6 +22,12 @@ import javax.inject.Singleton
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
+sealed interface RedirectResult {
+  data class Redirected(val url: HttpUrl) : RedirectResult
+  data object NoRedirect : RedirectResult
+  data object Failed : RedirectResult
+}
+
 @Singleton
 class Repository @Inject constructor(
   private val dataStore: DataStore<Preferences>,
@@ -54,22 +60,25 @@ class Repository @Inject constructor(
     return count
   }
 
-  suspend fun fetchRedirectUrl(url: HttpUrl, minimumDuration: Duration = 0.milliseconds): HttpUrl? {
+  suspend fun fetchRedirectUrl(url: HttpUrl, minimumDuration: Duration = 0.milliseconds): RedirectResult {
     val start = durationClock.now()
 
     val request = Request.Builder().url(url).build()
     // executeAsync() resumes on the caller's dispatcher, which is the main thread for viewModelScope.
     // Closing an unread HTTP/2 response body writes a RST_STREAM frame, so the close is real network
     // I/O and throws NetworkOnMainThreadException unless the whole call is confined to Dispatchers.IO.
-    val newUrl =
+    val result =
       withContext(Dispatchers.IO) {
         try {
           // the response body is never read, but it still has to be closed to release the connection
-          httpClient.newCall(request).executeAsync().use { it.request.url }
+          httpClient.newCall(request).executeAsync().use { response ->
+            val newUrl = response.request.url
+            if (newUrl != url) RedirectResult.Redirected(newUrl) else RedirectResult.NoRedirect
+          }
         } catch (e: IOException) {
-          // catch and ignore any network failures, such as java.net.UnknownHostException
+          // a network failure says nothing about whether the URL redirects, so it stays retryable
           Timber.w(e, "Unable to resolve redirects for: $url")
-          null
+          RedirectResult.Failed
         }
       }
 
@@ -80,6 +89,6 @@ class Repository @Inject constructor(
       delay(delay)
     }
 
-    return if (newUrl != url) newUrl else null
+    return result
   }
 }

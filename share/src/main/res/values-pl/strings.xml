@@ -9,6 +9,7 @@
   <string name="hint_decode_short_url">Kliknij ikonę pobierania w chmurze, aby zdekodować krótkie adresy URL &#x261D;</string>
   <string name="hint_did_you_know">Czy wiesz?</string>
   <string name="hint_paste_text_here">Wklej tutaj tekst zawierający adres URL &#x261D;</string>
+  <string name="hint_redirect_failed">Błąd sieci, dotknij, aby ponowić &#x261D;</string>
   <string name="hint_redirect_not_detected">Nie wykryto przekierowania &#x1F44D;</string>
   <string name="hint_use_sharesheet_instead">Tekst można również udostępniać z dowolnej aplikacji za pomocą funkcji Android Sharesheet</string>
   <string name="query_parameters">Parametry zapytania</string>
