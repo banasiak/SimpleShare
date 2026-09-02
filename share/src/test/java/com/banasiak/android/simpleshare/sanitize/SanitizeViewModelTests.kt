@@ -60,8 +60,8 @@ class SanitizeViewModelTests {
 
       // then
       val state = vm.stateFlow.value
-      state.parameters.keys.map { it.name } shouldBeEqualTo listOf("utm_source", "id")
-      state.parameters.values.all { it }.shouldBeFalse()
+      state.parameters.map { it.name } shouldBeEqualTo listOf("utm_source", "id")
+      state.parameters.any { it.enabled }.shouldBeFalse()
       state.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p"
     }
 
@@ -80,14 +80,32 @@ class SanitizeViewModelTests {
   @Test
   fun `given a url that repeats a parameter name, when the intent arrives, then every occurrence is listed`() =
     runTest {
-      // reading the query by name returns only the first match, which used to drop tag=y outright
+      // application/x-www-form-urlencoded produces repeated names for multi-valued form controls, so
+      // this is ordinary rather than malformed. Reading the query by name would return only the
+      // first match and drop tag=y before the user ever saw it.
       val vm = viewModel()
 
       vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?tag=x&tag=y"))
 
-      val parameters = vm.stateFlow.value.parameters.keys.toList()
-      parameters.map { it.name } shouldBeEqualTo listOf("tag", "tag")
-      parameters.map { it.value } shouldBeEqualTo listOf("x", "y")
+      vm.stateFlow.value.parameters shouldBeEqualTo
+        listOf(QueryParam("tag", "x"), QueryParam("tag", "y"))
+
+      // both survive into the output when the name is kept
+      vm.postAction(SanitizeAction.ParamToggled(0, true))
+      vm.postAction(SanitizeAction.ParamToggled(1, true))
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?tag=x&tag=y"
+    }
+
+  @Test
+  fun `given a parameter repeated with the same value, when the intent arrives, then both are still listed`() =
+    runTest {
+      // a map keyed on name and value could not represent this pair at all; a list can
+      val vm = viewModel()
+
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?a=1&a=1"))
+
+      vm.stateFlow.value.parameters shouldBeEqualTo
+        listOf(QueryParam("a", "1"), QueryParam("a", "1"))
     }
 
   @Test
@@ -101,7 +119,8 @@ class SanitizeViewModelTests {
       vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1"))
 
       // then
-      vm.stateFlow.value.parameters[QueryParam("id", "1")] shouldBeEqualTo true
+      vm.stateFlow.value.parameters shouldBeEqualTo
+        listOf(QueryParam("utm_source", "a"), QueryParam("id", "1", enabled = true))
       vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?id=1"
     }
 
@@ -150,7 +169,7 @@ class SanitizeViewModelTests {
       val vm = viewModel()
       vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1"))
 
-      vm.postAction(SanitizeAction.ParamToggled(QueryParam("id", "1"), true))
+      vm.postAction(SanitizeAction.ParamToggled(index = 1, enabled = true))
 
       vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?id=1"
     }
@@ -172,7 +191,7 @@ class SanitizeViewModelTests {
       // then
       val state = vm.stateFlow.value
       state.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/full"
-      state.parameters.keys.map { it.name } shouldBeEqualTo listOf("utm_source")
+      state.parameters.map { it.name } shouldBeEqualTo listOf("utm_source")
       // the resolved url may itself be a redirect, so the action stays available
       state.canFetchRedirect.shouldBeTrue()
       state.loading.shouldBeFalse()

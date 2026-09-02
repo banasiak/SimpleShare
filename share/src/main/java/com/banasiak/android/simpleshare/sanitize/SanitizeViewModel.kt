@@ -72,7 +72,7 @@ class SanitizeViewModel @Inject constructor(
         is SanitizeAction.FetchRedirect -> onFetchRedirect(state.originalUrl)
         is SanitizeAction.Dismiss -> _effectFlow.send(SanitizeEffect.Finish)
         is SanitizeAction.IntentReceived -> onIntentReceived(action.text)
-        is SanitizeAction.ParamToggled -> onParamToggle(action.param, action.value)
+        is SanitizeAction.ParamToggled -> onParamToggle(action.index, action.enabled)
       }
     }
   }
@@ -91,7 +91,7 @@ class SanitizeViewModel @Inject constructor(
     }
 
     val okHttpUrl = url.toHttpsUrlOrNull()
-    val params = buildParameterMap(okHttpUrl)
+    val params = buildParameterList(okHttpUrl)
 
     val launchCount = repository.getLaunchCountThenIncrement()
     // potentially prompt for a review every 10 app launches
@@ -117,10 +117,9 @@ class SanitizeViewModel @Inject constructor(
       .maxByOrNull { it.length } // if the detector returns multiple URLs, the longest is probably the correct one
   }
 
-  private suspend fun onParamToggle(param: QueryParam, value: Boolean) {
-    Timber.d("onParamToggle: param=$param, value=$value")
-    val updatedParams = state.parameters.toMutableMap()
-    updatedParams[param] = value
+  private suspend fun onParamToggle(index: Int, enabled: Boolean) {
+    Timber.d("onParamToggle: index=$index, enabled=$enabled")
+    val updatedParams = state.parameters.mapIndexed { i, param -> if (i == index) param.copy(enabled = enabled) else param }
     state =
       state.copy(
         parameters = updatedParams,
@@ -137,7 +136,7 @@ class SanitizeViewModel @Inject constructor(
       when (val result = repository.fetchRedirectUrl(originalUrl, minimumDuration = 1.seconds)) {
         is RedirectResult.Redirected -> {
           Timber.d("URL redirect detected: ${result.url}")
-          val parameters = buildParameterMap(result.url)
+          val parameters = buildParameterList(result.url)
           val sanitizedUrl = sanitizeUrl(result.url, parameters)
           // the new URL may redirect again, so leave the action available and clear any stale error
           state.copy(
@@ -176,7 +175,7 @@ class SanitizeViewModel @Inject constructor(
     _effectFlow.send(SanitizeEffect.Finish)
   }
 
-  private suspend fun sanitizeUrl(url: HttpUrl?, params: Map<QueryParam, Boolean>): String {
+  private suspend fun sanitizeUrl(url: HttpUrl?, params: List<QueryParam>): String {
     if (url == null) {
       Timber.e("Unable to parse URL")
       _effectFlow.send(SanitizeEffect.ShowErrorAndFinish(R.string.unable_to_parse))
@@ -189,29 +188,34 @@ class SanitizeViewModel @Inject constructor(
       .port(url.port) // a non-default port is part of the address, not tracking cruft
       .encodedPath(url.encodedPath)
       .apply {
-        params.filter { item -> item.value }
-          .forEach { item -> addQueryParameter(name = item.key.name, value = item.key.value) }
+        params.filter { it.enabled }
+          .forEach { addQueryParameter(name = it.name, value = it.value) }
         // the fragment identifies a location within the page, so dropping it can break the link
         encodedFragment(url.encodedFragment)
       }.build().toString()
   }
 
-  private suspend fun buildParameterMap(url: HttpUrl?): Map<QueryParam, Boolean> {
-    if (url == null) return emptyMap()
+  private suspend fun buildParameterList(url: HttpUrl?): List<QueryParam> {
+    if (url == null) return emptyList()
 
     val enabledParamNames = repository.getEnabledParamsForHost(url.host)
-    // walking the query by index rather than by name costs nothing and keeps ?tag=x&tag=y as two
-    // entries; only parameters identical in both name and value collapse into one
-    return (0 until url.querySize).associate { index ->
+    // walk the query by index: queryParameterNames is a Set and queryParameter() returns only the
+    // first match, so a name-keyed read silently drops every repeat before the user ever sees it
+    return (0 until url.querySize).map { index ->
       val name = url.queryParameterName(index)
-      QueryParam(name = name, value = url.queryParameterValue(index)) to enabledParamNames.contains(name)
+      QueryParam(
+        name = name,
+        value = url.queryParameterValue(index),
+        // preferences are stored per name, so repeats of a kept name all come back enabled
+        enabled = enabledParamNames.contains(name)
+      )
     }
   }
 
   private suspend fun persistEnabledParameters() {
     val url = state.originalUrl ?: return
 
-    val enabledParams = state.parameters.filter { it.value }.map { it.key.name }.distinct()
+    val enabledParams = state.parameters.filter { it.enabled }.map { it.name }.distinct()
     repository.setEnabledParamsForHost(url.host, enabledParams)
   }
 

@@ -17,14 +17,14 @@ data class SanitizeState(
   val launchCount: Int = 0,
   val loading: Boolean = false,
   val originalUrl: HttpUrl? = null,
-  val parameters: Map<QueryParam, Boolean> = emptyMap(),
+  val parameters: List<QueryParam> = emptyList(),
   val sanitizedUrl: String = ""
 ) : Parcelable
 
 sealed class SanitizeAction {
   data class ButtonTapped(val type: ButtonType) : SanitizeAction()
   data class IntentReceived(val text: String?) : SanitizeAction()
-  data class ParamToggled(val param: QueryParam, val value: Boolean) : SanitizeAction()
+  data class ParamToggled(val index: Int, val enabled: Boolean) : SanitizeAction()
   data object Dismiss : SanitizeAction()
   data object FetchRedirect : SanitizeAction()
 }
@@ -38,10 +38,13 @@ sealed class SanitizeEffect {
   data object ShowRateAppDialog : SanitizeEffect()
 }
 
+// a query is an ordered list of name/value pairs, not a map: a name may legitimately repeat, and
+// application/x-www-form-urlencoded actively produces that for multi-valued form controls
 @Parcelize
 data class QueryParam(
   val name: String,
-  val value: String?
+  val value: String?,
+  val enabled: Boolean = false
 ) : Parcelable
 
 enum class ButtonType {
