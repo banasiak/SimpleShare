@@ -15,7 +15,7 @@ android {
   defaultConfig {
     applicationId = "com.banasiak.android.simpleshare"
     minSdk = 24
-    targetSdk = 36
+    targetSdk = 37
     versionCode = 6
     versionName = "SIX"
     vectorDrawables {
