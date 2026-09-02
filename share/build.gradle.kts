@@ -1,6 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.hilt.android)
@@ -9,7 +10,8 @@ plugins {
 
 android {
   namespace = "com.banasiak.android.simpleshare"
-  compileSdk = 36
+  compileSdk = 37
+  compileSdkMinor = 1
   defaultConfig {
     applicationId = "com.banasiak.android.simpleshare"
     minSdk = 24
@@ -37,10 +39,6 @@ android {
     targetCompatibility = JavaVersion.VERSION_17
   }
 
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17.majorVersion
-  }
-
   packaging {
     resources {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -48,12 +46,17 @@ android {
   }
 }
 
+kotlin {
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_17
+  }
+}
+
 composeCompiler {
-  enableStrongSkippingMode = true
   reportsDestination = layout.buildDirectory.dir("compose_compiler")
 }
 
-val ktlint: Configuration by configurations.creating
+val ktlint: Configuration = configurations.create("ktlint")
 
 dependencies {
   debugImplementation(libs.androidx.compose.ui.tooling)
@@ -65,12 +68,9 @@ dependencies {
   implementation(libs.androidx.compose.ui.tooling.preview.android)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.datastore)
-  implementation(libs.androidx.hilt.navigation.compose)
   implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.lifecycle.runtime.ktx)
-  implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
-  implementation(libs.androidx.navigation.compose)
   implementation(libs.dagger.hilt.android)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.material)
@@ -90,7 +90,7 @@ dependencies {
   }
 }
 
-val ktlintCheck by tasks.registering(JavaExec::class) {
+tasks.register<JavaExec>("ktlintCheck") {
   group = LifecycleBasePlugin.VERIFICATION_GROUP
   description = "Check Kotlin code style"
   classpath = ktlint
@@ -104,7 +104,7 @@ val ktlintCheck by tasks.registering(JavaExec::class) {
 }
 
 tasks.check {
-  dependsOn(ktlintCheck)
+  dependsOn("ktlintCheck")
 }
 
 tasks.register<JavaExec>("format") {
