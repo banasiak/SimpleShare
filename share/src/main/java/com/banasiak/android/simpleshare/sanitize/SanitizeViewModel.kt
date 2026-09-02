@@ -1,9 +1,6 @@
 package com.banasiak.android.simpleshare.sanitize
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.os.Build
-import android.os.PersistableBundle
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -13,7 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
-import com.banasiak.android.simpleshare.common.Constants
+import com.banasiak.android.simpleshare.common.ClipboardHelper
 import com.banasiak.android.simpleshare.common.restore
 import com.banasiak.android.simpleshare.common.save
 import com.banasiak.android.simpleshare.common.toHttpsUrlOrNull
@@ -35,7 +32,7 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class SanitizeViewModel @Inject constructor(
   private val buildInfo: BuildInfo,
-  private val clipboardManager: ClipboardManager,
+  private val clipboard: ClipboardHelper,
   private val repository: Repository,
   private val savedState: SavedStateHandle
 ) : ViewModel(), LifecycleEventObserver {
@@ -170,9 +167,7 @@ class SanitizeViewModel @Inject constructor(
   }
 
   private suspend fun onCopyUrl(url: String) {
-    val clip = ClipData.newPlainText("url", url)
-    clip.apply { description.extras = PersistableBundle().apply { putBoolean(Constants.EXTRA_IS_SENSITIVE, false) } }
-    clipboardManager.setPrimaryClip(clip)
+    clipboard.copy(url)
 
     if (!isTiramisu()) {
       // only show a toast notification for devices < Android 13 (otherwise the system overlays its own UI)
