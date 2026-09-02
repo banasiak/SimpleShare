@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -93,17 +95,17 @@ private fun BottomSheetContent(
   postAction: InputAction,
   sheetState: SheetState
 ) {
+  // in landscape the navigation bar and any display cutout sit along the sides, not just the bottom
+  val insets =
+    WindowInsets.safeDrawing
+      .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+      .asPaddingValues()
+
   Column(
     modifier =
       Modifier
-        .padding(
-          start = 8.dp,
-          end = 8.dp,
-          bottom =
-            WindowInsets.navigationBars
-              .asPaddingValues()
-              .calculateBottomPadding()
-        )
+        .padding(insets)
+        .padding(horizontal = 8.dp)
         .verticalScroll(rememberScrollState())
   ) {
     TopHeader(title = R.string.title_activity_sanitize)
