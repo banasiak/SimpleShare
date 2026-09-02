@@ -10,7 +10,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.compose.runtime.DisposableEffect
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -38,9 +37,10 @@ class SanitizeActivity : ComponentActivity() {
     // handle the intent once per Activity instance rather than on every STARTED transition
     handleIntent(intent)
 
+    // the BottomSheet applies its own insets so this transparent activity cleanly overlays the app that
+    // calls our intent; there is deliberately no setDecorFitsSystemWindows() call to contradict this,
+    // which would be a no-op anyway now that the platform enforces edge-to-edge
     enableEdgeToEdge()
-    // handle NavigationBar window insets manually in the BottomSheet so this transparent activity cleanly overlays the app that calls our intent
-    WindowCompat.setDecorFitsSystemWindows(window, true)
     setContent {
       val lifecycle = LocalLifecycleOwner.current.lifecycle
       DisposableEffect(lifecycle) {
