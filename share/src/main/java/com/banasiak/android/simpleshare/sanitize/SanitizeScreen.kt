@@ -9,19 +9,17 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandIn
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -39,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +48,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -115,7 +116,7 @@ private fun BottomSheetContent(
       modifier =
         Modifier
           .padding(4.dp)
-          .fillMaxSize()
+          .fillMaxWidth()
           .animateContentSize(
             animationSpec =
               spring(
@@ -161,9 +162,9 @@ private fun TopHeader(@StringRes title: Int) {
   Row(
     modifier =
       Modifier
-        .fillMaxSize()
-        .padding(bottom = 16.dp)
-        .wrapContentSize(Alignment.Center)
+        .fillMaxWidth()
+        .padding(bottom = 16.dp),
+    horizontalArrangement = Arrangement.Center
   ) {
     Text(
       text = stringResource(id = title),
@@ -175,10 +176,13 @@ private fun TopHeader(@StringRes title: Int) {
 
 @Composable
 private fun AnimatedQueryParameters(state: SanitizeState, postAction: InputAction) {
-  // everything is going to listen to this flag
+  // everything is going to listen to this flag; flipping it from a LaunchedEffect means the whole
+  // list is measured and laid out before it animates in, without writing to state during composition
   var visible: Boolean by remember { mutableStateOf(false) }
+  LaunchedEffect(state.parameters) {
+    visible = state.parameters.isNotEmpty()
+  }
 
-  // add the query parameters SectionHeader, so far so good...
   AnimatedVisibility(
     visible = visible,
     enter = expandIn()
@@ -186,18 +190,17 @@ private fun AnimatedQueryParameters(state: SanitizeState, postAction: InputActio
     SectionHeader(title = R.string.query_parameters)
   }
 
-  // this is gross, but it basically adds each ParameterItem in the map, but only animates them into existence just before the final one is composed and visible
-  state.parameters.toList().forEachIndexed { i: Int, pair: Pair<QueryParam, Boolean> ->
+  state.parameters.forEach { (parameter: QueryParam, value: Boolean) ->
     AnimatedVisibility(
       visible = visible,
       enter = expandIn()
     ) {
-      ParameterItem(parameter = pair.first, value = pair.second, postAction = postAction)
+      ParameterItem(
+        parameter = parameter,
+        value = value,
+        onToggle = { postAction(SanitizeAction.ParamToggled(parameter, it)) }
+      )
     }
-
-    // trigger the visible flag on the second-to-last item
-    // therefore, when the last one is added, that will be the final recompose and the measurements will be correct
-    if (i == state.parameters.size - 1) visible = true
   }
 }
 
@@ -211,62 +214,55 @@ private fun SectionHeader(@StringRes title: Int) {
 }
 
 @Composable
-private fun ParameterItem(parameter: QueryParam, value: Boolean, postAction: InputAction) {
-  Column(
-    modifier = Modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.Start
+private fun ParameterItem(parameter: QueryParam, value: Boolean, onToggle: (Boolean) -> Unit) {
+  Row(
+    modifier = Modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically
   ) {
-    Row {
-      TextField(
-        modifier =
-          Modifier
-            .padding(4.dp)
-            .fillMaxSize(0.8f),
-        value = parameter.value ?: "",
-        label = { Text(parameter.name) },
-        maxLines = 1,
-        readOnly = true,
-        onValueChange = { /* NO-OP */ }
-      )
+    TextField(
+      modifier =
+        Modifier
+          .padding(4.dp)
+          .weight(1f),
+      value = parameter.value ?: "",
+      label = { Text(parameter.name) },
+      maxLines = 1,
+      readOnly = true,
+      onValueChange = { /* NO-OP */ }
+    )
 
-      val checkedState = remember { mutableStateOf(value) }
-      Checkbox(
-        modifier =
-          Modifier
-            .padding(8.dp)
-            .fillMaxSize(),
-        checked = checkedState.value,
-        onCheckedChange = {
-          checkedState.value = it
-          postAction(SanitizeAction.ParamToggled(parameter, it))
-        }
-      )
-    }
+    // drive the checkbox straight from the hoisted state, otherwise it keeps showing the previous
+    // URL's values when the parameter list is replaced (e.g. after decoding a short URL)
+    Checkbox(
+      modifier =
+        Modifier
+          .padding(8.dp)
+          .semantics { contentDescription = parameter.name },
+      checked = value,
+      onCheckedChange = onToggle
+    )
   }
 }
 
 @Composable
 private fun LoadingIndicator(isLoading: Boolean) {
-  AnimatedVisibility(
-    visible = isLoading
+  // always reserve the track height so the buttons below don't shift when loading starts and stops
+  Box(
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .height(2.dp)
   ) {
-    LinearProgressIndicator(
-      modifier =
-        Modifier
-          .fillMaxWidth()
-          .height(2.dp),
-      color = MaterialTheme.colorScheme.secondary,
-      trackColor = MaterialTheme.colorScheme.surfaceVariant
-    )
-  }
-  AnimatedVisibility(visible = !isLoading) {
-    Spacer(
-      modifier =
-        Modifier
-          .fillMaxWidth()
-          .height(2.dp)
-    )
+    AnimatedVisibility(visible = isLoading) {
+      LinearProgressIndicator(
+        modifier =
+          Modifier
+            .fillMaxWidth()
+            .height(2.dp),
+        color = MaterialTheme.colorScheme.secondary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant
+      )
+    }
   }
 }
 
@@ -278,32 +274,29 @@ private fun Buttons(
   postAction: InputAction
 ) {
   val scope = rememberCoroutineScope()
-  Column(
+  Row(
     modifier =
       Modifier
         .padding(vertical = 16.dp)
-        .fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
+        .fillMaxWidth(),
+    horizontalArrangement = Arrangement.Center
   ) {
-    Row {
-      ActionButton(title = R.string.button_share, enabled = enabled) {
-        scope.launch {
-          sheetState.hide()
-          postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
-        }
+    ActionButton(title = R.string.button_share, enabled = enabled) {
+      scope.launch {
+        sheetState.hide()
+        postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
       }
-      ActionButton(title = R.string.button_copy, enabled = enabled) {
-        scope.launch {
-          sheetState.hide()
-          postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
-        }
+    }
+    ActionButton(title = R.string.button_copy, enabled = enabled) {
+      scope.launch {
+        sheetState.hide()
+        postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
       }
-      ActionButton(title = R.string.button_open, enabled = enabled, color = MaterialTheme.colorScheme.tertiary) {
-        scope.launch {
-          sheetState.hide()
-          postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN))
-        }
+    }
+    ActionButton(title = R.string.button_open, enabled = enabled, color = MaterialTheme.colorScheme.tertiary) {
+      scope.launch {
+        sheetState.hide()
+        postAction(SanitizeAction.ButtonTapped(ButtonType.OPEN))
       }
     }
   }
