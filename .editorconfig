@@ -956,10 +956,15 @@ ktlint_experimental = disabled
 ktlint_standard_annotation = disabled
 ktlint_function_naming_ignore_when_annotated_with = Composable
 ktlint_standard_blank-line-before-declaration = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+ktlint_standard_chain-method-continuation = disabled
+ktlint_standard_class-signature = disabled
+ktlint_standard_function-expression-body = disabled
 ktlint_standard_function-signature = disabled
 ktlint_standard_parameter-list-wrapping = disabled
 ktlint_standard_spacing-between-declarations-with-annotations = disabled
 ktlint_standard_value-parameter-comment = disabled
+ktlint_standard_when-entry-bracing = disabled
 
 [{*.markdown,*.md}]
 ij_markdown_force_one_space_after_blockquote_symbol = true
