@@ -190,15 +190,14 @@ private fun AnimatedQueryParameters(state: SanitizeState, postAction: InputActio
     SectionHeader(title = R.string.query_parameters)
   }
 
-  state.parameters.forEach { (parameter: QueryParam, value: Boolean) ->
+  state.parameters.forEachIndexed { index: Int, parameter: QueryParam ->
     AnimatedVisibility(
       visible = visible,
       enter = expandIn()
     ) {
       ParameterItem(
         parameter = parameter,
-        value = value,
-        onToggle = { postAction(SanitizeAction.ParamToggled(parameter, it)) }
+        onToggle = { enabled -> postAction(SanitizeAction.ParamToggled(index, enabled)) }
       )
     }
   }
@@ -214,7 +213,7 @@ private fun SectionHeader(@StringRes title: Int) {
 }
 
 @Composable
-private fun ParameterItem(parameter: QueryParam, value: Boolean, onToggle: (Boolean) -> Unit) {
+private fun ParameterItem(parameter: QueryParam, onToggle: (Boolean) -> Unit) {
   Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
@@ -238,7 +237,7 @@ private fun ParameterItem(parameter: QueryParam, value: Boolean, onToggle: (Bool
         Modifier
           .padding(8.dp)
           .semantics { contentDescription = parameter.name },
-      checked = value,
+      checked = parameter.enabled,
       onCheckedChange = onToggle
     )
   }
@@ -332,12 +331,12 @@ fun SanitizeViewPreview() {
       // https://www.banasiak.com/share?utm_source=AAAAA&utm_medium=BBBBBB&utm_campaign=CCCCCC&utm_term=DDDDDD&utm_content=EEEEEE
       sanitizedUrl = "https://www.banasiak.com/share?utm_source=AAAAA&utm_campaign=CCCCCC&utm_content=EEEEEE",
       parameters =
-        mapOf(
-          QueryParam("utm_source", "AAAAAA") to true,
-          QueryParam("utm_medium", "BBBBBB") to false,
-          QueryParam("utm_campaign", "CCCCCC") to true,
-          QueryParam("utm_term", "DDDDDD") to false,
-          QueryParam("utm_content", "EEEEEE") to true
+        listOf(
+          QueryParam("utm_source", "AAAAAA", enabled = true),
+          QueryParam("utm_medium", "BBBBBB", enabled = false),
+          QueryParam("utm_campaign", "CCCCCC", enabled = true),
+          QueryParam("utm_term", "DDDDDD", enabled = false),
+          QueryParam("utm_content", "EEEEEE", enabled = true)
         ),
       loading = false
     )
