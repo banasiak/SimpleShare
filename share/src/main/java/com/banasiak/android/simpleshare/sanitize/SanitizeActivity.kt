@@ -1,7 +1,7 @@
 package com.banasiak.android.simpleshare.sanitize
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.compose.runtime.DisposableEffect
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -88,9 +89,15 @@ class SanitizeActivity : ComponentActivity() {
   }
 
   private fun launchOpenIntent(url: String) {
-    val uri = Uri.parse(url)
-    val openIntent = Intent(Intent.ACTION_VIEW, uri)
-    startActivity(openIntent)
+    val openIntent = Intent(Intent.ACTION_VIEW, url.toUri())
+    try {
+      startActivity(openIntent)
+    } catch (e: ActivityNotFoundException) {
+      // a device with no browser installed has nothing to hand this URL to
+      Timber.e(e, "Unable to open URL: $url")
+      showErrorAndFinish(R.string.no_app_to_open_url)
+      return
+    }
     finishAffinity()
   }
 

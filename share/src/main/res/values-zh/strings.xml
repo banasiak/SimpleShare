@@ -12,6 +12,7 @@
   <string name="hint_redirect_failed">网络错误，点按重试 &#x261D;</string>
   <string name="hint_redirect_not_detected">未检测到重定向&#x1F44D;?</string>
   <string name="hint_use_sharesheet_instead">您还可以使用 Android Sharesheet 分享任何应用中的文本</string>
+  <string name="no_app_to_open_url">没有可打开该网址的应用</string>
   <string name="query_parameters">查询参数</string>
   <string name="remove_tracking">删除跟踪参数</string>
   <string name="sanitized_url">已清理的 网址</string>

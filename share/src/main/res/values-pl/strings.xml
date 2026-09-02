@@ -12,6 +12,7 @@
   <string name="hint_redirect_failed">Błąd sieci, dotknij, aby ponowić &#x261D;</string>
   <string name="hint_redirect_not_detected">Nie wykryto przekierowania &#x1F44D;</string>
   <string name="hint_use_sharesheet_instead">Tekst można również udostępniać z dowolnej aplikacji za pomocą funkcji Android Sharesheet</string>
+  <string name="no_app_to_open_url">Brak aplikacji do otwarcia adresu URL</string>
   <string name="query_parameters">Parametry zapytania</string>
   <string name="remove_tracking">Usuń parametry śledzenia</string>
   <string name="sanitized_url">Wyczyszczony adres URL</string>

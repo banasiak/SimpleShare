@@ -12,6 +12,7 @@
   <string name="hint_redirect_failed">Error de red, toca para reintentar &#x261D;</string>
   <string name="hint_redirect_not_detected">No se detectó ninguna redirección &#x1F44D;</string>
   <string name="hint_use_sharesheet_instead">También puedes compartir texto desde cualquier aplicación mediante Android Sharesheet</string>
+  <string name="no_app_to_open_url">No hay ninguna aplicación para abrir la URL</string>
   <string name="query_parameters">Parámetros de consulta</string>
   <string name="remove_tracking">Eliminar parámetros de seguimiento</string>
   <string name="sanitized_url">URL higienizada</string>
