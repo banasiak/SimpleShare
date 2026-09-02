@@ -6,4 +6,8 @@ Anyway, this app gives you a simple way to remove query parameters from any URL.
 
 Uncheck the boxes to remove any tracking parameters from the URL. Have to figure out which ones those are by yourself, though. This app is *simple*, remember? (But at least it will save your selections for next time.)
 
+Got a shortened link that hides where it actually goes? Tap the cloud icon and the app will follow the redirect first, then sanitize wherever it lands.
+
+Requires Android 7.0 or later.
+
 It is available via the [Google Play Store](https://play.google.com/store/apps/details?id=com.banasiak.android.simpleshare).
