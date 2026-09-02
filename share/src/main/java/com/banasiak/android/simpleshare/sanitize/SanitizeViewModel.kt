@@ -22,10 +22,10 @@ import com.banasiak.android.simpleshare.data.Repository
 import com.linkedin.urls.detection.UrlDetector
 import com.linkedin.urls.detection.UrlDetectorOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import timber.log.Timber
@@ -40,34 +40,31 @@ class SanitizeViewModel @Inject constructor(
   private val repository: Repository,
   private val savedState: SavedStateHandle
 ) : ViewModel(), LifecycleEventObserver {
-  private val _stateFlow = MutableStateFlow(SanitizeState())
+  // seed the flow from the SavedStateHandle -- a property initializer bypasses the custom setter below,
+  // so restoring into `state` alone would leave the UI showing an empty screen after process death
+  private val _stateFlow = MutableStateFlow(savedState.restore<SanitizeState>() ?: SanitizeState())
   val stateFlow = _stateFlow.asStateFlow()
 
-  private val _effectFlow = MutableSharedFlow<SanitizeEffect>(extraBufferCapacity = 1)
-  val effectFlow = _effectFlow.asSharedFlow()
+  // a Channel buffers effects emitted before the Activity subscribes; a SharedFlow would drop them
+  private val _effectFlow = Channel<SanitizeEffect>(Channel.BUFFERED)
+  val effectFlow = _effectFlow.receiveAsFlow()
 
-  private var state: SanitizeState = savedState.restore() ?: SanitizeState()
+  private var state: SanitizeState
+    get() = _stateFlow.value
     set(value) {
-      field = value
       Timber.v("state: $value")
-      _stateFlow.tryEmit(value)
+      _stateFlow.value = value
     }
 
   override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
     Timber.v("Lifecycle onStateChanged(): $event")
     when (event) {
       Lifecycle.Event.ON_PAUSE -> {
-        viewModelScope.launch {
-          persistEnabledParameters()
-          savedState.save(state)
-        }
+        // write to the SavedStateHandle synchronously; the process may not survive long enough for a coroutine to run
+        savedState.save(state)
+        viewModelScope.launch { persistEnabledParameters() }
       }
       // Not necessary, because if this ViewModel is recreated, the state will be restored when SanitizeState is instantiated
-      // Lifecycle.Event.ON_RESUME -> {
-      //   viewModelScope.launch {
-      //     state = savedState.restore<SanitizeState>() ?: SanitizeState()
-      //   }
-      // }
       else -> { /* NO-OP */ }
     }
   }
@@ -77,7 +74,7 @@ class SanitizeViewModel @Inject constructor(
       when (action) {
         is SanitizeAction.ButtonTapped -> onButtonTapped(action.type, state.sanitizedUrl)
         is SanitizeAction.FetchRedirect -> onFetchRedirect(state.originalUrl)
-        is SanitizeAction.Dismiss -> _effectFlow.emit(SanitizeEffect.Finish)
+        is SanitizeAction.Dismiss -> _effectFlow.send(SanitizeEffect.Finish)
         is SanitizeAction.IntentReceived -> onIntentReceived(action.text)
         is SanitizeAction.ParamToggled -> onParamToggle(action.param, action.value)
       }
@@ -93,7 +90,7 @@ class SanitizeViewModel @Inject constructor(
     val url = text?.let { extractUrl(it) }
     if (text == null || url == null) {
       Timber.e("Unable to detect URL in received intent data: $text")
-      _effectFlow.emit(SanitizeEffect.ShowErrorAndFinish(R.string.url_not_detected))
+      _effectFlow.send(SanitizeEffect.ShowErrorAndFinish(R.string.url_not_detected))
       return
     }
 
@@ -102,7 +99,7 @@ class SanitizeViewModel @Inject constructor(
 
     val launchCount = repository.getLaunchCountThenIncrement()
     // potentially prompt for a review every 10 app launches
-    if (launchCount % 10 == 0) _effectFlow.emit(SanitizeEffect.ShowRateAppDialog)
+    if (launchCount % 10 == 0) _effectFlow.send(SanitizeEffect.ShowRateAppDialog)
 
     state =
       state.copy(
@@ -162,8 +159,8 @@ class SanitizeViewModel @Inject constructor(
     Timber.d("onButtonTapped: $type")
     when (type) {
       ButtonType.COPY -> onCopyUrl(sanitizedUrl)
-      ButtonType.OPEN -> _effectFlow.emit(SanitizeEffect.OpenUrl(sanitizedUrl))
-      ButtonType.SHARE -> _effectFlow.emit(SanitizeEffect.ShareUrl(sanitizedUrl))
+      ButtonType.OPEN -> _effectFlow.send(SanitizeEffect.OpenUrl(sanitizedUrl))
+      ButtonType.SHARE -> _effectFlow.send(SanitizeEffect.ShareUrl(sanitizedUrl))
     }
   }
 
@@ -176,15 +173,15 @@ class SanitizeViewModel @Inject constructor(
 
     if (!isTiramisu()) {
       // only show a toast notification for devices < Android 13 (otherwise the system overlays its own UI)
-      _effectFlow.emit(SanitizeEffect.ShowToast(R.string.url_copied))
+      _effectFlow.send(SanitizeEffect.ShowToast(R.string.url_copied))
     }
-    _effectFlow.emit(SanitizeEffect.Finish)
+    _effectFlow.send(SanitizeEffect.Finish)
   }
 
   private suspend fun sanitizeUrl(url: HttpUrl?, params: Map<QueryParam, Boolean>): String {
     if (url == null) {
       Timber.e("Unable to parse URL")
-      _effectFlow.emit(SanitizeEffect.ShowErrorAndFinish(R.string.unable_to_parse))
+      _effectFlow.send(SanitizeEffect.ShowErrorAndFinish(R.string.unable_to_parse))
       return ""
     }
 

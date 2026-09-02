@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.compose.runtime.DisposableEffect
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -31,17 +32,21 @@ class SanitizeActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
-        launch {
-          viewModel.effectFlow.collect(::onEffect)
-        }
-        handleIntent(intent)
+        viewModel.effectFlow.collect(::onEffect)
       }
     }
+    // handle the intent once per Activity instance rather than on every STARTED transition
+    handleIntent(intent)
+
     enableEdgeToEdge()
     // handle NavigationBar window insets manually in the BottomSheet so this transparent activity cleanly overlays the app that calls our intent
     WindowCompat.setDecorFitsSystemWindows(window, true)
     setContent {
-      LocalLifecycleOwner.current.lifecycle.addObserver(viewModel)
+      val lifecycle = LocalLifecycleOwner.current.lifecycle
+      DisposableEffect(lifecycle) {
+        lifecycle.addObserver(viewModel)
+        onDispose { lifecycle.removeObserver(viewModel) }
+      }
       SimpleShareTheme {
         SanitizeScreen(viewModel)
       }
