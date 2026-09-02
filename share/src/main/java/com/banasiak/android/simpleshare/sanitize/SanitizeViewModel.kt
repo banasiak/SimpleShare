@@ -188,28 +188,32 @@ class SanitizeViewModel @Inject constructor(
     return HttpUrl.Builder()
       .scheme(url.scheme)
       .host(url.host)
+      .port(url.port) // a non-default port is part of the address, not tracking cruft
       .encodedPath(url.encodedPath)
       .apply {
         params.filter { item -> item.value }
           .forEach { item -> addQueryParameter(name = item.key.name, value = item.key.value) }
+        // the fragment identifies a location within the page, so dropping it can break the link
+        encodedFragment(url.encodedFragment)
       }.build().toString()
   }
 
   private suspend fun buildParameterMap(url: HttpUrl?): Map<QueryParam, Boolean> {
     if (url == null) return emptyMap()
 
-    val paramMap = mutableMapOf<QueryParam, Boolean>()
     val enabledParamNames = repository.getEnabledParamsForHost(url.host)
-    for (name in url.queryParameterNames) {
-      paramMap[QueryParam(name = name, value = url.queryParameter(name))] = enabledParamNames.contains(name)
+    // walking the query by index rather than by name costs nothing and keeps ?tag=x&tag=y as two
+    // entries; only parameters identical in both name and value collapse into one
+    return (0 until url.querySize).associate { index ->
+      val name = url.queryParameterName(index)
+      QueryParam(name = name, value = url.queryParameterValue(index)) to enabledParamNames.contains(name)
     }
-    return paramMap
   }
 
   private suspend fun persistEnabledParameters() {
     val url = state.originalUrl ?: return
 
-    val enabledParams = state.parameters.filter { it.value }.map { it.key.name }
+    val enabledParams = state.parameters.filter { it.value }.map { it.key.name }.distinct()
     repository.setEnabledParamsForHost(url.host, enabledParams)
   }
 
