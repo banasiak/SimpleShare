@@ -6,21 +6,21 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.banasiak.android.simpleshare.common.DurationClock
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.coroutines.executeAsync
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class Repository @Inject constructor(
@@ -45,22 +45,33 @@ class Repository @Inject constructor(
 
   suspend fun getLaunchCountThenIncrement(): Int {
     val key = intPreferencesKey("launchCount")
-    val count = dataStore.data.map { it[key] }.firstOrNull() ?: 1
-    dataStore.edit { it[key] = count + 1 }
+    var count = 1
+    // read and write inside a single edit{} so concurrent callers can't observe the same count twice
+    dataStore.edit { prefs ->
+      count = prefs[key] ?: 1
+      prefs[key] = count + 1
+    }
     return count
   }
 
-  @OptIn(ExperimentalCoroutinesApi::class)
-  suspend fun fetchRedirectUrl(url: HttpUrl, minimumDuration: Duration = 0.toDuration(DurationUnit.MILLISECONDS)): HttpUrl? {
+  suspend fun fetchRedirectUrl(url: HttpUrl, minimumDuration: Duration = 0.milliseconds): HttpUrl? {
     val start = durationClock.now()
 
     val request = Request.Builder().url(url).build()
-    val response =
-      runCatching {
-        // catch and ignore any exceptions, such as java.net.UnknownHostException
-        httpClient.newCall(request).executeAsync()
-      }.getOrNull()
-    val newUrl = response?.request?.url
+    // executeAsync() resumes on the caller's dispatcher, which is the main thread for viewModelScope.
+    // Closing an unread HTTP/2 response body writes a RST_STREAM frame, so the close is real network
+    // I/O and throws NetworkOnMainThreadException unless the whole call is confined to Dispatchers.IO.
+    val newUrl =
+      withContext(Dispatchers.IO) {
+        try {
+          // the response body is never read, but it still has to be closed to release the connection
+          httpClient.newCall(request).executeAsync().use { it.request.url }
+        } catch (e: IOException) {
+          // catch and ignore any network failures, such as java.net.UnknownHostException
+          Timber.w(e, "Unable to resolve redirects for: $url")
+          null
+        }
+      }
 
     val duration = durationClock.now() - start
     if (duration < minimumDuration) {
