@@ -9,6 +9,7 @@
   <string name="hint_decode_short_url">点击云下载图标来解码短网址☝</string>
   <string name="hint_did_you_know">你可知道？</string>
   <string name="hint_paste_text_here">在此处粘贴包含 网址 的文本 ☝</string>
+  <string name="hint_redirect_failed">网络错误，点按重试 &#x261D;</string>
   <string name="hint_redirect_not_detected">未检测到重定向&#x1F44D;?</string>
   <string name="hint_use_sharesheet_instead">您还可以使用 Android Sharesheet 分享任何应用中的文本</string>
   <string name="query_parameters">查询参数</string>

@@ -18,6 +18,7 @@ import com.banasiak.android.simpleshare.common.Constants
 import com.banasiak.android.simpleshare.common.restore
 import com.banasiak.android.simpleshare.common.save
 import com.banasiak.android.simpleshare.common.toHttpsUrlOrNull
+import com.banasiak.android.simpleshare.data.RedirectResult
 import com.banasiak.android.simpleshare.data.Repository
 import com.linkedin.urls.detection.UrlDetector
 import com.linkedin.urls.detection.UrlDetectorOptions
@@ -30,8 +31,7 @@ import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class SanitizeViewModel @Inject constructor(
@@ -138,21 +138,28 @@ class SanitizeViewModel @Inject constructor(
 
     state = state.copy(loading = true)
 
-    repository.fetchRedirectUrl(originalUrl, minimumDuration = 1000.toDuration(DurationUnit.MILLISECONDS))?.let { newUrl ->
-      Timber.d("URL redirect detected: $newUrl")
-      val parameters = buildParameterMap(newUrl)
-      val sanitizedUrl = sanitizeUrl(newUrl, parameters)
-      state =
-        state.copy(
-          originalUrl = newUrl,
-          parameters = parameters,
-          sanitizedUrl = sanitizedUrl,
-          loading = false
-        )
-      return
-    }
-
-    state = state.copy(hint = R.string.hint_redirect_not_detected, loading = false)
+    state =
+      when (val result = repository.fetchRedirectUrl(originalUrl, minimumDuration = 1.seconds)) {
+        is RedirectResult.Redirected -> {
+          Timber.d("URL redirect detected: ${result.url}")
+          val parameters = buildParameterMap(result.url)
+          val sanitizedUrl = sanitizeUrl(result.url, parameters)
+          // the new URL may redirect again, so leave the action available and clear any stale error
+          state.copy(
+            hint = R.string.hint_decode_short_url,
+            originalUrl = result.url,
+            parameters = parameters,
+            sanitizedUrl = sanitizedUrl,
+            loading = false
+          )
+        }
+        // there is genuinely nothing to follow, so stop offering the action
+        RedirectResult.NoRedirect ->
+          state.copy(hint = R.string.hint_redirect_not_detected, canFetchRedirect = false, loading = false)
+        // we never reached the host, so keep the action enabled and invite another attempt
+        RedirectResult.Failed ->
+          state.copy(hint = R.string.hint_redirect_failed, loading = false)
+      }
   }
 
   private suspend fun onButtonTapped(type: ButtonType, sanitizedUrl: String) {

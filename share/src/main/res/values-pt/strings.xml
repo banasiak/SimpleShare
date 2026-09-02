@@ -9,6 +9,7 @@
   <string name="hint_decode_short_url">Toque no ícone de download na nuvem para decodificar URLs curtos &#x261D;</string>
   <string name="hint_did_you_know">Você sabia?</string>
   <string name="hint_paste_text_here">Cole aqui o texto que contém uma URL &#x261D;</string>
+  <string name="hint_redirect_failed">Erro de rede, toque para tentar novamente &#x261D;</string>
   <string name="hint_redirect_not_detected">Nenhum redirecionamento detectado &#x1F44D;</string>
   <string name="hint_use_sharesheet_instead">Você também pode compartilhar texto de qualquer aplicativo usando o Android Sharesheet</string>
   <string name="query_parameters">Parâmetros de consulta</string>

@@ -9,6 +9,7 @@
   <string name="hint_decode_short_url">クラウドダウンロードアイコンをタップして短縮 URL をデコードします☝</string>
   <string name="hint_did_you_know">知っていましたか？</string>
   <string name="hint_paste_text_here">URL を含むテキストをここに貼り付けます☝</string>
+  <string name="hint_redirect_failed">ネットワークエラー、タップして再試行 &#x261D;</string>
   <string name="hint_redirect_not_detected">リダイレクトは検出されませんでした&#x1F44D;?</string>
   <string name="hint_use_sharesheet_instead">Android Sharesheet を使用して、どのアプリからでもテキストを共有できます。</string>
   <string name="query_parameters">クエリパラメータ</string>

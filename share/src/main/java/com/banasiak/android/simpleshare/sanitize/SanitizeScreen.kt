@@ -134,7 +134,7 @@ private fun BottomSheetContent(
       readOnly = true,
       trailingIcon = {
         IconButton(
-          enabled = !state.loading && state.hint == R.string.hint_decode_short_url,
+          enabled = !state.loading && state.canFetchRedirect,
           onClick = { postAction(SanitizeAction.FetchRedirect) }
         ) {
           Icon(
