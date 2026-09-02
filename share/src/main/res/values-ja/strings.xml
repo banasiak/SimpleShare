@@ -12,6 +12,7 @@
   <string name="hint_redirect_failed">ネットワークエラー、タップして再試行 &#x261D;</string>
   <string name="hint_redirect_not_detected">リダイレクトは検出されませんでした&#x1F44D;?</string>
   <string name="hint_use_sharesheet_instead">Android Sharesheet を使用して、どのアプリからでもテキストを共有できます。</string>
+  <string name="no_app_to_open_url">URL を開けるアプリがありません</string>
   <string name="query_parameters">クエリパラメータ</string>
   <string name="remove_tracking">追跡パラメータを削除する</string>
   <string name="sanitized_url">サニタイズされた URL</string>

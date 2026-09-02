@@ -12,6 +12,7 @@
   <string name="hint_redirect_failed">Ağ hatası, yeniden denemek için dokunun &#x261D;</string>
   <string name="hint_redirect_not_detected">Yönlendirme Algılanmadı &#x1F44D;</string>
   <string name="hint_use_sharesheet_instead">Android Sharesheet\'i kullanarak herhangi bir uygulamadan metin de paylaşabilirsiniz</string>
+  <string name="no_app_to_open_url">URL\'yi Açacak Uygulama Yok</string>
   <string name="query_parameters">Sorgu Parametreleri</string>
   <string name="remove_tracking">İzleme Parametrelerini Kaldır</string>
   <string name="sanitized_url">Temizlenmiş URL</string>
