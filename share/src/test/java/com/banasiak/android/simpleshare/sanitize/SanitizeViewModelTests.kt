@@ -1,9 +1,5 @@
 package com.banasiak.android.simpleshare.sanitize
 
-import android.content.ClipData
-import android.content.ClipDescription
-import android.content.ClipboardManager
-import android.os.PersistableBundle
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -11,30 +7,26 @@ import app.cash.turbine.test
 import com.banasiak.android.simpleshare.MainDispatcherRule
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
+import com.banasiak.android.simpleshare.common.ClipboardHelper
 import com.banasiak.android.simpleshare.data.RedirectResult
 import com.banasiak.android.simpleshare.data.Repository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkConstructor
-import io.mockk.mockkStatic
-import io.mockk.unmockkConstructor
-import io.mockk.unmockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MainDispatcherRule::class)
 class SanitizeViewModelTests {
-  private val clipboardManager: ClipboardManager = mockk(relaxed = true)
+  private val clipboard: ClipboardHelper = mockk(relaxed = true)
   private val repository: Repository = mockk(relaxed = true)
   private val savedState: SavedStateHandle = mockk(relaxed = true)
   private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
@@ -42,7 +34,7 @@ class SanitizeViewModelTests {
   private fun viewModel(apiLevel: Int = 33) =
     SanitizeViewModel(
       buildInfo = BuildInfo(apiLevel, "com.banasiak.android.simpleshare", "TEST", 1),
-      clipboardManager = clipboardManager,
+      clipboard = clipboard,
       repository = repository,
       savedState = savedState
     )
@@ -53,21 +45,6 @@ class SanitizeViewModelTests {
     coEvery { repository.getEnabledParamsForHost(any()) } returns emptyList()
     coEvery { repository.getLaunchCountThenIncrement() } returns 1
     coEvery { repository.fetchRedirectUrl(any(), any()) } returns RedirectResult.NoRedirect
-
-    // ClipData.newPlainText and the PersistableBundle constructor are android.jar stubs that throw
-    // when called on the JVM; stubbing them keeps the copy path testable without Robolectric
-    mockkStatic(ClipData::class)
-    mockkConstructor(PersistableBundle::class)
-    val description: ClipDescription = mockk(relaxed = true)
-    val clip: ClipData = mockk(relaxed = true)
-    every { clip.description } returns description
-    every { ClipData.newPlainText(any(), any()) } returns clip
-  }
-
-  @AfterEach
-  fun afterEach() {
-    unmockkStatic(ClipData::class)
-    unmockkConstructor(PersistableBundle::class)
   }
 
   // region intent handling
@@ -288,7 +265,7 @@ class SanitizeViewModelTests {
         vm.postAction(SanitizeAction.ButtonTapped(ButtonType.COPY))
         awaitItem() shouldBeEqualTo SanitizeEffect.Finish
       }
-      verify { clipboardManager.setPrimaryClip(any()) }
+      verify { clipboard.copy("https://www.banasiak.com/p") }
     }
 
   @Test

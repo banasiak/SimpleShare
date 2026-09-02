@@ -46,14 +46,8 @@ android {
   }
 
   testOptions {
-    unitTests {
-      // onCopyUrl() constructs a PersistableBundle, and every android.jar stub throws when called
-      // off-device. Returning defaults instead keeps the clipboard path reachable from a JVM test;
-      // anything a test actually depends on is stubbed explicitly with mockk.
-      isReturnDefaultValues = true
-      all {
-        it.useJUnitPlatform()
-      }
+    unitTests.all {
+      it.useJUnitPlatform()
     }
   }
 }
