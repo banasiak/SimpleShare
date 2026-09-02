@@ -44,6 +44,18 @@ android {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
   }
+
+  testOptions {
+    unitTests {
+      // onCopyUrl() constructs a PersistableBundle, and every android.jar stub throws when called
+      // off-device. Returning defaults instead keeps the clipboard path reachable from a JVM test;
+      // anything a test actually depends on is stubbed explicitly with mockk.
+      isReturnDefaultValues = true
+      all {
+        it.useJUnitPlatform()
+      }
+    }
+  }
 }
 
 kotlin {
@@ -82,6 +94,15 @@ dependencies {
   implementation(platform(libs.androidx.compose.bom))
   implementation(platform(libs.okhttp.bom))
   ksp(libs.dagger.hilt.android.compiler)
+  testImplementation(libs.junit.jupiter)
+  testImplementation(libs.kluent.android)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.mockk.agent)
+  testImplementation(libs.mockk.android)
+  testImplementation(libs.okhttp.mockwebserver)
+  testImplementation(libs.turbine)
+  testImplementation(platform(libs.okhttp.bom))
+  testRuntimeOnly(libs.junit.platform.launcher)
 
   ktlint(libs.ktlint) {
     attributes {
