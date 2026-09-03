@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">ฆ่าเชื้อ URL</string>
-  <string name="button_copy">สำเนา</string>
+  <string name="app_name">ล้าง URL</string>
+  <string name="button_copy">คัดลอก</string>
   <string name="button_open">เปิด</string>
-  <string name="button_share">แบ่งปัน</string>
-  <string name="feeling_lucky">ฉันรู้สึกโชคดี</string>
-  <string name="follow_redirect">ถอดรหัส URL สั้น</string>
-  <string name="hint_decode_short_url">แตะไอคอนดาวน์โหลดบนคลาวด์เพื่อถอดรหัส URL สั้น ☝</string>
-  <string name="hint_did_you_know">คุณรู้หรือไม่?</string>
-  <string name="hint_paste_text_here">วางข้อความที่มี URL ที่นี่ ☝</string>
-  <string name="hint_redirect_failed">เครือข่ายผิดพลาด แตะเพื่อลองใหม่ &#x261D;</string>
+  <string name="button_share">แชร์</string>
+  <string name="feeling_lucky">ลองเสี่ยงดวง</string>
+  <string name="follow_redirect">ขยาย URL แบบสั้น</string>
+  <string name="hint_decode_short_url">แตะไอคอนดาวน์โหลดจากคลาวด์เพื่อขยาย URL แบบสั้น &#x261D;</string>
+  <string name="hint_did_you_know">รู้หรือไม่?</string>
+  <string name="hint_paste_text_here">วางข้อความที่มี URL ที่นี่ &#x261D;</string>
+  <string name="hint_redirect_failed">เครือข่ายขัดข้อง แตะเพื่อลองใหม่ &#x261D;</string>
   <string name="hint_redirect_not_detected">ไม่พบการเปลี่ยนเส้นทาง &#x1F44D;</string>
-  <string name="hint_use_sharesheet_instead">คุณสามารถแชร์ข้อความจากแอปใดๆ ได้ด้วยการใช้ Android Sharesheet</string>
-  <string name="no_app_to_open_url">ไม่มีแอปสำหรับเปิด URL</string>
-  <string name="query_parameters">พารามิเตอร์การค้นหา</string>
+  <string name="hint_use_sharesheet_instead">คุณแชร์ข้อความจากแอปใดก็ได้ผ่านเมนูแชร์ของ Android</string>
+  <string name="no_app_to_open_url">ไม่มีแอปที่เปิด URL นี้ได้</string>
+  <string name="query_parameters">พารามิเตอร์คิวรี</string>
   <string name="remove_tracking">ลบพารามิเตอร์การติดตาม</string>
-  <string name="sanitized_url">URL ที่ผ่านการฆ่าเชื้อแล้ว</string>
-  <string name="share_sanitized">แบ่งปัน URL ที่ผ่านการฆ่าเชื้อ</string>
-  <string name="title_activity_sanitize">โปรแกรมทำความสะอาด URL แบบง่าย</string>
-  <string name="unable_to_parse">ไม่สามารถฆ่าเชื้อ URL ได้</string>
+  <string name="sanitized_url">URL ที่ล้างแล้ว</string>
+  <string name="share_sanitized">แชร์ URL ที่ล้างแล้ว</string>
+  <string name="title_activity_sanitize">ตัวล้าง URL อย่างง่าย</string>
+  <string name="unable_to_parse">ล้าง URL ไม่สำเร็จ</string>
   <string name="url_copied">คัดลอก URL ไปยังคลิปบอร์ดแล้ว</string>
-  <string name="url_not_detected">ไม่สามารถตรวจจับ URL ได้</string>
+  <string name="url_not_detected">ตรวจไม่พบ URL</string>
 </resources>

@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">URL\'yi temizle</string>
   <string name="button_copy">Kopyala</string>
-  <string name="button_open">Açık</string>
-  <string name="button_share">Paylaşmak</string>
+  <string name="button_open">Aç</string>
+  <string name="button_share">Paylaş</string>
   <string name="feeling_lucky">Kendimi şanslı hissediyorum</string>
-  <string name="follow_redirect">Kısa URL\'yi Çöz</string>
-  <string name="hint_decode_short_url">Kısa URL\'leri çözmek için Bulut İndirme simgesine dokunun &#x261D;</string>
-  <string name="hint_did_you_know">Biliyor musun?</string>
+  <string name="follow_redirect">Kısa URL\'yi çözümle</string>
+  <string name="hint_decode_short_url">Kısa URL\'leri çözümlemek için bulut indirme simgesine dokunun &#x261D;</string>
+  <string name="hint_did_you_know">Biliyor muydunuz?</string>
   <string name="hint_paste_text_here">URL içeren metni buraya yapıştırın &#x261D;</string>
   <string name="hint_redirect_failed">Ağ hatası, yeniden denemek için dokunun &#x261D;</string>
-  <string name="hint_redirect_not_detected">Yönlendirme Algılanmadı &#x1F44D;</string>
-  <string name="hint_use_sharesheet_instead">Android Sharesheet\'i kullanarak herhangi bir uygulamadan metin de paylaşabilirsiniz</string>
-  <string name="no_app_to_open_url">URL\'yi Açacak Uygulama Yok</string>
-  <string name="query_parameters">Sorgu Parametreleri</string>
-  <string name="remove_tracking">İzleme Parametrelerini Kaldır</string>
+  <string name="hint_redirect_not_detected">Yönlendirme bulunamadı &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">Android paylaşım menüsünü kullanarak herhangi bir uygulamadan da metin paylaşabilirsiniz</string>
+  <string name="no_app_to_open_url">URL\'yi açabilecek uygulama yok</string>
+  <string name="query_parameters">Sorgu parametreleri</string>
+  <string name="remove_tracking">İzleme parametrelerini kaldır</string>
   <string name="sanitized_url">Temizlenmiş URL</string>
-  <string name="share_sanitized">Temizlenmiş URL\'yi Paylaş</string>
-  <string name="title_activity_sanitize">Basit URL Temizleyici</string>
-  <string name="unable_to_parse">URL Temizlenemiyor</string>
-  <string name="url_copied">URL Panoya Kopyalandı</string>
-  <string name="url_not_detected">URL Algılanamıyor</string>
+  <string name="share_sanitized">Temizlenmiş URL\'yi paylaş</string>
+  <string name="title_activity_sanitize">Basit URL temizleyici</string>
+  <string name="unable_to_parse">URL temizlenemedi</string>
+  <string name="url_copied">URL panoya kopyalandı</string>
+  <string name="url_not_detected">URL algılanamadı</string>
 </resources>
