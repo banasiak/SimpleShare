@@ -16,8 +16,8 @@ android {
     applicationId = "com.banasiak.android.simpleshare"
     minSdk = 24
     targetSdk = 37
-    versionCode = 7
-    versionName = "SEVEN"
+    versionCode = 8
+    versionName = "EIGHT"
     vectorDrawables {
       useSupportLibrary = true
     }
