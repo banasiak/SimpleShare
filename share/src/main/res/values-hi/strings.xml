@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">URL साफ़ करें</string>
+  <string name="button_copy">कॉपी करें</string>
+  <string name="button_open">खोलें</string>
+  <string name="button_share">शेयर करें</string>
+  <string name="feeling_lucky">मुझे भाग्य पर भरोसा है</string>
+  <string name="follow_redirect">शॉर्ट URL डिकोड करें</string>
+  <string name="hint_decode_short_url">शॉर्ट URL डिकोड करने के लिए क्लाउड डाउनलोड आइकॉन पर टैप करें &#x261D;</string>
+  <string name="hint_did_you_know">क्या आप जानते हैं?</string>
+  <string name="hint_paste_text_here">URL वाला टेक्स्ट यहाँ पेस्ट करें &#x261D;</string>
+  <string name="hint_redirect_failed">नेटवर्क गड़बड़ी, फिर से कोशिश करने के लिए टैप करें &#x261D;</string>
+  <string name="hint_redirect_not_detected">कोई रीडायरेक्ट नहीं मिला &#x1F44D;</string>
+  <string name="hint_use_sharesheet_instead">Android के शेयर मेन्यू से आप किसी भी ऐप का टेक्स्ट शेयर कर सकते हैं</string>
+  <string name="no_app_to_open_url">URL खोलने के लिए कोई ऐप उपलब्ध नहीं है</string>
+  <string name="query_parameters">क्वेरी पैरामीटर</string>
+  <string name="remove_tracking">ट्रैकिंग पैरामीटर हटाएँ</string>
+  <string name="sanitized_url">साफ़ किया गया URL</string>
+  <string name="share_sanitized">साफ़ किया गया URL शेयर करें</string>
+  <string name="title_activity_sanitize">आसान URL क्लीनर</string>
+  <string name="unable_to_parse">URL साफ़ नहीं किया जा सका</string>
+  <string name="url_copied">URL क्लिपबोर्ड पर कॉपी किया गया</string>
+  <string name="url_not_detected">कोई URL नहीं मिला</string>
+</resources>
