@@ -215,8 +215,11 @@ class SanitizeViewModel @Inject constructor(
   private suspend fun persistEnabledParameters() {
     val url = state.originalUrl ?: return
 
-    val enabledParams = state.parameters.filter { it.enabled }.map { it.name }.distinct()
-    repository.setEnabledParamsForHost(url.host, enabledParams)
+    // every name on the link goes along with the kept ones, so the repository can tell a parameter
+    // that was unchecked from one this link simply didn't carry
+    val present = state.parameters.map { it.name }.toSet()
+    val enabled = state.parameters.filter { it.enabled }.map { it.name }.toSet()
+    repository.updateEnabledParamsForHost(url.host, present, enabled)
   }
 
   @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.TIRAMISU)

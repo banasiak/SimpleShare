@@ -326,7 +326,7 @@ class SanitizeViewModelTests {
     }
 
   @Test
-  fun `when the screen pauses, then state is stored and the kept parameters are written out`() =
+  fun `when the screen pauses, then state is stored and the choices for this link are written out`() =
     runTest {
       coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("id")
       val vm = viewModel()
@@ -336,6 +336,6 @@ class SanitizeViewModelTests {
 
       // written straight through rather than from a coroutine: the process may not live long enough
       verify { savedState.set("state", vm.stateFlow.value) }
-      coVerify { repository.setEnabledParamsForHost("www.banasiak.com", listOf("id")) }
+      coVerify { repository.updateEnabledParamsForHost("www.banasiak.com", setOf("utm_source", "id"), setOf("id")) }
     }
 }
