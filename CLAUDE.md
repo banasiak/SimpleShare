@@ -69,6 +69,10 @@ the UI keeps the retry action available only for the second.
 - **Framework seams exist so the ViewModel is JVM-testable.** `ClipboardHelper` wraps `ClipData` and
   `PersistableBundle`, which are android.jar stubs that throw off-device. Inlining it back would force
   `unitTests.isReturnDefaultValues` on again.
+- **The sanitized query is written decoded, so it reads as text.** `sanitizeUrl` joins the kept
+  parameters by hand, because `HttpUrl.Builder` would escape every value again. What stays escaped,
+  and why, is at `readableQueryComponent`; the round-trip test in `SanitizeViewModelTests` fails if
+  the output ever parses back to different parameters.
 - **`toHttpsUrlOrNull` upgrades every URL to https** before anything else touches it.
 - Five ktlint rules are disabled in `.editorconfig` because promoting them would reformat otherwise
   untouched files. Do not re-enable them to "tidy up".

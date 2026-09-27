@@ -174,6 +174,87 @@ class SanitizeViewModelTests {
       vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?id=1"
     }
 
+  // region readable query
+
+  @Test
+  fun `given kept values with escaped punctuation, when sanitizing, then the query reads decoded`() =
+    runTest {
+      // given
+      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("list", "next")
+      val vm = viewModel()
+
+      // when
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?list=a%2Cb%2Cc&next=https%3A%2F%2Fexample.com%2Fpage"))
+
+      // then
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?list=a,b,c&next=https://example.com/page"
+    }
+
+  @Test
+  fun `given a kept value in another script, when sanitizing, then it reads as written`() =
+    runTest {
+      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("q")
+      val vm = viewModel()
+
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/s?q=caf%C3%A9"))
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/s?q=café"
+    }
+
+  @Test
+  fun `given kept values holding a plus, an ampersand or a hash, when sanitizing, then those stay escaped`() =
+    runTest {
+      // decoded, the plus would read as a space, the ampersand would split the nested link into a
+      // second parameter, and the hash would turn the rest of the query into a fragment
+      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("q", "u", "tag")
+      val vm = viewModel()
+
+      vm.postAction(
+        SanitizeAction.IntentReceived(
+          "https://www.banasiak.com/s?q=c%2B%2B+tutorial&u=https%3A%2F%2Fshop.com%2Fp%3Fa%3D1%26b%3D2&tag=%23news"
+        )
+      )
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo
+        "https://www.banasiak.com/s?q=c%2B%2B+tutorial&u=https://shop.com/p?a=1%26b=2&tag=%23news"
+    }
+
+  @Test
+  fun `given kept values with invisible or bidi characters, when sanitizing, then they stay escaped`() =
+    runTest {
+      // a decoded right-to-left override reorders everything after it, so the link on screen would no
+      // longer read the way it actually goes
+      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("f", "g")
+      val vm = viewModel()
+
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?f=%E2%80%AEevil&g=nb%C2%A0sp"))
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?f=%E2%80%AEevil&g=nb%C2%A0sp"
+    }
+
+  @Test
+  fun `given values that decoding could corrupt, when sanitizing, then the result parses back to the same parameters`() =
+    runTest {
+      val names = listOf("a", "b", "c", "d", "e=name", "f", "g", "h", "i", "j", "k")
+      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns names
+      val vm = viewModel()
+
+      vm.postAction(
+        SanitizeAction.IntentReceived(
+          "https://www.banasiak.com/p?a=1%2B1%3D2&b=x%26y%23z&c=100%25&d=%22q%22+and+%3Ctag%3E" +
+            "&e%3Dname=v&f=%E2%80%AEevil&g=nb%C2%A0sp&h=%F0%9F%98%80&i=%00&j=&k"
+        )
+      )
+
+      val state = vm.stateFlow.value
+      state.parameters.map { it.name } shouldBeEqualTo names
+      val reparsed = state.sanitizedUrl.toHttpUrl()
+      (0 until reparsed.querySize).map { reparsed.queryParameterName(it) to reparsed.queryParameterValue(it) } shouldBeEqualTo
+        state.parameters.map { it.name to it.value }
+    }
+
+  // endregion
+
   // region short url decoding
 
   @Test
