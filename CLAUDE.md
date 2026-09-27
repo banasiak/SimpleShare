@@ -61,7 +61,9 @@ the UI keeps the retry action available only for the second.
   because `queryParameterNames` is a `Set` and `queryParameter(name)` returns only the first match.
 - **Preferences are stored per parameter *name*, deliberately.** Values change from link to link
   while names recur, so a value-keyed preference would rarely match again. The consequence -- keeping
-  one of two same-named parameters re-enables both next time -- errs toward keeping more.
+  one of two same-named parameters re-enables both next time -- errs toward keeping more. Saving
+  merges rather than replaces: a link updates only the names it carries, so one that lacks a
+  parameter (or has no query at all) cannot erase a choice made on an earlier link.
 - **The DataStore schema is load-bearing for upgrades.** Preferences written by older installs must
   keep reading; changing key types or entry meaning orphans real user data.
 - **Framework seams exist so the ViewModel is JVM-testable.** `ClipboardHelper` wraps `ClipData` and

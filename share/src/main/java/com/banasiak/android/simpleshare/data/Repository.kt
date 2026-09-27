@@ -34,11 +34,14 @@ class Repository @Inject constructor(
   private val durationClock: DurationClock,
   private val httpClient: OkHttpClient
 ) {
-  suspend fun setEnabledParamsForHost(host: String, params: List<String>) {
-    Timber.d("Persist enabled params for '$host': $params")
+  // a link only speaks for the names it carries, so merge rather than replace: overwriting the set would
+  // let a link without some parameter (or with no query at all) erase a choice made on an earlier link
+  suspend fun updateEnabledParamsForHost(host: String, present: Set<String>, enabled: Set<String>) {
+    Timber.d("Update params for '$host': present=$present, enabled=$enabled")
     val key = stringSetPreferencesKey(host)
+    // read and write inside a single edit{} so a concurrent update for the same host isn't lost
     dataStore.edit { prefs ->
-      prefs[key] = params.toSet()
+      prefs[key] = prefs[key].orEmpty() - present + enabled
     }
   }
 
