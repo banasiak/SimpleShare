@@ -1,6 +1,5 @@
 package com.banasiak.android.simpleshare.sanitize
 
-import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -13,15 +12,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -46,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -53,6 +51,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.offset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.ui.theme.SimpleShareTheme
@@ -73,14 +72,9 @@ fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   val scope = rememberCoroutineScope()
 
-  // debatable whether or not this works correctly
-  // https://issuetracker.google.com/issues/281967264
-  BackHandler {
-    dismissScreen(scope, sheetState, postAction)
-  }
-
   SimpleShareTheme {
     ModalBottomSheet(
+      modifier = Modifier.clearOfSideInsets(WindowInsets.safeDrawing),
       sheetState = sheetState,
       onDismissRequest = { dismissScreen(scope, sheetState, postAction) }
     ) {
@@ -89,6 +83,19 @@ fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
   }
 }
 
+// the sheet is centered and at most SheetMaxWidth wide, so a side inset reaches it only by however much
+// the inset is wider than the margin beside it. Narrowing by that overlap alone keeps the sheet clear of
+// a side navigation bar or cutout without pushing it off-center when there is room
+@OptIn(ExperimentalMaterial3Api::class)
+private fun Modifier.clearOfSideInsets(insets: WindowInsets): Modifier =
+  layout { measurable, constraints ->
+    val margin = (constraints.maxWidth - BottomSheetDefaults.SheetMaxWidth.roundToPx()).coerceAtLeast(0) / 2
+    val left = (insets.getLeft(this, layoutDirection) - margin).coerceAtLeast(0)
+    val right = (insets.getRight(this, layoutDirection) - margin).coerceAtLeast(0)
+    val placeable = measurable.measure(constraints.offset(horizontal = -(left + right)))
+    layout(placeable.width + left + right, placeable.height) { placeable.place(left, 0) }
+  }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BottomSheetContent(
@@ -96,16 +103,9 @@ private fun BottomSheetContent(
   postAction: InputAction,
   sheetState: SheetState
 ) {
-  // in landscape the navigation bar and any display cutout sit along the sides, not just the bottom
-  val insets =
-    WindowInsets.safeDrawing
-      .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
-      .asPaddingValues()
-
   Column(
     modifier =
       Modifier
-        .padding(insets)
         .padding(horizontal = 8.dp)
         .verticalScroll(rememberScrollState())
   ) {

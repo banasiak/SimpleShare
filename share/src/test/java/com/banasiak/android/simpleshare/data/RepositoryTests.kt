@@ -2,9 +2,12 @@ package com.banasiak.android.simpleshare.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
 import com.banasiak.android.simpleshare.common.DurationClock
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
@@ -18,7 +21,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class RepositoryTests {
   private lateinit var server: MockWebServer
-  private val dataStore: DataStore<Preferences> = mockk(relaxed = true)
+  private val dataStore: DataStore<Preferences> = FakeDataStore()
   private val durationClock: DurationClock = mockk()
 
   private fun repository() = Repository(dataStore, durationClock, OkHttpClient())
@@ -90,4 +93,58 @@ class RepositoryTests {
       server.takeRequest()
       server.requestCount shouldBeEqualTo 2
     }
+
+  @Test
+  fun `given a name kept on an earlier link, when a link without that name is saved, then the earlier choice survives`() =
+    runTest {
+      // given
+      val repository = repository()
+      repository.updateEnabledParamsForHost("www.youtube.com", present = setOf("v", "si"), enabled = setOf("v"))
+
+      // when
+      repository.updateEnabledParamsForHost("www.youtube.com", present = setOf("list", "si"), enabled = setOf("list"))
+
+      // then
+      repository.getEnabledParamsForHost("www.youtube.com").toSet() shouldBeEqualTo setOf("v", "list")
+    }
+
+  @Test
+  fun `given a name kept on an earlier link, when a link with no query is saved, then nothing is forgotten`() =
+    runTest {
+      // given
+      val repository = repository()
+      repository.updateEnabledParamsForHost("www.youtube.com", present = setOf("v", "si"), enabled = setOf("v"))
+
+      // when
+      repository.updateEnabledParamsForHost("www.youtube.com", present = emptySet(), enabled = emptySet())
+
+      // then
+      repository.getEnabledParamsForHost("www.youtube.com") shouldBeEqualTo listOf("v")
+    }
+
+  @Test
+  fun `given a name kept on an earlier link, when a link carrying it unchecked is saved, then only that name is forgotten`() =
+    runTest {
+      // given
+      val repository = repository()
+      repository.updateEnabledParamsForHost("www.youtube.com", present = setOf("v", "t"), enabled = setOf("v", "t"))
+
+      // when
+      repository.updateEnabledParamsForHost("www.youtube.com", present = setOf("v"), enabled = emptySet())
+
+      // then
+      repository.getEnabledParamsForHost("www.youtube.com") shouldBeEqualTo listOf("t")
+    }
+}
+
+// edit{} still runs the real Preferences transform against this, so the merge is exercised exactly as
+// on a device; only the file behind the store is left out
+private class FakeDataStore : DataStore<Preferences> {
+  private val state = MutableStateFlow(emptyPreferences())
+  override val data: Flow<Preferences> = state
+
+  override suspend fun updateData(transform: suspend (t: Preferences) -> Preferences): Preferences {
+    state.value = transform(state.value)
+    return state.value
+  }
 }

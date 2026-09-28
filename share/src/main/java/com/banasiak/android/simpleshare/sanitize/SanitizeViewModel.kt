@@ -182,17 +182,58 @@ class SanitizeViewModel @Inject constructor(
       return ""
     }
 
-    return HttpUrl.Builder()
-      .scheme(url.scheme)
-      .host(url.host)
-      .port(url.port) // a non-default port is part of the address, not tracking cruft
-      .encodedPath(url.encodedPath)
-      .apply {
-        params.filter { it.enabled }
-          .forEach { addQueryParameter(name = it.name, value = it.value) }
-        // the fragment identifies a location within the page, so dropping it can break the link
-        encodedFragment(url.encodedFragment)
-      }.build().toString()
+    val address =
+      HttpUrl.Builder()
+        .scheme(url.scheme)
+        .host(url.host)
+        .port(url.port) // a non-default port is part of the address, not tracking cruft
+        .encodedPath(url.encodedPath)
+        .build()
+        .toString()
+    // joined by hand: HttpUrl.Builder would escape every value again and undo the readable form
+    val query = params.filter { it.enabled }.joinToString("&") { it.toReadableQueryPair() }
+
+    return buildString {
+      append(address)
+      if (query.isNotEmpty()) append('?').append(query)
+      // the fragment identifies a location within the page, so dropping it can break the link
+      url.encodedFragment?.let { append('#').append(it) }
+    }
+  }
+
+  private fun QueryParam.toReadableQueryPair(): String {
+    val readableName = readableQueryComponent(name, isName = true)
+    return if (value == null) readableName else "$readableName=${readableQueryComponent(value, isName = false)}"
+  }
+
+  // decoded for reading, except where that would change the query once it is parsed again: a space is
+  // written as +, so a literal + stays escaped, & would end the pair, # would start the fragment, % an
+  // escape, and = would end a name. Characters a URL cannot hold stay escaped so the result still pastes
+  // as one link, and so do invisible and bidi characters, which would make the displayed link misleading
+  private fun readableQueryComponent(text: String, isName: Boolean): String =
+    buildString {
+      var i = 0
+      while (i < text.length) {
+        val codePoint = text.codePointAt(i)
+        when {
+          codePoint == ' '.code -> append('+')
+          mustEscape(codePoint, isName) -> appendEscaped(codePoint)
+          else -> appendCodePoint(codePoint)
+        }
+        i += Character.charCount(codePoint)
+      }
+    }
+
+  private fun mustEscape(codePoint: Int, isName: Boolean): Boolean =
+    (codePoint < 0x80 && codePoint.toChar() in QUERY_ESCAPED) ||
+      (isName && codePoint == '='.code) ||
+      Character.getType(codePoint) in INVISIBLE_CHARACTER_TYPES
+
+  private fun StringBuilder.appendEscaped(codePoint: Int) {
+    for (byte in String(Character.toChars(codePoint)).toByteArray(Charsets.UTF_8)) {
+      val bits = byte.toInt()
+      append('%').append(HEX_DIGITS[(bits shr 4) and 0xF]).append(HEX_DIGITS[bits and 0xF])
+    }
   }
 
   private suspend fun buildParameterList(url: HttpUrl?): List<QueryParam> {
@@ -215,10 +256,30 @@ class SanitizeViewModel @Inject constructor(
   private suspend fun persistEnabledParameters() {
     val url = state.originalUrl ?: return
 
-    val enabledParams = state.parameters.filter { it.enabled }.map { it.name }.distinct()
-    repository.setEnabledParamsForHost(url.host, enabledParams)
+    // every name on the link goes along with the kept ones, so the repository can tell a parameter
+    // that was unchecked from one this link simply didn't carry
+    val present = state.parameters.map { it.name }.toSet()
+    val enabled = state.parameters.filter { it.enabled }.map { it.name }.toSet()
+    repository.updateEnabledParamsForHost(url.host, present, enabled)
   }
 
   @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.TIRAMISU)
   private fun isTiramisu(): Boolean = buildInfo.apiLevel >= Build.VERSION_CODES.TIRAMISU
 }
+
+private const val HEX_DIGITS = "0123456789ABCDEF"
+
+// ASCII that readableQueryComponent keeps escaped
+private const val QUERY_ESCAPED = "%+&#\"<>\\^`{|}"
+
+private val INVISIBLE_CHARACTER_TYPES =
+  setOf(
+    Character.CONTROL,
+    Character.FORMAT,
+    Character.SPACE_SEPARATOR,
+    Character.LINE_SEPARATOR,
+    Character.PARAGRAPH_SEPARATOR,
+    Character.PRIVATE_USE,
+    Character.SURROGATE,
+    Character.UNASSIGNED
+  ).map { it.toInt() }
