@@ -1,6 +1,5 @@
 package com.banasiak.android.simpleshare.sanitize
 
-import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -72,12 +71,6 @@ fun SanitizeScreen(viewModel: SanitizeViewModel) {
 fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   val scope = rememberCoroutineScope()
-
-  // debatable whether or not this works correctly
-  // https://issuetracker.google.com/issues/281967264
-  BackHandler {
-    dismissScreen(scope, sheetState, postAction)
-  }
 
   SimpleShareTheme {
     ModalBottomSheet(
