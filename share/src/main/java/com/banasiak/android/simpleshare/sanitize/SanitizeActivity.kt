@@ -1,6 +1,7 @@
 package com.banasiak.android.simpleshare.sanitize
 
 import android.content.ActivityNotFoundException
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -84,7 +85,12 @@ class SanitizeActivity : ComponentActivity() {
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, url)
       }
-    startActivity(Intent.createChooser(shareIntent, getString(R.string.share_sanitized)))
+    val chooser =
+      Intent.createChooser(shareIntent, getString(R.string.share_sanitized)).apply {
+        // read from the chooser intent itself; on shareIntent it would be ignored
+        putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, arrayOf(ComponentName(this@SanitizeActivity, SanitizeActivity::class.java)))
+      }
+    startActivity(chooser)
     finishAffinity()
   }
 
