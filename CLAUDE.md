@@ -74,8 +74,13 @@ the UI keeps the retry action available only for the second.
   and why, is at `readableQueryComponent`; the round-trip test in `SanitizeViewModelTests` fails if
   the output ever parses back to different parameters.
 - **`toHttpsUrlOrNull` upgrades every URL to https** before anything else touches it.
-- Five ktlint rules are disabled in `.editorconfig` because promoting them would reformat otherwise
-  untouched files. Do not re-enable them to "tidy up".
+- `.editorconfig` disables the ktlint rules that reflow working code rather than catch a defect.
+  Most of them would reformat otherwise untouched files, so do not re-enable them to "tidy up".
+  Two found nothing to change when checked on 2026-11-04:
+  `spacing-between-declarations-with-annotations` and `value-parameter-comment`. No reason was
+  recorded for turning those two off, so ask before turning them on.
+- `no-unused-imports` is enabled by name in `.editorconfig`, which is the only way it runs: ktlint
+  1.7.0 stopped running it by default. It is deprecated and goes in ktlint 2.0.0.
 - `.editorconfig` sets `insert_final_newline = false`, and ktlint holds Kotlin sources to it, so
   they end without a trailing newline. The markdown files in the repo do end with one.
 - R8 is on for release. Every rule in `share/proguard-rules.pro` notes the failure it prevents,
