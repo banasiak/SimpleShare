@@ -44,9 +44,9 @@ Two entry points share one ViewModel-driven loop:
   over whichever app invoked the share sheet, which is why it handles its own window insets rather
   than letting the framework fit system windows.
 
-`sanitize/Sanitize.kt` holds the whole contract for that screen: `SanitizeState` (parcelable, the
-single source of truth), `SanitizeAction` (input) and `SanitizeEffect` (one-shot output). Reading
-that file first explains most of the rest.
+`sanitize/SanitizeState.kt` holds the whole contract for that screen: `SanitizeState` (parcelable,
+the single source of truth), `SanitizeAction` (input) and `SanitizeEffect` (one-shot output).
+Reading that file first explains most of the rest.
 
 `SanitizeViewModel` is the only place state changes:
 

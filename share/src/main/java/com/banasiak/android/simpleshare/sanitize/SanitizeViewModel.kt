@@ -11,12 +11,12 @@ import androidx.lifecycle.viewModelScope
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
 import com.banasiak.android.simpleshare.common.ClipboardHelper
-import com.banasiak.android.simpleshare.common.restore
-import com.banasiak.android.simpleshare.common.save
-import com.banasiak.android.simpleshare.common.toHttpsUrlOrNull
 import com.banasiak.android.simpleshare.data.RedirectResult
 import com.banasiak.android.simpleshare.data.Repository
 import com.banasiak.android.simpleshare.data.TrackerRules
+import com.banasiak.android.simpleshare.extensions.restore
+import com.banasiak.android.simpleshare.extensions.save
+import com.banasiak.android.simpleshare.extensions.toHttpsUrlOrNull
 import com.linkedin.urls.detection.UrlDetector
 import com.linkedin.urls.detection.UrlDetectorOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
