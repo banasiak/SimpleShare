@@ -2,9 +2,6 @@ package com.banasiak.android.simpleshare.sanitize
 
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,35 +36,21 @@ class SanitizeViewModel @Inject constructor(
   private val repository: Repository,
   private val savedState: SavedStateHandle,
   private val trackerRules: TrackerRules
-) : ViewModel(), LifecycleEventObserver {
-  // seed the flow from the SavedStateHandle -- a property initializer bypasses the custom setter below,
-  // so restoring into `state` alone would leave the UI showing an empty screen after process death
-  private val _stateFlow = MutableStateFlow(savedState.restore<SanitizeState>() ?: SanitizeState())
+) : ViewModel() {
+  private var state = savedState.restore() ?: SanitizeState()
+    set(value) {
+      field = value
+      Timber.v("state: $value")
+      savedState.save(value)
+      _stateFlow.value = value
+    }
+
+  private val _stateFlow = MutableStateFlow(state)
   val stateFlow = _stateFlow.asStateFlow()
 
   // a Channel buffers effects emitted before the Activity subscribes; a SharedFlow would drop them
   private val _effectFlow = Channel<SanitizeEffect>(Channel.BUFFERED)
   val effectFlow = _effectFlow.receiveAsFlow()
-
-  private var state: SanitizeState
-    get() = _stateFlow.value
-    set(value) {
-      Timber.v("state: $value")
-      _stateFlow.value = value
-    }
-
-  override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-    Timber.v("Lifecycle onStateChanged(): $event")
-    when (event) {
-      Lifecycle.Event.ON_PAUSE -> {
-        // write to the SavedStateHandle synchronously; the process may not survive long enough for a coroutine to run
-        savedState.save(state)
-        viewModelScope.launch { persistParamPreferences() }
-      }
-      // Not necessary, because if this ViewModel is recreated, the state will be restored when SanitizeState is instantiated
-      else -> { /* NO-OP */ }
-    }
-  }
 
   fun postAction(action: SanitizeAction) {
     viewModelScope.launch {
@@ -129,6 +112,7 @@ class SanitizeViewModel @Inject constructor(
         parameters = updatedParams,
         sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams)
       )
+    persistParamPreferences()
   }
 
   private suspend fun onFetchRedirect(originalUrl: HttpUrl?) {

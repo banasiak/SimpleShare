@@ -10,10 +10,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
-import androidx.compose.runtime.DisposableEffect
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.android.simpleshare.R
@@ -45,11 +43,6 @@ class SanitizeActivity : ComponentActivity() {
     // which would be a no-op anyway now that the platform enforces edge-to-edge
     enableEdgeToEdge()
     setContent {
-      val lifecycle = LocalLifecycleOwner.current.lifecycle
-      DisposableEffect(lifecycle) {
-        lifecycle.addObserver(viewModel)
-        onDispose { lifecycle.removeObserver(viewModel) }
-      }
       SimpleShareTheme {
         SanitizeScreen(viewModel)
       }
