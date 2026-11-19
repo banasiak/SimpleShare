@@ -138,8 +138,10 @@ add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all ca
 - **Framework seams exist so the ViewModel is JVM-testable.** `ClipboardHelper` wraps `ClipData` and
   `PersistableBundle`, which are android.jar stubs that throw off-device. Inlining it back would force
   `unitTests.isReturnDefaultValues` on again. `RuleSource` is the same kind of seam over the APK's
-  assets, and `TrackerRules` matches on an injected `@DefaultDispatcher` so a test can pass the test
-  scheduler's.
+  assets.
+- **Dispatchers are injected, never named where they are used.** `AppModule` provides
+  `@DefaultDispatcher` and `@IoDispatcher`, and a test passes
+  `UnconfinedTestDispatcher(testScheduler)` for either.
 - **The sanitized query is written decoded, so it reads as text.** `sanitizeUrl` joins the kept
   parameters by hand, because `HttpUrl.Builder` would escape every value again. What stays escaped,
   and why, is at `readableQueryComponent`; the round-trip test in `SanitizeViewModelTests` fails if

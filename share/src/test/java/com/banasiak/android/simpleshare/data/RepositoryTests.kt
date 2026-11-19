@@ -8,9 +8,12 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.banasiak.android.simpleshare.common.DurationClock
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
@@ -23,12 +26,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.milliseconds
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class RepositoryTests {
   private lateinit var server: MockWebServer
   private val dataStore: DataStore<Preferences> = FakeDataStore()
   private val durationClock: DurationClock = mockk()
 
-  private fun repository() = Repository(dataStore, durationClock, OkHttpClient())
+  private fun TestScope.repository() = Repository(dataStore, durationClock, OkHttpClient(), UnconfinedTestDispatcher(testScheduler))
 
   @BeforeEach
   fun beforeEach() {
