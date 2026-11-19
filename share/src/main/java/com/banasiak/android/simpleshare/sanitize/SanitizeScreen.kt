@@ -49,7 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -63,23 +63,21 @@ private typealias InputAction = (SanitizeAction) -> Unit
 @Composable
 fun SanitizeScreen(viewModel: SanitizeViewModel) {
   val state: SanitizeState by viewModel.stateFlow.collectAsStateWithLifecycle()
-  SanitizeViewBottomSheet(state, viewModel::postAction)
+  SanitizeView(state, viewModel::postAction)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SanitizeViewBottomSheet(state: SanitizeState, postAction: InputAction) {
+fun SanitizeView(state: SanitizeState, postAction: InputAction = { }) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   val scope = rememberCoroutineScope()
 
-  SimpleShareTheme {
-    ModalBottomSheet(
-      modifier = Modifier.clearOfSideInsets(WindowInsets.safeDrawing),
-      sheetState = sheetState,
-      onDismissRequest = { dismissScreen(scope, sheetState, postAction) }
-    ) {
-      BottomSheetContent(state, postAction, sheetState)
-    }
+  ModalBottomSheet(
+    modifier = Modifier.clearOfSideInsets(WindowInsets.safeDrawing),
+    sheetState = sheetState,
+    onDismissRequest = { dismissScreen(scope, sheetState, postAction) }
+  ) {
+    BottomSheetContent(state, postAction, sheetState)
   }
 }
 
@@ -323,24 +321,26 @@ private fun dismissScreen(scope: CoroutineScope, sheetState: SheetState, postAct
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@PreviewLightDark
 @Composable
 fun SanitizeViewPreview() {
   val state =
     SanitizeState(
-      // https://www.banasiak.com/share?utm_source=AAAAA&utm_medium=BBBBBB&utm_campaign=CCCCCC&utm_term=DDDDDD&utm_content=EEEEEE
-      sanitizedUrl = "https://www.banasiak.com/share?utm_source=AAAAA&utm_campaign=CCCCCC&utm_content=EEEEEE",
+      // https://www.banasiak.com/share?id=AAAAAA&utm_source=BBBBBB&page=CCCCCC&utm_medium=DDDDDD&fbclid=EEEEEE
+      sanitizedUrl = "https://www.banasiak.com/share?id=AAAAAA&page=CCCCCC",
       parameters =
         listOf(
-          QueryParam("utm_source", "AAAAAA", enabled = true),
-          QueryParam("utm_medium", "BBBBBB", enabled = false),
-          QueryParam("utm_campaign", "CCCCCC", enabled = true),
-          QueryParam("utm_term", "DDDDDD", enabled = false),
-          QueryParam("utm_content", "EEEEEE", enabled = true)
+          QueryParam("id", "AAAAAA"),
+          QueryParam("utm_source", "BBBBBB", enabled = false, flagged = true),
+          QueryParam("page", "CCCCCC"),
+          QueryParam("utm_medium", "DDDDDD", enabled = false, flagged = true),
+          QueryParam("fbclid", "EEEEEE", enabled = false, flagged = true)
         ),
       loading = false
     )
-  Surface {
-    BottomSheetContent(state = state, sheetState = rememberModalBottomSheetState(), postAction = { })
+  SimpleShareTheme {
+    Surface {
+      BottomSheetContent(state = state, sheetState = rememberModalBottomSheetState(), postAction = { })
+    }
   }
 }

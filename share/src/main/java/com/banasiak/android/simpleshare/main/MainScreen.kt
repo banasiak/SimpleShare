@@ -46,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.banasiak.android.simpleshare.R
@@ -71,60 +72,58 @@ fun MainScreen() {
     launchIntent(context, textValue)
   }
 
-  SimpleShareTheme {
-    BoxWithConstraints(
-      modifier =
-        Modifier
-          .fillMaxSize()
-          .background(color = MaterialTheme.colorScheme.primaryContainer)
-    ) {
-      // a landscape phone has nowhere near enough height to stack the logo on top of the form,
-      // so sit them side by side and shrink the logo to fit whichever dimension is scarcer
-      val landscape = maxWidth > maxHeight
-      val logoSize = if (landscape) minOf(maxWidth * 0.3f, maxHeight * 0.65f) else maxWidth * 0.5f
-      val spacing = if (landscape) 16.dp else 64.dp
+  BoxWithConstraints(
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.primaryContainer)
+  ) {
+    // a landscape phone has nowhere near enough height to stack the logo on top of the form,
+    // so sit them side by side and shrink the logo to fit whichever dimension is scarcer
+    val landscape = maxWidth > maxHeight
+    val logoSize = if (landscape) minOf(maxWidth * 0.3f, maxHeight * 0.65f) else maxWidth * 0.5f
+    val spacing = if (landscape) 16.dp else 64.dp
 
-      val insetModifier =
-        Modifier
-          .fillMaxSize()
-          // safeDrawing covers the status bar, navigation bar, display cutout and the IME
-          .windowInsetsPadding(WindowInsets.safeDrawing)
-          .padding(horizontal = 16.dp)
+    val insetModifier =
+      Modifier
+        .fillMaxSize()
+        // safeDrawing covers the status bar, navigation bar, display cutout and the IME
+        .windowInsetsPadding(WindowInsets.safeDrawing)
+        .padding(horizontal = 16.dp)
 
-      if (landscape) {
-        Row(
-          modifier = insetModifier,
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          AnimatedVisibility(visible = !WindowInsets.isImeVisible) {
-            Logo(size = logoSize)
-          }
-          Spacer(modifier = Modifier.width(16.dp))
-          Column(
-            modifier =
-              Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-          ) {
-            SanitizeForm(textValue, { textValue = it }, onSubmit, spacing)
-          }
+    if (landscape) {
+      Row(
+        modifier = insetModifier,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        AnimatedVisibility(visible = !WindowInsets.isImeVisible) {
+          Logo(size = logoSize)
         }
-      } else {
+        Spacer(modifier = Modifier.width(16.dp))
         Column(
           modifier =
-            insetModifier
-              .verticalScroll(rememberScrollState())
-              .padding(top = spacing),
+            Modifier
+              .weight(1f)
+              .verticalScroll(rememberScrollState()),
           horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Top
+          verticalArrangement = Arrangement.Center
         ) {
-          AnimatedVisibility(visible = !WindowInsets.isImeVisible) {
-            Logo(size = logoSize)
-          }
           SanitizeForm(textValue, { textValue = it }, onSubmit, spacing)
         }
+      }
+    } else {
+      Column(
+        modifier =
+          insetModifier
+            .verticalScroll(rememberScrollState())
+            .padding(top = spacing),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+      ) {
+        AnimatedVisibility(visible = !WindowInsets.isImeVisible) {
+          Logo(size = logoSize)
+        }
+        SanitizeForm(textValue, { textValue = it }, onSubmit, spacing)
       }
     }
   }
@@ -215,14 +214,18 @@ private fun launchIntent(context: Context, text: String) {
   )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@PreviewLightDark
 @Composable
 fun MainScreenPreview() {
-  MainScreen()
+  SimpleShareTheme {
+    MainScreen()
+  }
 }
 
 @Preview(showBackground = true, showSystemUi = true, device = "spec:parent=pixel_9,orientation=landscape")
 @Composable
 fun MainScreenLandscapePreview() {
-  MainScreen()
+  SimpleShareTheme {
+    MainScreen()
+  }
 }
