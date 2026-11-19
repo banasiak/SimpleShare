@@ -11,7 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `./gradlew testDebugUnitTest --tests "*SanitizeViewModelTests*"` | a single test class |
 | `./gradlew assembleRelease` | R8-minified release APK, output unsigned |
 
-Lint is expected to report **zero** findings; treat a new one as a regression rather than noise.
+Lint is expected to report **zero** findings; treat a new one as a regression rather than noise. It
+also reports every dependency that has a newer release, so a clean run needs the catalog current.
 
 The Gradle version and `distributionSha256Sum` in `gradle/wrapper/gradle-wrapper.properties` are
 bumped together, with the sum taken from the `.sha256` file Gradle publishes beside the
