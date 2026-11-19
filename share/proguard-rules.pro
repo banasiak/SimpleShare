@@ -12,5 +12,5 @@
   public static final ** CREATOR;
 }
 # review-ktx carries a Play Services build-time annotation that is not on the runtime classpath.
-# It has no bearing on behaviour, but R8 treats a missing referenced class as a hard error.
+# It has no bearing on behavior, but R8 treats a missing referenced class as a hard error.
 -dontwarn com.google.android.gms.common.annotation.NoNullnessRewrite
