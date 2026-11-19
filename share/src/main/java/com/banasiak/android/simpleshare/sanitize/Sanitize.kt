@@ -44,7 +44,8 @@ sealed class SanitizeEffect {
 data class QueryParam(
   val name: String,
   val value: String?,
-  val enabled: Boolean = false
+  val enabled: Boolean = true,
+  val flagged: Boolean = false
 ) : Parcelable
 
 enum class ButtonType {

@@ -81,6 +81,7 @@ dependencies {
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
   implementation(libs.dagger.hilt.android)
   implementation(libs.kotlinx.coroutines.android)
+  implementation(libs.kotlinx.serialization.json)
   implementation(libs.material)
   implementation(libs.okhttp)
   implementation(libs.okhttp.coroutines)

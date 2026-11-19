@@ -4,9 +4,9 @@ Sometimes you just want to share a link with a friend without being canceled by 
 
 Anyway, this app gives you a simple way to remove query parameters from any URL. Either launch the app and paste a URL into the text box or share a URL from another app via the Android Sharesheet. 
 
-Uncheck the boxes to remove any tracking parameters from the URL. Have to figure out which ones those are by yourself, though. This app is *simple*, remember? (But at least it will save your selections for next time.)
+The tracking parameters it recognizes start out unchecked, courtesy of the rules from the [ClearURLs](https://github.com/ClearURLs/Rules) project. Everything else stays checked, so the link still goes where it was going. If it guesses wrong, check or uncheck the box yourself, and it will remember your choice for that site next time.
 
-Got a shortened link that hides where it actually goes? Tap the cloud icon and the app will follow the redirect first, then sanitize wherever it lands.
+Got a shortened link that hides where it actually goes? Tap the cloud icon and the app will follow the redirect first, then sanitize wherever it lands. That tap is the only time the app makes a network request of its own: the rules ship inside it and are never downloaded.
 
 Requires Android 7.0 or later.
 

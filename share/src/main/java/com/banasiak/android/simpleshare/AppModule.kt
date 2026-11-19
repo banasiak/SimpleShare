@@ -13,24 +13,32 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.banasiak.android.simpleshare.common.BuildInfo
 import com.banasiak.android.simpleshare.common.Constants
 import com.banasiak.android.simpleshare.common.DurationClock
+import com.banasiak.android.simpleshare.data.RuleSource
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlin.time.DurationUnit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DefaultDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
   private const val DATASTORE_NAME = "datastore"
+  private const val RULES_ASSET = "clearurls/data.min.json"
 
   @Provides
   @Reusable
@@ -81,5 +89,17 @@ object AppModule {
   @Singleton
   fun provideDurationClock(): DurationClock {
     return DurationClock(DurationUnit.MILLISECONDS)
+  }
+
+  @Provides
+  @DefaultDispatcher
+  fun provideDefaultDispatcher(): CoroutineDispatcher {
+    return Dispatchers.Default
+  }
+
+  @Provides
+  @Singleton
+  fun provideRuleSource(@ApplicationContext context: Context): RuleSource {
+    return RuleSource { context.assets.open(RULES_ASSET) }
   }
 }

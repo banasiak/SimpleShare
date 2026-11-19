@@ -8,14 +8,17 @@ import com.banasiak.android.simpleshare.MainDispatcherRule
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.common.BuildInfo
 import com.banasiak.android.simpleshare.common.ClipboardHelper
+import com.banasiak.android.simpleshare.data.ParamPreferences
 import com.banasiak.android.simpleshare.data.RedirectResult
 import com.banasiak.android.simpleshare.data.Repository
+import com.banasiak.android.simpleshare.data.TrackerRules
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
+import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -29,6 +32,7 @@ class SanitizeViewModelTests {
   private val clipboard: ClipboardHelper = mockk(relaxed = true)
   private val repository: Repository = mockk(relaxed = true)
   private val savedState: SavedStateHandle = mockk(relaxed = true)
+  private val trackerRules: TrackerRules = mockk()
   private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
 
   private fun viewModel(apiLevel: Int = 33) =
@@ -36,21 +40,24 @@ class SanitizeViewModelTests {
       buildInfo = BuildInfo(apiLevel, "com.banasiak.android.simpleshare", "TEST", 1),
       clipboard = clipboard,
       repository = repository,
-      savedState = savedState
+      savedState = savedState,
+      trackerRules = trackerRules
     )
 
   @BeforeEach
   fun beforeEach() {
     every { savedState.get<SanitizeState>("state") } returns null
-    coEvery { repository.getEnabledParamsForHost(any()) } returns emptyList()
+    coEvery { repository.getParamPreferencesForHost(any()) } returns ParamPreferences()
     coEvery { repository.getLaunchCountThenIncrement() } returns 1
     coEvery { repository.fetchRedirectUrl(any(), any()) } returns RedirectResult.NoRedirect
+    // stands in for the catalog: utm_source is the one tracker these tests know about
+    coEvery { trackerRules.flaggedNames(any()) } answers { firstArg<HttpUrl>().queryParameterNames intersect setOf("utm_source") }
   }
 
   // region intent handling
 
   @Test
-  fun `given text around a tracked url, when the intent arrives, then the parameters are listed and stripped`() =
+  fun `given text around a link carrying a known tracker, when the intent arrives, then only the tracker starts unchecked`() =
     runTest {
       // given
       val vm = viewModel()
@@ -60,9 +67,20 @@ class SanitizeViewModelTests {
 
       // then
       val state = vm.stateFlow.value
-      state.parameters.map { it.name } shouldBeEqualTo listOf("utm_source", "id")
-      state.parameters.any { it.enabled }.shouldBeFalse()
-      state.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p"
+      state.parameters shouldBeEqualTo
+        listOf(QueryParam("utm_source", "a", enabled = false, flagged = true), QueryParam("id", "1", enabled = true))
+      state.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?id=1"
+    }
+
+  @Test
+  fun `given a link the rules have nothing to say about, when the intent arrives, then it comes through whole`() =
+    runTest {
+      // boxes used to start unchecked, which stripped the v from a video link and the q from a search
+      val vm = viewModel()
+
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/watch?v=abc&t=42"))
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/watch?v=abc&t=42"
     }
 
   @Test
@@ -89,11 +107,11 @@ class SanitizeViewModelTests {
 
       vm.stateFlow.value.parameters shouldBeEqualTo
         listOf(QueryParam("tag", "x"), QueryParam("tag", "y"))
-
-      // both survive into the output when the name is kept
-      vm.postAction(SanitizeAction.ParamToggled(0, true))
-      vm.postAction(SanitizeAction.ParamToggled(1, true))
       vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?tag=x&tag=y"
+
+      // each occurrence has a box of its own
+      vm.postAction(SanitizeAction.ParamToggled(0, false))
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?tag=y"
     }
 
   @Test
@@ -109,10 +127,10 @@ class SanitizeViewModelTests {
     }
 
   @Test
-  fun `given a parameter kept for this host before, when the intent arrives, then it is pre-checked and preserved`() =
+  fun `given a tracker the user kept on this host before, when the intent arrives, then their choice outranks the rules`() =
     runTest {
       // given
-      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("id")
+      coEvery { repository.getParamPreferencesForHost("www.banasiak.com") } returns ParamPreferences(kept = setOf("utm_source"))
       val vm = viewModel()
 
       // when
@@ -120,8 +138,35 @@ class SanitizeViewModelTests {
 
       // then
       vm.stateFlow.value.parameters shouldBeEqualTo
-        listOf(QueryParam("utm_source", "a"), QueryParam("id", "1", enabled = true))
-      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?id=1"
+        listOf(QueryParam("utm_source", "a", enabled = true, flagged = true), QueryParam("id", "1", enabled = true))
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?utm_source=a&id=1"
+    }
+
+  @Test
+  fun `given a parameter the user removed on this host before, when the intent arrives, then it starts unchecked`() =
+    runTest {
+      // given
+      coEvery { repository.getParamPreferencesForHost("www.banasiak.com") } returns ParamPreferences(removed = setOf("id"))
+      val vm = viewModel()
+
+      // when
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?page=2&id=1"))
+
+      // then
+      vm.stateFlow.value.parameters shouldBeEqualTo
+        listOf(QueryParam("page", "2", enabled = true), QueryParam("id", "1", enabled = false))
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?page=2"
+    }
+
+  @Test
+  fun `given a choice made on one host, when a link to another host arrives, then the choice does not follow it`() =
+    runTest {
+      coEvery { repository.getParamPreferencesForHost("www.banasiak.com") } returns ParamPreferences(kept = setOf("utm_source"))
+      val vm = viewModel()
+
+      vm.postAction(SanitizeAction.IntentReceived("https://example.com/p?utm_source=a"))
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://example.com/p"
     }
 
   @Test
@@ -164,14 +209,25 @@ class SanitizeViewModelTests {
   // endregion
 
   @Test
-  fun `given a stripped parameter, when it is toggled back on, then it returns to the sanitized url`() =
+  fun `given a tracker that started unchecked, when it is toggled back on, then it returns to the sanitized url`() =
     runTest {
       val vm = viewModel()
       vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1"))
 
-      vm.postAction(SanitizeAction.ParamToggled(index = 1, enabled = true))
+      vm.postAction(SanitizeAction.ParamToggled(index = 0, enabled = true))
 
-      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?id=1"
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p?utm_source=a&id=1"
+    }
+
+  @Test
+  fun `given a parameter that started checked, when it is toggled off, then it leaves the sanitized url`() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1"))
+
+      vm.postAction(SanitizeAction.ParamToggled(index = 1, enabled = false))
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/p"
     }
 
   // region readable query
@@ -180,7 +236,6 @@ class SanitizeViewModelTests {
   fun `given kept values with escaped punctuation, when sanitizing, then the query reads decoded`() =
     runTest {
       // given
-      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("list", "next")
       val vm = viewModel()
 
       // when
@@ -193,7 +248,6 @@ class SanitizeViewModelTests {
   @Test
   fun `given a kept value in another script, when sanitizing, then it reads as written`() =
     runTest {
-      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("q")
       val vm = viewModel()
 
       vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/s?q=caf%C3%A9"))
@@ -206,7 +260,6 @@ class SanitizeViewModelTests {
     runTest {
       // decoded, the plus would read as a space, the ampersand would split the nested link into a
       // second parameter, and the hash would turn the rest of the query into a fragment
-      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("q", "u", "tag")
       val vm = viewModel()
 
       vm.postAction(
@@ -224,7 +277,6 @@ class SanitizeViewModelTests {
     runTest {
       // a decoded right-to-left override reorders everything after it, so the link on screen would no
       // longer read the way it actually goes
-      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("f", "g")
       val vm = viewModel()
 
       vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?f=%E2%80%AEevil&g=nb%C2%A0sp"))
@@ -236,7 +288,6 @@ class SanitizeViewModelTests {
   fun `given values that decoding could corrupt, when sanitizing, then the result parses back to the same parameters`() =
     runTest {
       val names = listOf("a", "b", "c", "d", "e=name", "f", "g", "h", "i", "j", "k")
-      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns names
       val vm = viewModel()
 
       vm.postAction(
@@ -406,17 +457,67 @@ class SanitizeViewModelTests {
       vm.effectFlow.test { awaitItem() shouldBeEqualTo SanitizeEffect.Finish }
     }
 
+  // region saving
+
   @Test
-  fun `when the screen pauses, then state is stored and the choices for this link are written out`() =
+  fun `when the screen pauses, then state is stored and the boxes for this link are written out`() =
     runTest {
-      coEvery { repository.getEnabledParamsForHost("www.banasiak.com") } returns listOf("id")
       val vm = viewModel()
-      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1"))
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1&page=2"))
+      vm.postAction(SanitizeAction.ParamToggled(index = 2, enabled = false))
 
       vm.onStateChanged(lifecycleOwner, Lifecycle.Event.ON_PAUSE)
 
       // written straight through rather than from a coroutine: the process may not live long enough
       verify { savedState.set("state", vm.stateFlow.value) }
-      coVerify { repository.updateEnabledParamsForHost("www.banasiak.com", setOf("utm_source", "id"), setOf("id")) }
+      // what the rules flagged goes along, because the repository remembers only the boxes that were
+      // left against them
+      coVerify {
+        repository.updateParamPreferencesForHost(
+          "www.banasiak.com",
+          enabled = setOf("id"),
+          disabled = setOf("utm_source", "page"),
+          flagged = setOf("utm_source")
+        )
+      }
     }
+
+  @Test
+  fun `given a repeated name with one occurrence unchecked, when the screen pauses, then the name still counts as kept`() =
+    runTest {
+      // preferences are per name, so two boxes have to collapse into one answer; keeping errs toward
+      // the link still working
+      val vm = viewModel()
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?tag=x&tag=y"))
+      vm.postAction(SanitizeAction.ParamToggled(index = 0, enabled = false))
+
+      vm.onStateChanged(lifecycleOwner, Lifecycle.Event.ON_PAUSE)
+
+      coVerify {
+        repository.updateParamPreferencesForHost("www.banasiak.com", enabled = setOf("tag"), disabled = emptySet(), flagged = emptySet())
+      }
+    }
+
+  @Test
+  fun `given a short link that was decoded, when the screen pauses, then the boxes are saved for the host it led to`() =
+    runTest {
+      coEvery { repository.fetchRedirectUrl(any(), any()) } returns
+        RedirectResult.Redirected("https://www.banasiak.com/full?utm_source=a&id=1".toHttpUrl())
+      val vm = viewModel()
+      vm.postAction(SanitizeAction.IntentReceived("https://ban.co/abc"))
+      vm.postAction(SanitizeAction.FetchRedirect)
+
+      vm.onStateChanged(lifecycleOwner, Lifecycle.Event.ON_PAUSE)
+
+      coVerify {
+        repository.updateParamPreferencesForHost(
+          "www.banasiak.com",
+          enabled = setOf("id"),
+          disabled = setOf("utm_source"),
+          flagged = setOf("utm_source")
+        )
+      }
+    }
+
+  // endregion
 }

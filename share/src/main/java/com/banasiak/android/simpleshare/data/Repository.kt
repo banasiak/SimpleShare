@@ -1,6 +1,7 @@
 package com.banasiak.android.simpleshare.data
 
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -9,7 +10,6 @@ import com.banasiak.android.simpleshare.common.DurationClock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -28,28 +28,53 @@ sealed interface RedirectResult {
   data object Failed : RedirectResult
 }
 
+data class ParamPreferences(
+  val kept: Set<String> = emptySet(),
+  val removed: Set<String> = emptySet()
+)
+
 @Singleton
 class Repository @Inject constructor(
   private val dataStore: DataStore<Preferences>,
   private val durationClock: DurationClock,
   private val httpClient: OkHttpClient
 ) {
-  // a link only speaks for the names it carries, so merge rather than replace: overwriting the set would
-  // let a link without some parameter (or with no query at all) erase a choice made on an earlier link
-  suspend fun updateEnabledParamsForHost(host: String, present: Set<String>, enabled: Set<String>) {
-    Timber.d("Update params for '$host': present=$present, enabled=$enabled")
-    val key = stringSetPreferencesKey(host)
+  /**
+   * Records what the user decided on one link. [enabled] and [disabled] split the names the link
+   * carried by how its boxes were left, and [flagged] holds the names the rules had marked.
+   *
+   * Only a box left against the rules is remembered: a flagged name that was kept, or an unflagged
+   * one that was removed. Leaving a box as the rules had it stores nothing, but it does not erase an
+   * earlier choice the box still agrees with.
+   */
+  suspend fun updateParamPreferencesForHost(host: String, enabled: Set<String>, disabled: Set<String>, flagged: Set<String>) {
+    Timber.d("Update param preferences for '$host': enabled=$enabled, disabled=$disabled, flagged=$flagged")
+    // a link only speaks for the names it carries, so merge rather than replace: overwriting the sets
+    // would let a link without some parameter (or with no query at all) erase an earlier choice.
     // read and write inside a single edit{} so a concurrent update for the same host isn't lost
     dataStore.edit { prefs ->
-      prefs[key] = prefs[key].orEmpty() - present + enabled
+      prefs.setOrRemove(keptKey(host), prefs[keptKey(host)].orEmpty() - disabled + (enabled intersect flagged))
+      prefs.setOrRemove(removedKey(host), prefs[removedKey(host)].orEmpty() - enabled + (disabled - flagged))
     }
   }
 
-  suspend fun getEnabledParamsForHost(host: String): List<String> {
-    val key = stringSetPreferencesKey(host)
-    val params = dataStore.data.map { it[key] }.map { it?.toList() ?: emptyList() }.first()
-    Timber.d("Retrieve enabled params for '$host': $params")
-    return params
+  suspend fun getParamPreferencesForHost(host: String): ParamPreferences {
+    val prefs = dataStore.data.first()
+    val preferences = ParamPreferences(kept = prefs[keptKey(host)].orEmpty(), removed = prefs[removedKey(host)].orEmpty())
+    Timber.d("Retrieve param preferences for '$host': $preferences")
+    return preferences
+  }
+
+  // the host alone, as every release has written it, so choices saved by an older install still read
+  private fun keptKey(host: String) = stringSetPreferencesKey(host)
+
+  // a host cannot contain '#', so this never collides with another host's kept names
+  private fun removedKey(host: String) = stringSetPreferencesKey("$host#removed")
+
+  // a host with nothing to remember leaves no entry, so the store holds choices, not a list of every
+  // host that was ever shared
+  private fun MutablePreferences.setOrRemove(key: Preferences.Key<Set<String>>, value: Set<String>) {
+    if (value.isEmpty()) remove(key) else this[key] = value
   }
 
   suspend fun getLaunchCountThenIncrement(): Int {
