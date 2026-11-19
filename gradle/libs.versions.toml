@@ -11,6 +11,7 @@ kluent = "1.73"
 kotlin = "2.4.21"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.13.0"
+kover = "0.9.11"
 ksp = "2.3.14"
 ktlint = "1.8.0"
 material = "1.14.0"
@@ -60,8 +61,8 @@ urldetector = { module = "com.linkedin.urls:url-detector", version.ref = "urldet
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt-android" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 versions = { id = "io.github.ben-manes.versions", version.ref = "versions" }

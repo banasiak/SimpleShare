@@ -5,6 +5,7 @@ plugins {
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.hilt.android)
+  alias(libs.plugins.kover)
   alias(libs.plugins.ksp)
 }
 
@@ -64,6 +65,32 @@ composeCompiler {
   reportsDestination = layout.buildDirectory.dir("compose_compiler")
 }
 
+kover {
+  reports {
+    filters {
+      excludes {
+        // Hilt/Dagger and the Compose compiler emit these; nobody wrote them and nobody can test them
+        annotatedBy("dagger.internal.DaggerGenerated")
+        classes(
+          "*.BuildConfig",
+          "*.Hilt_*",
+          "*_Factory*",
+          "*_MembersInjector",
+          "*_HiltModules*",
+          "*ComposableSingletons*",
+          "*Factory\$InstanceHolder"
+        )
+        packages("hilt_aggregated_deps", "dagger.hilt.internal")
+
+        // the UI layer is out of scope while there are no Compose tests. Drop these two
+        // exclusions the day androidTest exists, or the report will keep flattering the UI.
+        annotatedBy("androidx.compose.runtime.Composable")
+        packages("com.banasiak.android.simpleshare.ui.theme")
+      }
+    }
+  }
+}
+
 val ktlint: Configuration = configurations.create("ktlint")
 
 dependencies {
@@ -117,17 +144,18 @@ val ktlintFiles =
     rootProject.file("settings.gradle.kts")
   ).let { files -> CommandLineArgumentProvider { files.map { it.path } } }
 
-tasks.register<JavaExec>("ktlintCheck") {
-  group = LifecycleBasePlugin.VERIFICATION_GROUP
-  description = "Check Kotlin code style"
-  classpath = ktlint
-  mainClass.set("com.pinterest.ktlint.Main")
-  // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
-  argumentProviders.add(ktlintFiles)
-}
+val ktlintCheck =
+  tasks.register<JavaExec>("ktlintCheck") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Check Kotlin code style"
+    classpath = ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+    argumentProviders.add(ktlintFiles)
+  }
 
 tasks.check {
-  dependsOn("ktlintCheck")
+  dependsOn(ktlintCheck)
 }
 
 tasks.register<JavaExec>("format") {

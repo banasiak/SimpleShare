@@ -9,7 +9,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `./gradlew check` | ktlint, Android lint and the unit tests -- the gate to run before calling anything done |
 | `./gradlew format` | ktlint auto-fix. Must be idempotent: a second run has to produce no diff |
 | `./gradlew testDebugUnitTest --tests "*SanitizeViewModelTests*"` | a single test class |
+| `./gradlew koverHtmlReportDebug` | unit test coverage, with generated code and composables left out |
 | `./gradlew assembleRelease` | R8-minified release APK, output unsigned |
+
+Run `format` and `check` as two commands, `format` first: nothing orders them inside one invocation.
 
 Lint is expected to report **zero** findings; treat a new one as a regression rather than noise. It
 also reports every dependency that has a newer release, so a clean run needs the catalog current.
@@ -142,11 +145,11 @@ add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all ca
   and why, is at `readableQueryComponent`; the round-trip test in `SanitizeViewModelTests` fails if
   the output ever parses back to different parameters.
 - **`toHttpsUrlOrNull` upgrades every URL to https** before anything else touches it.
-- `.editorconfig` disables the ktlint rules that reflow working code rather than catch a defect.
-  Most of them would reformat otherwise untouched files, so do not re-enable them to "tidy up".
-  Two found nothing to change when checked on 2026-11-04:
-  `spacing-between-declarations-with-annotations` and `value-parameter-comment`. No reason was
-  recorded for turning those two off, so ask before turning them on.
+- `.editorconfig` is the house style's copy, unchanged, from the `android-house-style` skill. It
+  disables the ktlint rules that reflow working code rather than catch a defect, so do not re-enable
+  them to "tidy up". Three more that this file used to disable (`function-expression-body`,
+  `value-parameter-comment` and `when-entry-bracing`) found nothing to change when they came back on
+  2026-11-18.
 - `no-unused-imports` is enabled by name in `.editorconfig`, which is the only way it runs: ktlint
   1.7.0 stopped running it by default. It is deprecated and goes in ktlint 2.0.0.
 - `.editorconfig` sets `insert_final_newline = false`, and ktlint holds Kotlin sources to it, so
