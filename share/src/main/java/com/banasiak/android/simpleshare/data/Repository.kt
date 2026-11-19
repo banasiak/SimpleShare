@@ -6,8 +6,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.banasiak.android.simpleshare.IoDispatcher
 import com.banasiak.android.simpleshare.common.DurationClock
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -37,7 +38,8 @@ data class ParamPreferences(
 class Repository @Inject constructor(
   private val dataStore: DataStore<Preferences>,
   private val durationClock: DurationClock,
-  private val httpClient: OkHttpClient
+  private val httpClient: OkHttpClient,
+  @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) {
   /**
    * Records what the user decided on one link. [enabled] and [disabled] split the names the link
@@ -94,9 +96,9 @@ class Repository @Inject constructor(
     val request = Request.Builder().url(url).build()
     // executeAsync() resumes on the caller's dispatcher, which is the main thread for viewModelScope.
     // Closing an unread HTTP/2 response body writes a RST_STREAM frame, so the close is real network
-    // I/O and throws NetworkOnMainThreadException unless the whole call is confined to Dispatchers.IO.
+    // I/O and throws NetworkOnMainThreadException unless the whole call is confined to the IO dispatcher.
     val result =
-      withContext(Dispatchers.IO) {
+      withContext(ioDispatcher) {
         try {
           // the response body is never read, but it still has to be closed to release the connection
           httpClient.newCall(request).executeAsync().use { response ->

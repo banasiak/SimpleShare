@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.android.simpleshare.R
+import com.banasiak.android.simpleshare.common.attempt
 import com.banasiak.android.simpleshare.ui.theme.SimpleShareTheme
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
@@ -109,13 +110,11 @@ class SanitizeActivity : ComponentActivity() {
 
   private fun showRateAppDialog() {
     lifecycleScope.launch {
-      try {
+      attempt(onFailure = { Timber.e(it, "Unable to show Google Play rate app dialog") }) {
         val context = this@SanitizeActivity
         val reviewManager = ReviewManagerFactory.create(context)
         val reviewInfo = reviewManager.requestReview()
         reviewManager.launchReview(context, reviewInfo)
-      } catch (e: Exception) {
-        Timber.e(e, "Unable to show Google Play rate app dialog")
       }
     }
   }

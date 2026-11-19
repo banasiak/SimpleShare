@@ -34,6 +34,10 @@ import kotlin.time.DurationUnit
 @Retention(AnnotationRetention.BINARY)
 annotation class DefaultDispatcher
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class IoDispatcher
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -95,6 +99,12 @@ object AppModule {
   @DefaultDispatcher
   fun provideDefaultDispatcher(): CoroutineDispatcher {
     return Dispatchers.Default
+  }
+
+  @Provides
+  @IoDispatcher
+  fun provideIoDispatcher(): CoroutineDispatcher {
+    return Dispatchers.IO
   }
 
   @Provides
