@@ -1,7 +1,5 @@
 package com.banasiak.android.simpleshare.sanitize
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.banasiak.android.simpleshare.MainDispatcherRule
@@ -33,7 +31,6 @@ class SanitizeViewModelTests {
   private val repository: Repository = mockk(relaxed = true)
   private val savedState: SavedStateHandle = mockk(relaxed = true)
   private val trackerRules: TrackerRules = mockk()
-  private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
 
   private fun viewModel(apiLevel: Int = 33) =
     SanitizeViewModel(
@@ -460,16 +457,25 @@ class SanitizeViewModelTests {
   // region saving
 
   @Test
-  fun `when the screen pauses, then state is stored and the boxes for this link are written out`() =
+  fun `when the state changes, then it is saved at once`() =
+    runTest {
+      // nothing tells a ViewModel that its process is about to be killed, so there is no later
+      // moment to save at
+      val vm = viewModel()
+
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1"))
+
+      verify { savedState.set("state", vm.stateFlow.value) }
+    }
+
+  @Test
+  fun `when a box is toggled, then the boxes for this link are written out`() =
     runTest {
       val vm = viewModel()
       vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1&page=2"))
+
       vm.postAction(SanitizeAction.ParamToggled(index = 2, enabled = false))
 
-      vm.onStateChanged(lifecycleOwner, Lifecycle.Event.ON_PAUSE)
-
-      // written straight through rather than from a coroutine: the process may not live long enough
-      verify { savedState.set("state", vm.stateFlow.value) }
       // what the rules flagged goes along, because the repository remembers only the boxes that were
       // left against them
       coVerify {
@@ -483,15 +489,27 @@ class SanitizeViewModelTests {
     }
 
   @Test
-  fun `given a repeated name with one occurrence unchecked, when the screen pauses, then the name still counts as kept`() =
+  fun `given a link whose boxes are never touched, when it is shared, then nothing is written`() =
+    runTest {
+      // an untouched box is not a choice, and writing for every link would turn the store into a
+      // history of the hosts links were shared from
+      val vm = viewModel()
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?utm_source=a&id=1"))
+
+      vm.postAction(SanitizeAction.ButtonTapped(ButtonType.SHARE))
+
+      coVerify(exactly = 0) { repository.updateParamPreferencesForHost(any(), any(), any(), any()) }
+    }
+
+  @Test
+  fun `given a repeated name with one occurrence unchecked, when it is toggled, then the name still counts as kept`() =
     runTest {
       // preferences are per name, so two boxes have to collapse into one answer; keeping errs toward
       // the link still working
       val vm = viewModel()
       vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/p?tag=x&tag=y"))
-      vm.postAction(SanitizeAction.ParamToggled(index = 0, enabled = false))
 
-      vm.onStateChanged(lifecycleOwner, Lifecycle.Event.ON_PAUSE)
+      vm.postAction(SanitizeAction.ParamToggled(index = 0, enabled = false))
 
       coVerify {
         repository.updateParamPreferencesForHost("www.banasiak.com", enabled = setOf("tag"), disabled = emptySet(), flagged = emptySet())
@@ -499,7 +517,7 @@ class SanitizeViewModelTests {
     }
 
   @Test
-  fun `given a short link that was decoded, when the screen pauses, then the boxes are saved for the host it led to`() =
+  fun `given a short link that was decoded, when a box is toggled, then the boxes are saved for the host it led to`() =
     runTest {
       coEvery { repository.fetchRedirectUrl(any(), any()) } returns
         RedirectResult.Redirected("https://www.banasiak.com/full?utm_source=a&id=1".toHttpUrl())
@@ -507,13 +525,13 @@ class SanitizeViewModelTests {
       vm.postAction(SanitizeAction.IntentReceived("https://ban.co/abc"))
       vm.postAction(SanitizeAction.FetchRedirect)
 
-      vm.onStateChanged(lifecycleOwner, Lifecycle.Event.ON_PAUSE)
+      vm.postAction(SanitizeAction.ParamToggled(index = 0, enabled = true))
 
       coVerify {
         repository.updateParamPreferencesForHost(
           "www.banasiak.com",
-          enabled = setOf("id"),
-          disabled = setOf("utm_source"),
+          enabled = setOf("utm_source", "id"),
+          disabled = emptySet(),
           flagged = setOf("utm_source")
         )
       }

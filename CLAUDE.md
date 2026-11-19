@@ -50,14 +50,18 @@ Reading that file first explains most of the rest.
 
 `SanitizeViewModel` is the only place state changes:
 
-- `stateFlow` is a `StateFlow` for rendering. The private `state` property reads and writes through
-  it, and is seeded from `SavedStateHandle` at construction -- a property initialiser would bypass
-  the setter and leave the UI on a default after process death.
+- The private `state` property is restored from `SavedStateHandle` at construction, and its setter
+  is the only place state is published. The setter also saves to `SavedStateHandle`, because nothing
+  tells a ViewModel that its process is about to be killed.
+- `stateFlow` is seeded from `state`. The initializer assigns the restored value without running the
+  setter, so a flow created with a default of its own would leave the UI empty after process death.
+- `loading` is `@IgnoredOnParcel`. A lookup does not survive the process, and a restored `true`
+  would leave the progress bar running with the button disabled.
 - `effectFlow` is backed by a **`Channel`, not a `SharedFlow`**. Effects are one-shot and the
   Activity subscribes asynchronously; a shared flow silently drops anything emitted before the
   collector attaches.
-- It implements `LifecycleEventObserver`. On `ON_PAUSE` it writes to `SavedStateHandle`
-  synchronously and persists the user's choices in the background.
+- The user's choices are written out when a box is toggled, and at no other time. A link whose boxes
+  are never touched writes nothing.
 - The saved preferences and the rules are looked up concurrently. Each lookup returns on the main
   thread, which is busy drawing the sheet's first frame, so one after the other costs a second wait.
 
@@ -167,8 +171,16 @@ is a JUnit 5 extension, not a JUnit 4 rule. Test names are `given / when / then`
 backticks and class names end in `Tests`.
 
 The ViewModel is constructed directly rather than through Hilt, `Repository` is mocked, and
-`RepositoryTests` drives real HTTP against MockWebServer. `HttpUrlParceler` is untested because a
-real `Parcel` needs Robolectric or instrumentation.
+`RepositoryTests` drives real HTTP against MockWebServer. `HttpUrlParceler` has no unit test because
+a real `Parcel` needs Robolectric or instrumentation, and for the same reason neither does `loading`
+being left out of the parcel.
+
+Both were checked by hand instead, on a Pixel 9a running Android 17 on 2026-11-19, in a debug and
+an R8 release build. Killed six seconds into a lookup, the sheet came back with its link and boxes
+and no progress bar, and the cloud button started a new lookup. A build without `@IgnoredOnParcel`
+came back with the bar running and a button that did nothing. To repeat it, share a link to
+`192.0.2.1`, which never answers, tap the cloud icon, press Home, `am kill` the package, and return
+with `am task focus <task id>`.
 
 `TrackerRules` is mocked in the ViewModel tests, where it flags `utm_source` and nothing else.
 `TrackerRulesTests` mostly feeds it small catalogs written inline, and reads the bundled one

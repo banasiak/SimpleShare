@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import com.banasiak.android.simpleshare.R
 import com.banasiak.android.simpleshare.data.HttpUrlParceler
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
 import okhttp3.HttpUrl
@@ -15,7 +16,7 @@ data class SanitizeState(
   val canFetchRedirect: Boolean = true,
   val intentProcessed: Boolean = false,
   val launchCount: Int = 0,
-  val loading: Boolean = false,
+  @IgnoredOnParcel val loading: Boolean = false,
   val originalUrl: HttpUrl? = null,
   val parameters: List<QueryParam> = emptyList(),
   val sanitizedUrl: String = ""
