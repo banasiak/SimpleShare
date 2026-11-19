@@ -36,7 +36,7 @@ apksigner sign --ks ~/.android/debug.keystore --ks-pass pass:android \
 
 ## Architecture
 
-Two entry points share one ViewModel-driven loop:
+There are two entry points:
 
 - `main.MainActivity` -- the launcher screen, a Compose-only screen with no ViewModel, where the user
   pastes text and starts an `ACTION_SEND` intent aimed at the other activity.
@@ -166,6 +166,22 @@ add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all ca
 - R8 is on for release. Every rule in `share/proguard-rules.pro` notes the failure it prevents,
   because R8 breakage is silent -- verify reflection-driven paths (Hilt, `@Parcelize` through process
   death, DataStore) on a device rather than trusting a clean build.
+
+## Where this app departs from the house style
+
+Each of these was looked at on 2026-11-18 and left as it is, for the reason given.
+
+- **The launcher screen has no ViewModel or State/Action/Effect triad.** Its one piece of state is
+  the text field. Hoisted through a `StateFlow`, a text field's value arrives a frame after the
+  keystroke, which is the documented way to get dropped characters and a jumping cursor. Converting
+  it needs a state-based text field and a typing test on a device. Until then `rememberSaveable`
+  holds the text, and the demo link is picked with an uninjected `Random`.
+- **`effectFlow` is a `Channel`.** The house style's `MutableSharedFlow` drops an effect raised
+  before the Activity's collector attaches, and a test here guards against exactly that.
+- **The app still depends on Material Components, for the XML theme's parent.** The platform theme
+  the house style uses instead needs API 29, and `minSdk` is 24.
+- **Effects are collected by the Activity, not the `*Screen`.** Every effect here finishes the
+  Activity or starts another one, so the Activity is what owns navigation.
 
 ## Tests
 

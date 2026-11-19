@@ -12,6 +12,15 @@ Requires Android 7.0 or later.
 
 It is available via the [Google Play Store](https://play.google.com/store/apps/details?id=com.banasiak.android.simpleshare).
 
+## Building
+
+It is a single Gradle module, `share`, written in Kotlin with Jetpack Compose, Hilt and DataStore. The versions of everything it is built with are in [`gradle/libs.versions.toml`](gradle/libs.versions.toml). You need a JDK and the Android SDK; the Gradle wrapper fetches the rest, and checks the Gradle download against a pinned checksum.
+
+```
+./gradlew assembleDebug    # a debug APK, in share/build/outputs/apk/debug
+./gradlew check            # ktlint, Android lint and the unit tests
+```
+
 ## License
 
 This repository holds two works under two licenses.
