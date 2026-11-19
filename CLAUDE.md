@@ -46,12 +46,25 @@ that file first explains most of the rest.
   Activity subscribes asynchronously; a shared flow silently drops anything emitted before the
   collector attaches.
 - It implements `LifecycleEventObserver`. On `ON_PAUSE` it writes to `SavedStateHandle`
-  synchronously and persists enabled parameters in the background.
+  synchronously and persists the user's choices in the background.
+- The saved preferences and the rules are looked up concurrently. Each lookup returns on the main
+  thread, which is busy drawing the sheet's first frame, so one after the other costs a second wait.
 
 `data/Repository` owns everything durable: per-host preferences in Preferences DataStore, the launch
 counter, and short-URL resolution over OkHttp. `fetchRedirectUrl` returns a `RedirectResult` rather
 than a nullable URL so callers can tell "this host has no redirect" from "we never reached it" --
 the UI keeps the retry action available only for the second.
+
+`data/TrackerRules` answers one question: which query parameter names on a link does the ClearURLs
+catalog mark as tracking. The catalog is upstream's `data.min.json`, bundled unmodified in
+`share/src/main/assets/clearurls/` and read on first use. It is matched the way the ClearURLs
+add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all case-insensitively:
+
+- A provider applies when its `urlPattern` is found anywhere in the link and none of its
+  `exceptions` is.
+- Each entry in `rules` and `referralMarketing` is wrapped in `^...$` and tested against a decoded
+  parameter name.
+- Nothing reads `rawRules`, `redirections`, `completeProvider` or `forceRedirection`.
 
 ## Decisions worth not re-litigating
 
@@ -59,16 +72,63 @@ the UI keeps the retry action available only for the second.
   `application/x-www-form-urlencoded` produces them for multi-valued form controls. A map cannot
   represent `?a=1&a=1` at all. Read the query positionally (`querySize` / `queryParameterName(i)`),
   because `queryParameterNames` is a `Set` and `queryParameter(name)` returns only the first match.
-- **Preferences are stored per parameter *name*, deliberately.** Values change from link to link
-  while names recur, so a value-keyed preference would rarely match again. The consequence -- keeping
-  one of two same-named parameters re-enables both next time -- errs toward keeping more. Saving
-  merges rather than replaces: a link updates only the names it carries, so one that lacks a
-  parameter (or has no query at all) cannot erase a choice made on an earlier link.
+- **A box starts checked unless something says otherwise.** `buildParameterList` asks, in order:
+  did the user keep this name on this host, did they remove it, do the rules flag it. Boxes started
+  unchecked through release EIGHT, which stripped the `v` from a video link until the user checked
+  it.
+- **Only a choice the user made is stored, and it is stored per parameter *name*.** Values change
+  from link to link while names recur, so a value-keyed preference would rarely match again.
+  - A box left as the rules had it stores nothing, so a later catalog that starts or stops flagging
+    a name still reaches that host.
+  - A box left against the rules is remembered until the user reverses it.
+  - Two same-named parameters collapse into one answer, kept if either is, which errs toward keeping
+    more.
+  - Saving merges rather than replaces: a link updates only the names it carries, so one that lacks
+    a parameter (or has no query at all) cannot erase a choice made on an earlier link.
 - **The DataStore schema is load-bearing for upgrades.** Preferences written by older installs must
   keep reading; changing key types or entry meaning orphans real user data.
+  - A host's kept names are under the bare host, the only key that releases through EIGHT wrote.
+  - Its removed names are under `<host>#removed`. A host cannot contain `#`, so the two never
+    collide.
+  - A host with nothing to remember has no entry. The file is backed up, and it should not become a
+    list of every host a link was ever shared from.
+- **The rules are bundled, never fetched.** The only network request the app makes is the one behind
+  the cloud icon. The catalog is also unsigned, and its published hash comes from the same server,
+  so the hash catches corruption but not tampering. A bundled copy changes only through a diff
+  someone read. To refresh it:
+  1. Pick a commit of `github.com/ClearURLs/Rules`.
+  2. Download `data.min.json` and `LICENSE` from
+     `raw.githubusercontent.com/ClearURLs/Rules/<commit>/` into `share/src/main/assets/clearurls/`.
+  3. Put the commit in the `NOTICE` beside them, and read the diff.
+  4. On a device, look for "Skipping rules" in logcat (see the next entry).
+- **A pattern the platform will not compile is skipped, and a provider that loses its `urlPattern`
+  or an exception is dropped whole.** The catalog is written for JavaScript's regex engine.
+  `TrackerRulesTests` compiles every bundled pattern, but on the JVM's engine, and Android's is a
+  different one (ICU). Dropping only the exception would flag parameters on the links it protects.
+  The catalog at commit `326be26` was run on a Pixel 9a with Android 17 on 2026-11-18: every pattern
+  compiled, and 24 sample links got the same verdicts as on the JVM.
+- **A link's length is not capped before matching.** On that phone, in a test harness, every URL
+  pattern and exception against a hostile link of a million characters took 0.6 to 3.2 seconds and
+  threw nothing, and time grew in step with length. The app does that work off the main thread. The
+  JVM's engine does overflow its stack on a host of thousands of labels, which is a reason not to
+  read the unit tests as a measure of this.
+- **The catalog is LGPL-3.0 and the app is under the Unlicense**, which is why the catalog ships
+  unmodified, with its license and a notice beside it in the APK. A converted or trimmed copy would
+  be a modified work with more to state. The README's License section tells readers that the root
+  `LICENSE` does not cover the catalog, and it stays for as long as the catalog is bundled.
+- Rule patterns compile on first use, one provider at a time. The share sheet usually starts in a
+  new process, and a link matches a provider or two out of a couple of hundred.
+- **The rules were measured not to slow the sheet.** On the same phone and day, as R8 release
+  builds, the time from the intent to the first complete state was a median of 258 ms with the rules
+  against 262 ms without when interpreted, and 132 ms against 115 ms when compiled ahead of time,
+  with the runs of each pair overlapping. Reading and parsing the catalog and compiling the URL
+  patterns took 7 to 13 ms of that. Before the two lookups ran concurrently the compiled figure was
+  178 ms against 133 ms.
 - **Framework seams exist so the ViewModel is JVM-testable.** `ClipboardHelper` wraps `ClipData` and
   `PersistableBundle`, which are android.jar stubs that throw off-device. Inlining it back would force
-  `unitTests.isReturnDefaultValues` on again.
+  `unitTests.isReturnDefaultValues` on again. `RuleSource` is the same kind of seam over the APK's
+  assets, and `TrackerRules` matches on an injected `@DefaultDispatcher` so a test can pass the test
+  scheduler's.
 - **The sanitized query is written decoded, so it reads as text.** `sanitizeUrl` joins the kept
   parameters by hand, because `HttpUrl.Builder` would escape every value again. What stays escaped,
   and why, is at `readableQueryComponent`; the round-trip test in `SanitizeViewModelTests` fails if
@@ -96,6 +156,10 @@ backticks and class names end in `Tests`.
 The ViewModel is constructed directly rather than through Hilt, `Repository` is mocked, and
 `RepositoryTests` drives real HTTP against MockWebServer. `HttpUrlParceler` is untested because a
 real `Parcel` needs Robolectric or instrumentation.
+
+`TrackerRules` is mocked in the ViewModel tests, where it flags `utm_source` and nothing else.
+`TrackerRulesTests` mostly feeds it small catalogs written inline, and reads the bundled one
+straight from `src/main/assets`, which works because unit tests run from the module directory.
 
 When a test guards against a specific bug, prove it fails against the bug before trusting it. Restore
 mutated files from a copy, never `git checkout HEAD --`, which silently discards uncommitted work.

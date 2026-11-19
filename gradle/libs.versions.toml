@@ -10,6 +10,7 @@ junit = "6.1.3"
 kluent = "1.73"
 kotlin = "2.4.10"
 kotlinx-coroutines = "1.11.0"
+kotlinx-serialization = "1.13.0"
 ksp = "2.3.11"
 ktlint = "1.8.0"
 material = "1.14.0"
@@ -42,6 +43,7 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 kluent-android = { module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 ktlint = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockk" }

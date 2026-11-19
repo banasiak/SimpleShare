@@ -16,10 +16,13 @@ import com.banasiak.android.simpleshare.common.save
 import com.banasiak.android.simpleshare.common.toHttpsUrlOrNull
 import com.banasiak.android.simpleshare.data.RedirectResult
 import com.banasiak.android.simpleshare.data.Repository
+import com.banasiak.android.simpleshare.data.TrackerRules
 import com.linkedin.urls.detection.UrlDetector
 import com.linkedin.urls.detection.UrlDetectorOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -34,7 +37,8 @@ class SanitizeViewModel @Inject constructor(
   private val buildInfo: BuildInfo,
   private val clipboard: ClipboardHelper,
   private val repository: Repository,
-  private val savedState: SavedStateHandle
+  private val savedState: SavedStateHandle,
+  private val trackerRules: TrackerRules
 ) : ViewModel(), LifecycleEventObserver {
   // seed the flow from the SavedStateHandle -- a property initializer bypasses the custom setter below,
   // so restoring into `state` alone would leave the UI showing an empty screen after process death
@@ -58,7 +62,7 @@ class SanitizeViewModel @Inject constructor(
       Lifecycle.Event.ON_PAUSE -> {
         // write to the SavedStateHandle synchronously; the process may not survive long enough for a coroutine to run
         savedState.save(state)
-        viewModelScope.launch { persistEnabledParameters() }
+        viewModelScope.launch { persistParamPreferences() }
       }
       // Not necessary, because if this ViewModel is recreated, the state will be restored when SanitizeState is instantiated
       else -> { /* NO-OP */ }
@@ -239,7 +243,12 @@ class SanitizeViewModel @Inject constructor(
   private suspend fun buildParameterList(url: HttpUrl?): List<QueryParam> {
     if (url == null) return emptyList()
 
-    val enabledParamNames = repository.getEnabledParamsForHost(url.host)
+    val (preferences, flagged) =
+      coroutineScope {
+        val preferences = async { repository.getParamPreferencesForHost(url.host) }
+        val flagged = async { trackerRules.flaggedNames(url) }
+        preferences.await() to flagged.await()
+      }
     // walk the query by index: queryParameterNames is a Set and queryParameter() returns only the
     // first match, so a name-keyed read silently drops every repeat before the user ever sees it
     return (0 until url.querySize).map { index ->
@@ -247,20 +256,22 @@ class SanitizeViewModel @Inject constructor(
       QueryParam(
         name = name,
         value = url.queryParameterValue(index),
-        // preferences are stored per name, so repeats of a kept name all come back enabled
-        enabled = enabledParamNames.contains(name)
+        // the user's own choice for this host outranks the rules, and repeats of a name share one answer
+        enabled = name in preferences.kept || (name !in preferences.removed && name !in flagged),
+        flagged = name in flagged
       )
     }
   }
 
-  private suspend fun persistEnabledParameters() {
+  private suspend fun persistParamPreferences() {
     val url = state.originalUrl ?: return
 
-    // every name on the link goes along with the kept ones, so the repository can tell a parameter
-    // that was unchecked from one this link simply didn't carry
-    val present = state.parameters.map { it.name }.toSet()
+    // a name counts as kept when any of its occurrences is, and the names left unchecked go along so
+    // the repository can tell a parameter that was removed from one this link simply didn't carry
     val enabled = state.parameters.filter { it.enabled }.map { it.name }.toSet()
-    repository.updateEnabledParamsForHost(url.host, present, enabled)
+    val disabled = state.parameters.map { it.name }.toSet() - enabled
+    val flagged = state.parameters.filter { it.flagged }.map { it.name }.toSet()
+    repository.updateParamPreferencesForHost(url.host, enabled, disabled, flagged)
   }
 
   @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.TIRAMISU)
