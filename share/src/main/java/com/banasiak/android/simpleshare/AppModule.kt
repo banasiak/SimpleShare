@@ -13,6 +13,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.banasiak.android.simpleshare.common.BuildInfo
 import com.banasiak.android.simpleshare.common.Constants
 import com.banasiak.android.simpleshare.common.DurationClock
+import com.banasiak.android.simpleshare.data.EmptySetMigration
 import com.banasiak.android.simpleshare.data.RuleSource
 import dagger.Module
 import dagger.Provides
@@ -66,7 +67,7 @@ object AppModule {
   fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
     return PreferenceDataStoreFactory.create(
       corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
-      migrations = listOf(SharedPreferencesMigration(context, DATASTORE_NAME)),
+      migrations = listOf(SharedPreferencesMigration(context, DATASTORE_NAME), EmptySetMigration),
       scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
       produceFile = { context.preferencesDataStoreFile(DATASTORE_NAME) }
     )

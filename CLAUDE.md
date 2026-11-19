@@ -107,6 +107,9 @@ add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all ca
     collide.
   - A host with nothing to remember has no entry. The file is backed up, and it should not become a
     list of every host a link was ever shared from.
+  - Releases through EIGHT did write an entry for every such host, an empty set. `EmptySetMigration`
+    drops those on the first start after an upgrade. An empty set reads the same as no entry, so it
+    loses no choice.
 - **The rules are bundled, never fetched.** The only network request the app makes is the one behind
   the cloud icon. The catalog is also unsigned, and its published hash comes from the same server,
   so the hash catches corruption but not tampering. A bundled copy changes only through a diff
