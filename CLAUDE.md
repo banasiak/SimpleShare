@@ -27,7 +27,7 @@ the one from the 6.6 to 7.0.2 line.
 `assembleRelease` produces `share-release-unsigned.apk`. To run it on a device, sign it with the
 debug keystore -- that matches the debug build's signature, so it installs over an existing debug
 install with `-r` and keeps the DataStore contents, which is what makes it useful for testing
-migrations and R8 behaviour:
+migrations and R8 behavior:
 
 ```
 apksigner sign --ks ~/.android/debug.keystore --ks-pass pass:android \
@@ -163,6 +163,9 @@ add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all ca
   1.7.0 stopped running it by default. It is deprecated and goes in ktlint 2.0.0.
 - `.editorconfig` sets `insert_final_newline = false`, and ktlint holds Kotlin sources to it, so
   they end without a trailing newline. The markdown files in the repo do end with one.
+- Prose is U.S. English everywhere: comments, test names, these notes, the README and commit
+  messages. So "behavior", "initializer" and "canceled". An API's own name, such as `isCancelled`,
+  keeps the spelling the API gives it.
 - R8 is on for release. Every rule in `share/proguard-rules.pro` notes the failure it prevents,
   because R8 breakage is silent -- verify reflection-driven paths (Hilt, `@Parcelize` through process
   death, DataStore) on a device rather than trusting a clean build.
