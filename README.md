@@ -11,3 +11,10 @@ Got a shortened link that hides where it actually goes? Tap the cloud icon and t
 Requires Android 7.0 or later.
 
 It is available via the [Google Play Store](https://play.google.com/store/apps/details?id=com.banasiak.android.simpleshare).
+
+## License
+
+This repository holds two works under two licenses.
+
+- **The ClearURLs rules catalog is not covered by the Unlicense.** [`share/src/main/assets/clearurls/data.min.json`](share/src/main/assets/clearurls/data.min.json) is the work of the [ClearURLs](https://github.com/ClearURLs/Rules) project, copied unmodified, and is licensed under the [GNU Lesser General Public License, version 3](share/src/main/assets/clearurls/LICENSE). The [NOTICE](share/src/main/assets/clearurls/NOTICE) beside it names the upstream commit it came from, and all three files ship inside the APK.
+- **Everything else** is released under the [Unlicense](LICENSE).

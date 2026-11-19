@@ -1,0 +1,8 @@
+data.min.json in this directory is the ClearURLs rules catalog, copied unmodified from
+https://github.com/ClearURLs/Rules at commit 326be261ddeb619eaa6413d32920ed9e98924609.
+
+The catalog is the work of the ClearURLs project and is licensed under the GNU Lesser General
+Public License, version 3. LICENSE in this directory is the license file from that commit.
+
+Simple URL Sanitizer reads the catalog to decide which query parameters start unchecked. Its own
+source is at https://github.com/banasiak/SimpleShare.
