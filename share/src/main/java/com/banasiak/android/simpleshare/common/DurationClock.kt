@@ -6,7 +6,5 @@ import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 class DurationClock(private val durationUnit: DurationUnit) {
-  fun now(): Duration {
-    return SystemClock.elapsedRealtime().toDuration(durationUnit)
-  }
+  fun now(): Duration = SystemClock.elapsedRealtime().toDuration(durationUnit)
 }

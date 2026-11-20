@@ -136,11 +136,13 @@ class SanitizeViewModel @Inject constructor(
           )
         }
         // there is genuinely nothing to follow, so stop offering the action
-        RedirectResult.NoRedirect ->
+        RedirectResult.NoRedirect -> {
           state.copy(hint = R.string.hint_redirect_not_detected, canFetchRedirect = false, loading = false)
+        }
         // we never reached the host, so keep the action enabled and invite another attempt
-        RedirectResult.Failed ->
+        RedirectResult.Failed -> {
           state.copy(hint = R.string.hint_redirect_failed, loading = false)
+        }
       }
   }
 

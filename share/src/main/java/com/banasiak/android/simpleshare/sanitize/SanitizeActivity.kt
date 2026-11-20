@@ -68,7 +68,9 @@ class SanitizeActivity : ComponentActivity() {
         val text = intent.getStringExtra(Intent.EXTRA_TEXT)
         viewModel.postAction(SanitizeAction.IntentReceived(text = text))
       }
-      else -> showErrorAndFinish(R.string.url_not_detected)
+      else -> {
+        showErrorAndFinish(R.string.url_not_detected)
+      }
     }
   }
 
