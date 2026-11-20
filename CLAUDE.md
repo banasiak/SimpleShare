@@ -26,9 +26,17 @@ lint in a fresh worktree or after deleting that directory. On 2026-11-19 a workt
 dated from the evening before reported no findings, while a fresh one warned about five newer
 releases, one of them a Gradle security release.
 
+Lint says only that a release is newer, not whether it fixes anything. To find the security fixes,
+follow the `supply-chain-hardening` skill: run `./gradlew dependencyUpdates`, look each coordinate
+up in GitHub's advisory database, and look Gradle up with
+`gh api repos/gradle/gradle/security-advisories`. Gradle's four advisories of 2026-11-19 were there
+that day, while GitHub's global database still listed none of them.
+
 The Gradle version and `distributionSha256Sum` in `gradle/wrapper/gradle-wrapper.properties` are
 bumped together, with the sum taken from the `.sha256` file Gradle publishes beside the
-distribution. That URL redirects to `downloads.gradle.org`, so fetch it with `curl -L`. Run
+distribution. That URL redirects to `downloads.gradle.org`, so fetch it with
+`curl -fsSL --proto '=https' --proto-redir '=https'`: plain `-L` would also follow a redirect to
+HTTP, and `-f` fails on an error page rather than taking it for a sum. Run
 `./gradlew wrapper --gradle-version <version> --gradle-distribution-sha256-sum <sum>` twice. The
 first run rewrites only the properties. The second downloads the new version against the new sum,
 then, running under it, regenerates the jar and scripts. Then check `gradle-wrapper.jar` against
