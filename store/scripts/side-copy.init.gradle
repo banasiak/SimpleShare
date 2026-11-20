@@ -1,0 +1,13 @@
+// Builds the app as com.banasiak.android.simpleshare.screenshots, so it installs beside a real install
+// instead of over it, and into build/screenshots, so the project's own outputs are left alone. It
+// also turns dynamic color off, so the copy draws the app's own colors whatever the phone's
+// wallpaper. Used by screenshots.sh.
+allprojects {
+  layout.buildDirectory.set(rootProject.layout.projectDirectory.dir("build/screenshots/${name}"))
+  plugins.withId('com.android.application') {
+    android.buildTypes.configureEach {
+      applicationIdSuffix '.screenshots'
+      buildConfigField 'boolean', 'DYNAMIC_COLOR', 'false'
+    }
+  }
+}

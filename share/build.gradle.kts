@@ -19,6 +19,9 @@ android {
     targetSdk = 37
     versionCode = 9
     versionName = "NINE"
+    // store/scripts/side-copy.init.gradle sets this false by name, so the store screenshots show the
+    // app's own colors rather than the test phone's wallpaper
+    buildConfigField("boolean", "DYNAMIC_COLOR", "true")
     vectorDrawables {
       useSupportLibrary = true
     }

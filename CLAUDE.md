@@ -209,6 +209,9 @@ Each of these was looked at on 2026-11-18 and left as it is, for the reason give
   the house style uses instead needs API 29, and `minSdk` is 24.
 - **Effects are collected by the Activity, not the `*Screen`.** Every effect here finishes the
   Activity or starts another one, so the Activity is what owns navigation.
+- **`SimpleShareTheme` reads `BuildConfig.DYNAMIC_COLOR` directly, not through `BuildInfo`.** Added
+  on 2026-11-20. A theme is a composable with nothing injected into it and no unit test, and the
+  field exists only so the screenshot copy can turn dynamic color off.
 
 ## Tests
 
@@ -234,3 +237,33 @@ straight from `src/main/assets`, which works because unit tests run from the mod
 
 When a test guards against a specific bug, prove it fails against the bug before trusting it. Restore
 mutated files from a copy, never `git checkout HEAD --`, which silently discards uncommitted work.
+
+## Store listing
+
+`store/` holds the Google Play listing: its text, the release notes in every language, the
+screenshots, the feature graphic and the icon. Read **[store/README.md](store/README.md)** before
+changing any of it.
+Play Console's language codes tag both XML files, and Thai's is `th`, not `th-TH`: Play drops a
+block it does not recognize without a word. `python3 store/scripts/check.py` checks the codes and
+Play's length limits. A release's version bump in `share/build.gradle.kts` and its release notes go
+in one commit.
+
+The full description in `store_listing.xml` describes what the app does and what it leaves out, such
+as network requests and data collection. A change to either means updating it, and the release
+notes, before the release goes out.
+
+`store/scripts/screenshots.sh` retakes the screenshots from a separate copy of the app, and several
+things in the app reach into it:
+
+- `store/scripts/side-copy.init.gradle` turns dynamic color off in that copy by setting the
+  `DYNAMIC_COLOR` build config field, which `SimpleShareTheme` reads. Renaming the field fails
+  nothing: the copy gets a field nothing reads, and the shots take their colors from the phone's
+  wallpaper.
+- It finds its way around by labels that `store/scripts/labels.py` reads from the string resources,
+  by key. Renaming one of those keys fails the run loudly, in `labels.py`.
+- It knows the first two shots are ready when the sanitized URL reads the link without its trackers.
+  So a catalog refresh that stops flagging `si` or `feature` on YouTube, or one of the Amazon
+  parameters, fails the run at that shot after a minute's wait.
+- It taps Feeling Lucky until the demo link `a.co/d/0ZV7xf0` comes up, so that link has to stay in
+  `Constants.DEMO_URL_LIST`.
+- It starts `main.MainActivity` and `sanitize.SanitizeActivity` by class name.

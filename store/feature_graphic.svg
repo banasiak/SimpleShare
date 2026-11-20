@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="500" viewBox="0 0 1024 500">
+  <!-- the source of feature_graphic.png, which store/scripts/feature_graphic.sh renders from it.
+       store/README.md says why it looks as it does. The phone is screenshots/en-US/1.png, so render
+       again after retaking the screenshots -->
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#17183A" />
+      <stop offset="0.55" stop-color="#0E0E1C" />
+      <stop offset="1" stop-color="#0A0A12" />
+    </linearGradient>
+    <radialGradient id="peri" cx="0.86" cy="-0.1" r="0.7">
+      <stop offset="0" stop-color="#6667AB" stop-opacity="0.7" />
+      <stop offset="1" stop-color="#6667AB" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="peach" cx="-0.08" cy="1.2" r="0.6">
+      <stop offset="0" stop-color="#FFB68B" stop-opacity="0.16" />
+      <stop offset="1" stop-color="#FFB68B" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="2" />
+    </pattern>
+    <radialGradient id="gridFade" cx="0.26" cy="0.5" r="0.5">
+      <stop offset="0.2" stop-color="#FFFFFF" />
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0" />
+    </radialGradient>
+    <mask id="gridMask">
+      <rect width="1024" height="500" fill="url(#gridFade)" />
+    </mask>
+    <linearGradient id="name" x1="64" y1="0" x2="470" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" />
+      <stop offset="0.4" stop-color="#E1DFFF" />
+      <stop offset="0.75" stop-color="#C1C1FF" />
+      <stop offset="1" stop-color="#9C9DD8" />
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="22" />
+    </filter>
+  </defs>
+
+  <rect width="1024" height="500" fill="url(#base)" />
+  <rect width="1024" height="500" fill="url(#peri)" />
+  <rect width="1024" height="500" fill="url(#peach)" />
+  <rect width="1024" height="500" fill="url(#grid)" mask="url(#gridMask)" />
+
+  <!-- the phone: the first screenshot as framed, 1224x2570, drawn at 0.32 with its bottom corners in
+       view and its top cropped, so the share sheet's checklist fills the height -->
+  <rect x="590" y="-330" width="360" height="810" rx="56" fill="#6667AB" opacity="0.6" filter="url(#glow)" />
+  <image x="574.16" y="-334.4" width="391.68" height="822.4" xlink:href="screenshots/en-US/1.png" href="screenshots/en-US/1.png" />
+
+  <text x="60" y="209" font-family="Inter" font-weight="600" font-size="104" letter-spacing="-3" fill="url(#name)">URL</text>
+  <text x="60" y="305" font-family="Inter" font-weight="600" font-size="104" letter-spacing="-3" fill="url(#name)">Cleaner</text>
+  <text x="64" y="361" font-family="Inter" font-weight="400" font-size="27" fill="#D4D8DE">Sanitize tracking links before sharing</text>
+</svg>

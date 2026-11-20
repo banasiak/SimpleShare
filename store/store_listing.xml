@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="utf-8"?>
+<store_listing>
+  <en-US>
+    <app_name>URL Cleaner: Sanitize Links</app_name>
+    <short_description>Strip 'utm' and tracking junk from links, expand short URLs, share them clean.</short_description>
+    <full_description>
+Every link you share drags a tail behind it: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Those query parameters tell the destination site — and whoever handed you the link — where you found it, who sent it, and which campaign you clicked. Sanitize URL lets you cut them off before you hit send.
+
+HOW IT WORKS
+
+Share a link into the app from the Android share sheet, or open the app and paste any text containing a URL. The link is broken into its query parameters and shown as a checklist, with known trackers already unchecked. Uncheck anything else you don't want to pass along, then copy the clean URL, open it, or share it onward to the app you were headed to anyway.
+
+TRACKER RULES FROM CLEARURLS
+
+Which parameters are the tracking ones? The app comes with the rules from ClearURLs, the open-source project behind the browser add-on of the same name. ClearURLs lists the parameters known websites use to track you, such as YouTube's 'si' and Amazon's 'ref', along with ones like 'utm_source' and 'fbclid' that turn up everywhere. Those start unchecked. Everything else stays checked, so the link still goes where it was going — a video link keeps its 'v'.
+
+The rules are a suggestion, and the decision is yours. This app is simple, remember? It shows you exactly what is in the link and gets out of the way. Nothing is removed behind your back: every parameter stays on the list, and one tap brings back anything the rules unchecked, or removes anything they missed.
+
+The app remembers the boxes you change, per site, and your choice wins over the rules from then on. The next link from that same site arrives with your choices already applied, so cleaning a YouTube, Amazon or news link is a single tap.
+
+EXPAND SHORT LINKS FIRST
+
+Got a shortened link that hides where it actually goes? Tap the cloud icon and the app follows the redirect, then hands you the query parameters of the real destination. See where a short link was going to take you — and clean it — before you send it to anyone.
+
+FEATURES
+
+• Tracker rules from ClearURLs, built in: known tracking parameters start unchecked, and everything else stays
+• Remove tracking parameters from any URL — 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' and anything else a site tacks on
+• Works from the Android share sheet, in any app that can share a link
+• Or paste a URL — or any text containing one — straight into the app
+• Per-site memory: the boxes you change are saved, and override the rules on that site
+• Short link expander: follow redirects to reveal the real destination
+• Upgrades http:// links to https:// automatically
+• Copy, open, or share the cleaned link
+• Material You design, light and dark themes
+• Handles links with repeated parameters correctly, one checkbox each
+
+PRIVATE BY DEFAULT
+
+• No ads
+• No analytics, no telemetry, no crash reporting
+• No account, no sign-in
+• No data collected, ever
+• One permission: internet access, used only when you ask the app to expand a short link
+• The tracker rules are built in, and never downloaded
+• Your per-site choices are stored on your device, and included in your Android backup if you have it turned on
+
+OPEN SOURCE
+
+The app's own source code is released into the public domain. Read it, build it, fork it, sell it:
+https://github.com/banasiak/SimpleShare
+
+The tracker rules are the work of the ClearURLs project, bundled unmodified under the GNU LGPL 3.0. This app is not affiliated with ClearURLs.
+
+Available in English, Spanish, French, German, Italian, Polish, Portuguese, Turkish, Thai, Hindi, Chinese, Japanese and Korean. Requires Android 7.0 or later.
+
+If you have been looking for a URL cleaner, link cleaner, tracker remover, utm stripper, or short link expander that does one job without an account, a subscription, or a privacy policy that needs a lawyer — this is it.
+    </full_description>
+  </en-US>
+
+  <de-DE>
+    <app_name>URL-Cleaner: Links bereinigen</app_name>
+    <short_description>'utm' und Tracking-Müll aus Links entfernen, Kurz-URLs auflösen, sauber teilen.</short_description>
+    <full_description>
+Jeder geteilte Link schleppt etwas mit: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Diese Abfrageparameter verraten der Zielseite – und dem, der Ihnen den Link gab –, wo Sie ihn fanden, wer ihn schickte und welche Kampagne Sie anklickten. „URL bereinigen“ schneidet sie ab, bevor Sie ihn senden.
+
+SO FUNKTIONIERT'S
+
+Teilen Sie einen Link über das Android-Teilen-Menü mit der App, oder fügen Sie in der App Text mit einer URL ein. Der Link wird in seine Abfrageparameter zerlegt und als Checkliste angezeigt, bekannte Tracker sind schon abgewählt. Wählen Sie ab, was Sie sonst nicht weitergeben wollen, und kopieren, öffnen oder teilen Sie die bereinigte URL – direkt an die App, zu der Sie ohnehin wollten.
+
+TRACKER-REGELN VON CLEARURLS
+
+Welche Parameter dienen dem Tracking? Die App enthält die Regeln von ClearURLs, dem Open-Source-Projekt hinter der gleichnamigen Browser-Erweiterung. ClearURLs listet die Parameter, mit denen bekannte Websites Sie verfolgen, etwa 'si' bei YouTube und 'ref' bei Amazon, dazu überall auftauchende wie 'utm_source' und 'fbclid'. Diese sind anfangs abgewählt. Alles andere bleibt ausgewählt, damit der Link weiter ans Ziel führt – ein Videolink behält sein 'v'.
+
+Die Regeln sind ein Vorschlag, die Entscheidung liegt bei Ihnen. Die App ist einfach, schon vergessen? Sie zeigt genau, was im Link steckt, und hält sich sonst heraus. Nichts verschwindet heimlich: Jeder Parameter bleibt in der Liste, und ein Tippen holt zurück, was die Regeln abgewählt haben, oder entfernt, was sie übersehen haben.
+
+Die App merkt sich pro Website die Kästchen, die Sie ändern, und Ihre Wahl hat ab dann Vorrang vor den Regeln. Der nächste Link derselben Website kommt mit Ihrer Auswahl an, also ist ein YouTube-, Amazon- oder Nachrichtenlink mit einem Tippen bereinigt.
+
+ERST KURZLINKS AUFLÖSEN
+
+Ein Kurzlink verbirgt sein wahres Ziel? Tippen Sie auf das Cloud-Download-Symbol: Die App folgt der Weiterleitung und zeigt die Abfrageparameter des echten Ziels. So sehen Sie, wohin der Kurzlink führt – und bereinigen ihn, bevor Sie ihn weiterschicken.
+
+FUNKTIONEN
+
+• Tracker-Regeln von ClearURLs integriert: bekannte Tracking-Parameter sind anfangs abgewählt, der Rest bleibt
+• Entfernt Tracking-Parameter aus jeder URL – 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' und alles, was Websites sonst anhängen
+• Funktioniert über das Android-Teilen-Menü in jeder App, die Links teilt
+• Oder fügen Sie eine URL oder Text mit URL direkt in die App ein
+• Gedächtnis pro Website: geänderte Kästchen werden gespeichert und haben dort Vorrang vor den Regeln
+• Kurzlinks auflösen: folgt Weiterleitungen bis zum echten Ziel
+• Macht aus http:// automatisch https://
+• Bereinigten Link kopieren, öffnen oder teilen
+• Material-You-Design, helles und dunkles Theme
+• Wiederholte Parameter werden korrekt behandelt, mit je einem Kästchen
+
+PRIVAT VON HAUS AUS
+
+• Keine Werbung
+• Keine Analysen, keine Telemetrie, keine Absturzberichte
+• Kein Konto, keine Anmeldung
+• Keinerlei Datenerhebung
+• Eine Berechtigung: Internetzugriff, nur genutzt, wenn Sie einen Kurzlink auflösen lassen
+• Die Tracker-Regeln sind eingebaut, nie heruntergeladen
+• Ihre Auswahl pro Website wird auf dem Gerät gespeichert und, falls aktiviert, in Ihrer Android-Sicherung gesichert
+
+OPEN SOURCE
+
+Der eigene Quellcode der App ist gemeinfrei. Lesen, bauen, forken, verkaufen:
+https://github.com/banasiak/SimpleShare
+
+Die Tracker-Regeln stammen unverändert vom ClearURLs-Projekt und stehen unter der GNU LGPL 3.0. Diese App steht in keiner Verbindung zu ClearURLs.
+
+Verfügbar auf Englisch, Spanisch, Französisch, Deutsch, Italienisch, Polnisch, Portugiesisch, Türkisch, Thailändisch, Hindi, Chinesisch, Japanisch und Koreanisch. Erfordert Android 7.0 oder höher.
+
+Gesucht: ein URL-Cleaner, Link-Bereiniger, Tracker- und utm-Entferner oder Kurzlink-Auflöser, der nur eine Aufgabe erledigt – ohne Konto, ohne Abo, ohne Datenschutzerklärung für Anwälte? Das ist er.
+    </full_description>
+  </de-DE>
+
+  <es-ES>
+    <app_name>Limpiar URL: enlaces limpios</app_name>
+    <short_description>Quita 'utm' y el rastreo de enlaces, resuelve URL cortas y compártelos limpios.</short_description>
+    <full_description>
+Cada enlace que compartes arrastra una cola: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Esos parámetros de consulta le dicen al sitio de destino —y a quien te pasó el enlace— dónde lo encontraste, quién lo envió y en qué campaña hiciste clic. «Limpiar URL» te deja cortarlos antes de enviarlo.
+
+CÓMO FUNCIONA
+
+Comparte un enlace con la app desde el menú para compartir de Android, o pega en la app cualquier texto con una URL. El enlace se divide en sus parámetros de consulta y aparece como una lista de casillas, con los rastreadores conocidos ya desmarcados. Desmarca lo demás que no quieras pasar y copia la URL limpia, ábrela o compártela con la app a la que ibas.
+
+REGLAS DE RASTREO DE CLEARURLS
+
+¿Qué parámetros son los de rastreo? La app incluye las reglas de ClearURLs, el proyecto de código abierto detrás de la extensión de navegador homónima. ClearURLs recopila los parámetros con los que sitios conocidos te rastrean, como 'si' de YouTube y 'ref' de Amazon, y otros que aparecen en todas partes, como 'utm_source' y 'fbclid'. Esos empiezan desmarcados. El resto sigue marcado, así que el enlace sigue llevando a donde debía: un enlace de vídeo conserva su 'v'.
+
+Las reglas son una sugerencia; la decisión es tuya. Esta app es sencilla, ¿recuerdas? Te muestra exactamente lo que hay en el enlace y no estorba. Nada se elimina a tus espaldas: cada parámetro sigue en la lista, y con un toque recuperas lo que las reglas desmarcaron o quitas lo que se les escapó.
+
+La app recuerda por sitio las casillas que cambias, y desde entonces tu elección prevalece sobre las reglas. El siguiente enlace de ese sitio llega con tus elecciones aplicadas: limpiar un enlace de YouTube, Amazon o de noticias es cuestión de un toque.
+
+PRIMERO, RESUELVE LOS ENLACES CORTOS
+
+¿Un enlace acortado esconde adónde lleva? Toca el icono de descarga en la nube: la app sigue la redirección y te muestra los parámetros de consulta del destino real. Mira adónde te llevaba un enlace corto —y límpialo— antes de enviarlo.
+
+FUNCIONES
+
+• Reglas de rastreo de ClearURLs integradas: los parámetros de rastreo conocidos empiezan desmarcados y el resto se queda
+• Quita parámetros de rastreo de cualquier URL: 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' y lo que añada cada sitio
+• Funciona desde el menú para compartir de Android, en cualquier app que comparta enlaces
+• O pega directamente en la app una URL o un texto que la contenga
+• Memoria por sitio: las casillas que cambias se guardan y prevalecen sobre las reglas en ese sitio
+• Resolución de enlaces cortos: sigue las redirecciones hasta el destino real
+• Convierte automáticamente los enlaces http:// en https://
+• Copia, abre o comparte el enlace limpio
+• Diseño Material You, con temas claro y oscuro
+• Gestiona bien los parámetros repetidos: una casilla para cada uno
+
+PRIVADA DE SERIE
+
+• Sin anuncios
+• Sin analíticas, sin telemetría, sin informes de fallos
+• Sin cuenta ni inicio de sesión
+• No recopila ningún dato, nunca
+• Un solo permiso: acceso a internet, usado solo cuando pides resolver un enlace corto
+• Las reglas de rastreo vienen integradas y nunca se descargan
+• Tus elecciones por sitio se guardan en el dispositivo y entran en tu copia de seguridad de Android si está activada
+
+CÓDIGO ABIERTO
+
+El código fuente propio de la app es de dominio público. Léelo, compílalo, haz un fork, véndelo:
+https://github.com/banasiak/SimpleShare
+
+Las reglas de rastreo son obra del proyecto ClearURLs y se incluyen sin modificar bajo la GNU LGPL 3.0. Esta app no está afiliada a ClearURLs.
+
+Disponible en inglés, español, francés, alemán, italiano, polaco, portugués, turco, tailandés, hindi, chino, japonés y coreano. Requiere Android 7.0 o posterior.
+
+Si buscabas un limpiador de URL o de enlaces, un eliminador de rastreadores o de utm, o un expansor de enlaces cortos que haga una sola cosa, sin cuenta, sin suscripción y sin una política de privacidad para abogados, es esta.
+    </full_description>
+  </es-ES>
+
+  <es-419>
+    <app_name>Limpiar URL: enlaces limpios</app_name>
+    <short_description>Quita 'utm' y el rastreo de enlaces, resuelve URL cortas y compártelos limpios.</short_description>
+    <full_description>
+Cada enlace que compartes arrastra una cola: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Esos parámetros de consulta le dicen al sitio de destino —y a quien te pasó el enlace— dónde lo encontraste, quién lo envió y en qué campaña hiciste clic. «Limpiar URL» te deja cortarlos antes de enviarlo.
+
+CÓMO FUNCIONA
+
+Comparte un enlace con la app desde el menú para compartir de Android, o pega en la app cualquier texto con una URL. El enlace se divide en sus parámetros de consulta y aparece como una lista de casillas, con los rastreadores conocidos ya desmarcados. Desmarca lo demás que no quieras pasar y copia la URL limpia, ábrela o compártela con la app a la que ibas.
+
+REGLAS DE RASTREO DE CLEARURLS
+
+¿Qué parámetros son los de rastreo? La app incluye las reglas de ClearURLs, el proyecto de código abierto detrás de la extensión de navegador homónima. ClearURLs recopila los parámetros con los que sitios conocidos te rastrean, como 'si' de YouTube y 'ref' de Amazon, y otros que aparecen en todas partes, como 'utm_source' y 'fbclid'. Esos empiezan desmarcados. El resto sigue marcado, así que el enlace sigue llevando a donde debía: un enlace de video conserva su 'v'.
+
+Las reglas son una sugerencia; la decisión es tuya. Esta app es sencilla, ¿recuerdas? Te muestra exactamente lo que hay en el enlace y no estorba. Nada se elimina a tus espaldas: cada parámetro sigue en la lista, y con un toque recuperas lo que las reglas desmarcaron o quitas lo que se les escapó.
+
+La app recuerda por sitio las casillas que cambias, y desde entonces tu elección prevalece sobre las reglas. El siguiente enlace de ese sitio llega con tus elecciones aplicadas: limpiar un enlace de YouTube, Amazon o de noticias es cuestión de un toque.
+
+PRIMERO, RESUELVE LOS ENLACES CORTOS
+
+¿Un enlace acortado esconde adónde lleva? Presiona el ícono de descarga en la nube: la app sigue la redirección y te muestra los parámetros de consulta del destino real. Mira adónde te llevaba un enlace corto —y límpialo— antes de enviarlo.
+
+FUNCIONES
+
+• Reglas de rastreo de ClearURLs integradas: los parámetros de rastreo conocidos empiezan desmarcados y el resto se queda
+• Quita parámetros de rastreo de cualquier URL: 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' y lo que agregue cada sitio
+• Funciona desde el menú para compartir de Android, en cualquier app que comparta enlaces
+• O pega directamente en la app una URL o un texto que la contenga
+• Memoria por sitio: las casillas que cambias se guardan y prevalecen sobre las reglas en ese sitio
+• Resolución de enlaces cortos: sigue las redirecciones hasta el destino real
+• Convierte automáticamente los enlaces http:// en https://
+• Copia, abre o comparte el enlace limpio
+• Diseño Material You, con temas claro y oscuro
+• Maneja bien los parámetros repetidos: una casilla para cada uno
+
+PRIVADA POR DEFECTO
+
+• Sin anuncios
+• Sin analíticas, sin telemetría, sin reportes de fallas
+• Sin cuenta ni inicio de sesión
+• No recopila ningún dato, nunca
+• Un solo permiso: acceso a internet, usado solo cuando pides resolver un enlace corto
+• Las reglas de rastreo vienen integradas y nunca se descargan
+• Tus elecciones por sitio se guardan en el dispositivo y entran en tu copia de seguridad de Android si está activada
+
+CÓDIGO ABIERTO
+
+El código fuente propio de la app es de dominio público. Léelo, compílalo, haz un fork, véndelo:
+https://github.com/banasiak/SimpleShare
+
+Las reglas de rastreo son obra del proyecto ClearURLs y se incluyen sin modificar bajo la GNU LGPL 3.0. Esta app no está afiliada a ClearURLs.
+
+Disponible en inglés, español, francés, alemán, italiano, polaco, portugués, turco, tailandés, hindi, chino, japonés y coreano. Requiere Android 7.0 o posterior.
+
+Si buscabas un limpiador de URL o de enlaces, un eliminador de rastreadores o de utm, o un expansor de enlaces cortos que haga una sola cosa, sin cuenta, sin suscripción y sin una política de privacidad para abogados, es esta.
+    </full_description>
+  </es-419>
+
+  <fr-FR>
+    <app_name>Nettoyeur d'URL et de liens</app_name>
+    <short_description>Retirez 'utm' et traceurs des liens, résolvez les URL courtes, partagez propre.</short_description>
+    <full_description>
+Chaque lien partagé traîne une queue : 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Ces paramètres de requête disent au site de destination — et à qui vous a passé le lien — où vous l'avez trouvé, qui l'a envoyé et sur quelle campagne vous avez cliqué. « Nettoyer l'URL » les coupe avant l'envoi.
+
+COMMENT ÇA MARCHE
+
+Partagez un lien vers l'app depuis le menu de partage d'Android, ou collez dans l'app un texte contenant une URL. Le lien est découpé en paramètres de requête et affiché en liste à cocher, les traceurs connus déjà décochés. Décochez ce que vous ne voulez pas transmettre, puis copiez l'URL nettoyée, ouvrez-la ou partagez-la vers l'app prévue.
+
+LES RÈGLES DE CLEARURLS
+
+Quels paramètres servent au pistage ? L'app intègre les règles de ClearURLs, le projet open source derrière l'extension de navigateur du même nom. ClearURLs répertorie les paramètres que des sites connus utilisent pour vous suivre, comme 'si' chez YouTube et 'ref' chez Amazon, ainsi que ceux qu'on trouve partout, comme 'utm_source' et 'fbclid'. Ceux-là sont décochés d'office. Le reste demeure coché, et le lien mène toujours au bon endroit : un lien vidéo garde son 'v'.
+
+Les règles sont une suggestion ; c'est vous qui décidez. Cette app est simple, vous vous souvenez ? Elle montre exactement ce que contient le lien, puis s'efface. Rien n'est supprimé dans votre dos : chaque paramètre reste dans la liste, et un appui rétablit ce que les règles ont décoché ou retire ce qu'elles ont manqué.
+
+L'app mémorise par site les cases que vous modifiez, et votre choix prime ensuite sur les règles. Le lien suivant du même site arrive avec vos choix appliqués : nettoyer un lien YouTube, Amazon ou d'actualité ne demande qu'un appui.
+
+RÉSOLVEZ D'ABORD LES LIENS COURTS
+
+Un lien raccourci cache sa vraie destination ? Appuyez sur l'icône de téléchargement cloud : l'app suit la redirection et affiche les paramètres de requête de la vraie destination. Voyez où mène un lien court — et nettoyez-le — avant de l'envoyer.
+
+FONCTIONNALITÉS
+
+• Règles ClearURLs intégrées : les paramètres de pistage connus sont décochés d'office, le reste est conservé
+• Supprime les paramètres de pistage de toute URL — 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' et tout ce qu'un site y ajoute
+• Fonctionne depuis le menu de partage d'Android, dans toute app qui partage des liens
+• Ou collez directement dans l'app une URL, ou un texte qui en contient une
+• Mémoire par site : les cases modifiées sont enregistrées et priment sur les règles pour ce site
+• Résolution des liens courts : suit les redirections jusqu'à la vraie destination
+• Passe automatiquement les liens http:// en https://
+• Copiez, ouvrez ou partagez le lien nettoyé
+• Design Material You, thèmes clair et sombre
+• Gère correctement les paramètres répétés, avec une case pour chacun
+
+PRIVÉE PAR DÉFAUT
+
+• Aucune publicité
+• Aucune analyse, aucune télémétrie, aucun rapport de plantage
+• Aucun compte, aucune connexion
+• Aucune donnée collectée, jamais
+• Une seule autorisation : Internet, utilisé seulement pour résoudre un lien court à votre demande
+• Les règles de pistage sont intégrées, jamais téléchargées
+• Vos choix par site sont stockés sur l'appareil, et inclus dans votre sauvegarde Android si elle est activée
+
+OPEN SOURCE
+
+Le code source propre à l'app est dans le domaine public. Lisez-le, compilez-le, forkez-le, vendez-le :
+https://github.com/banasiak/SimpleShare
+
+Les règles de pistage sont l'œuvre du projet ClearURLs, incluses sans modification sous licence GNU LGPL 3.0. Cette app n'est pas affiliée à ClearURLs.
+
+Disponible en anglais, espagnol, français, allemand, italien, polonais, portugais, turc, thaï, hindi, chinois, japonais et coréen. Nécessite Android 7.0 ou plus.
+
+Nettoyeur d'URL ou de liens, anti-traceur, suppresseur d'utm, déplieur de liens courts : une app qui fait une seule chose, sans compte, sans abonnement, sans politique de confidentialité pour avocats.
+    </full_description>
+  </fr-FR>
+
+  <hi-IN>
+    <app_name>URL क्लीनर: लिंक साफ़ करें</app_name>
+    <short_description>लिंक से 'utm' और ट्रैकिंग कचरा हटाएँ, शॉर्ट URL डिकोड करें, साफ़ लिंक शेयर करें।</short_description>
+    <full_description>
+आप जो भी लिंक शेयर करते हैं, उसके पीछे एक पूँछ लगी रहती है: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'। ये क्वेरी पैरामीटर मंज़िल वाली साइट को — और जिसने आपको लिंक दिया उसे — बताते हैं कि लिंक आपको कहाँ मिला, किसने भेजा और आपने किस कैंपेन पर क्लिक किया। "URL साफ़ करें" भेजने से पहले इन्हें काट देता है।
+
+यह कैसे काम करता है
+
+Android के शेयर मेन्यू से कोई लिंक ऐप में शेयर करें, या ऐप खोलकर URL वाला कोई भी टेक्स्ट पेस्ट करें। लिंक को उसके क्वेरी पैरामीटर में बाँटकर एक चेकलिस्ट की तरह दिखाया जाता है, जिसमें जाने-माने ट्रैकर पहले से अनचेक होते हैं। जो कुछ और आप आगे नहीं भेजना चाहते उसे अनचेक करें, फिर साफ़ URL कॉपी करें, खोलें, या उसी ऐप में शेयर करें जहाँ आप वैसे भी जा रहे थे।
+
+ClearURLs के ट्रैकर नियम
+
+कौन-से पैरामीटर ट्रैकिंग के लिए हैं? ऐप में ClearURLs के नियम शामिल हैं, जो इसी नाम के ब्राउज़र ऐड-ऑन के पीछे का ओपन-सोर्स प्रोजेक्ट है। ClearURLs उन पैरामीटर की सूची रखता है जिनसे जानी-मानी वेबसाइटें आपको ट्रैक करती हैं, जैसे YouTube का 'si' और Amazon का 'ref', साथ ही 'utm_source' और 'fbclid' जैसे पैरामीटर जो हर जगह मिलते हैं। ये शुरू में अनचेक रहते हैं। बाकी सब चेक रहता है, ताकि लिंक वहीं पहुँचे जहाँ उसे जाना था — वीडियो लिंक का 'v' बना रहता है।
+
+नियम बस एक सुझाव हैं, फ़ैसला आपका है। यह ऐप आसान है, याद है? यह दिखाता है कि लिंक में असल में क्या है, और फिर रास्ते से हट जाता है। आपसे छिपाकर कुछ नहीं हटाया जाता: हर पैरामीटर सूची में रहता है, और एक टैप से आप नियमों का अनचेक किया हुआ पैरामीटर वापस ला सकते हैं, या उनसे छूटा हुआ हटा सकते हैं।
+
+ऐप हर साइट के लिए आपके बदले हुए चेकबॉक्स याद रखता है, और उसके बाद आपकी पसंद नियमों से ऊपर मानी जाती है। उसी साइट का अगला लिंक आपकी पसंद के साथ आता है, इसलिए YouTube, Amazon या किसी न्यूज़ लिंक को साफ़ करना बस एक टैप का काम है।
+
+पहले शॉर्ट लिंक डिकोड करें
+
+कोई छोटा लिंक छिपा रहा है कि वह असल में कहाँ जाता है? क्लाउड डाउनलोड आइकॉन पर टैप करें: ऐप रीडायरेक्ट को फ़ॉलो करता है, फिर असली मंज़िल के क्वेरी पैरामीटर दिखाता है। किसी को भेजने से पहले देख लें कि शॉर्ट लिंक आपको कहाँ ले जाने वाला था — और उसे साफ़ कर लें।
+
+सुविधाएँ
+
+• ClearURLs के ट्रैकर नियम ऐप में शामिल: जाने-माने ट्रैकिंग पैरामीटर शुरू में अनचेक, बाकी सब बना रहता है
+• किसी भी URL से ट्रैकिंग पैरामीटर हटाएँ — 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' और जो कुछ भी कोई साइट जोड़ दे
+• Android के शेयर मेन्यू से, लिंक शेयर कर सकने वाले हर ऐप में काम करता है
+• या कोई URL, या URL वाला कोई भी टेक्स्ट, सीधे ऐप में पेस्ट करें
+• हर साइट के लिए याददाश्त: बदले हुए चेकबॉक्स सेव होते हैं और उस साइट पर नियमों से ऊपर माने जाते हैं
+• शॉर्ट लिंक डिकोडर: रीडायरेक्ट फ़ॉलो करके असली मंज़िल दिखाता है
+• http:// लिंक को अपने-आप https:// में बदलता है
+• साफ़ लिंक कॉपी करें, खोलें या शेयर करें
+• Material You डिज़ाइन, लाइट और डार्क थीम
+• दोहराए गए पैरामीटर को सही तरह संभालता है, हर एक के लिए अलग चेकबॉक्स
+
+शुरू से ही निजी
+
+• कोई विज्ञापन नहीं
+• कोई एनालिटिक्स, टेलीमेट्री या क्रैश रिपोर्टिंग नहीं
+• कोई खाता नहीं, कोई साइन-इन नहीं
+• कोई डेटा इकट्ठा नहीं किया जाता, कभी नहीं
+• सिर्फ़ एक अनुमति: इंटरनेट ऐक्सेस, जो तभी इस्तेमाल होती है जब आप शॉर्ट लिंक डिकोड करने को कहते हैं
+• ट्रैकर नियम ऐप में ही शामिल हैं, कभी डाउनलोड नहीं होते
+• हर साइट के लिए आपकी पसंद आपके डिवाइस पर सेव होती है, और Android बैकअप चालू हो तो उसमें भी शामिल होती है
+
+ओपन सोर्स
+
+ऐप का अपना सोर्स कोड पब्लिक डोमेन में जारी किया गया है। इसे पढ़ें, बिल्ड करें, फ़ोर्क करें, बेचें:
+https://github.com/banasiak/SimpleShare
+
+ट्रैकर नियम ClearURLs प्रोजेक्ट का काम हैं, जो GNU LGPL 3.0 के तहत बिना बदलाव के शामिल हैं। यह ऐप ClearURLs से संबद्ध नहीं है।
+
+अंग्रेज़ी, स्पैनिश, फ़्रेंच, जर्मन, इतालवी, पोलिश, पुर्तगाली, तुर्की, थाई, हिन्दी, चीनी, जापानी और कोरियाई में उपलब्ध। Android 7.0 या उसके बाद का वर्शन ज़रूरी है।
+
+अगर आप ऐसा URL क्लीनर, लिंक क्लीनर, ट्रैकर रिमूवर, utm स्ट्रिपर या शॉर्ट लिंक एक्सपैंडर ढूँढ रहे थे जो बिना खाते, बिना सब्सक्रिप्शन और बिना वकील वाली प्राइवेसी पॉलिसी के सिर्फ़ एक काम करे — तो यही है।
+    </full_description>
+  </hi-IN>
+
+  <it-IT>
+    <app_name>Pulisci URL: link puliti</app_name>
+    <short_description>Togli 'utm' e il tracciamento dai link, risolvi URL brevi, condividili puliti.</short_description>
+    <full_description>
+Ogni link che condividi si porta dietro una coda: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Questi parametri di query dicono al sito di destinazione — e a chi ti ha passato il link — dove l'hai trovato, chi te l'ha mandato e su quale campagna hai cliccato. «Pulisci URL» li taglia prima dell'invio.
+
+COME FUNZIONA
+
+Condividi un link con l'app dal menu di condivisione di Android, oppure incolla nell'app un testo che contenga un URL. Il link viene scomposto nei suoi parametri di query e mostrato come una lista di caselle, con i tracker noti già deselezionati. Deseleziona tutto ciò che non vuoi passare, poi copia l'URL pulito, aprilo o condividilo con l'app che volevi usare.
+
+LE REGOLE DI CLEARURLS
+
+Quali parametri servono a tracciarti? L'app include le regole di ClearURLs, il progetto open source dietro l'omonima estensione per browser. ClearURLs elenca i parametri che i siti noti usano per tracciarti, come 'si' di YouTube e 'ref' di Amazon, insieme a quelli che spuntano ovunque, come 'utm_source' e 'fbclid'. Questi partono deselezionati. Tutto il resto resta selezionato, così il link porta ancora dove doveva: un link video mantiene il suo 'v'.
+
+Le regole sono un suggerimento, la decisione è tua. Quest'app è semplice, ricordi? Ti mostra esattamente cosa c'è nel link e poi si fa da parte. Niente viene rimosso alle tue spalle: ogni parametro resta nell'elenco, e con un tocco ripristini ciò che le regole hanno deselezionato o togli ciò che è sfuggito loro.
+
+L'app ricorda per sito le caselle che modifichi, e da quel momento la tua scelta prevale sulle regole. Il link successivo dallo stesso sito arriva con le tue scelte già applicate: pulire un link di YouTube, Amazon o di notizie richiede un solo tocco.
+
+PRIMA RISOLVI I LINK BREVI
+
+Un link abbreviato nasconde dove porta davvero? Tocca l'icona di download dal cloud: l'app segue il reindirizzamento e ti mostra i parametri di query della vera destinazione. Scopri dove ti avrebbe portato un link breve — e puliscilo — prima di inviarlo.
+
+FUNZIONI
+
+• Regole ClearURLs integrate: i parametri di tracciamento noti partono deselezionati, tutto il resto rimane
+• Rimuovi i parametri di tracciamento da qualsiasi URL — 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' e tutto ciò che un sito aggiunge
+• Funziona dal menu di condivisione di Android, in qualsiasi app che condivida link
+• Oppure incolla nell'app un URL, o un testo che ne contenga uno
+• Memoria per sito: le caselle che modifichi vengono salvate e prevalgono sulle regole per quel sito
+• Risoluzione dei link brevi: segue i reindirizzamenti fino alla vera destinazione
+• Converte automaticamente i link http:// in https://
+• Copia, apri o condividi il link pulito
+• Design Material You, temi chiaro e scuro
+• Gestisce correttamente i parametri ripetuti, con una casella per ciascuno
+
+PRIVATA DI DEFAULT
+
+• Nessuna pubblicità
+• Niente analisi, telemetria o report sugli arresti anomali
+• Nessun account, nessun accesso
+• Nessun dato raccolto, mai
+• Un solo permesso: l'accesso a Internet, usato solo quando chiedi di risolvere un link breve
+• Le regole di tracciamento sono integrate e mai scaricate
+• Le tue scelte per sito vengono salvate sul dispositivo e incluse nel backup di Android, se è attivo
+
+OPEN SOURCE
+
+Il codice sorgente proprio dell'app è di pubblico dominio. Leggilo, compilalo, fanne un fork, vendilo:
+https://github.com/banasiak/SimpleShare
+
+Le regole di tracciamento sono opera del progetto ClearURLs, incluse senza modifiche con licenza GNU LGPL 3.0. Quest'app non è affiliata a ClearURLs.
+
+Disponibile in inglese, spagnolo, francese, tedesco, italiano, polacco, portoghese, turco, thailandese, hindi, cinese, giapponese e coreano. Richiede Android 7.0 o superiore.
+
+Pulitore di URL e di link, rimuovi-tracker e rimuovi-utm, espansore di link brevi: un'app che fa una cosa sola, senza account, senza abbonamento, senza informativa sulla privacy da avvocati.
+    </full_description>
+  </it-IT>
+
+  <ja-JP>
+    <app_name>URL クリーナー：リンクをきれいに</app_name>
+    <short_description>リンクから 'utm' などの追跡情報を削除し、短縮 URL を展開して、きれいに共有。</short_description>
+    <full_description>
+共有するリンクには、いつも余計なものがついてきます：'utm_source'、'fbclid'、'igshid'、'gclid'、'si'、'ref'。これらのクエリパラメータは、リンク先のサイトに（そしてリンクを渡してきた相手にも）、あなたがどこでリンクを見つけたか、誰が送ったか、どのキャンペーンをクリックしたかを伝えます。「URL をクリーンアップ」なら、送信する前にそれらを取り除けます。
+
+【使い方】
+
+Android の共有メニューからリンクをアプリに共有するか、アプリを開いて URL を含むテキストを貼り付けます。リンクはクエリパラメータごとに分けられ、チェックリストとして表示されます。既知のトラッカーは最初からチェックが外れています。ほかに渡したくないものがあればチェックを外し、きれいになった URL をコピーする、開く、またはもともと送るつもりだったアプリに共有します。
+
+【ClearURLs のトラッカールール】
+
+どのパラメータが追跡用なのでしょう？ このアプリには、同名のブラウザ拡張機能を手がけるオープンソースプロジェクト ClearURLs のルールが入っています。ClearURLs は、よく知られたサイトがあなたを追跡するのに使うパラメータを一覧にしています。YouTube の 'si' や Amazon の 'ref'、そしてどこにでも現れる 'utm_source' や 'fbclid' などです。これらは最初からチェックが外れています。それ以外はチェックされたままなので、リンクは本来の行き先に届きます。動画のリンクなら 'v' は残ります。
+
+ルールはあくまで提案で、決めるのはあなたです。このアプリはシンプル、でしたよね？ リンクの中身をそのまま見せたら、あとは邪魔をしません。知らないうちに何かが消えることはありません。すべてのパラメータはリストに残り、ルールが外したものを戻すのも、ルールが見逃したものを外すのもワンタップです。
+
+変更したチェックはサイトごとに記憶され、それ以降はルールより優先されます。同じサイトの次のリンクには最初からあなたの選択が適用されるので、YouTube や Amazon、ニュースのリンクもワンタップできれいになります。
+
+【まず短縮リンクを展開】
+
+短縮リンクの本当の行き先が分からない？ クラウドダウンロードのアイコンをタップすると、アプリがリダイレクトをたどり、本当の行き先のクエリパラメータを表示します。短縮リンクがどこへ連れて行くつもりだったかを確かめ、きれいにしてから誰かに送れます。
+
+【機能】
+
+• ClearURLs のトラッカールールを内蔵：既知の追跡パラメータは最初からチェックなし、それ以外はそのまま
+• どんな URL からも追跡パラメータを削除：'utm_source'、'utm_medium'、'utm_campaign'、'fbclid'、'gclid'、'igshid'、'si'、'ref' など、サイトが付け足すものすべて
+• Android の共有メニューから、リンクを共有できるどのアプリでも使えます
+• URL、または URL を含むテキストをアプリに直接貼り付けることも可能
+• サイトごとの記憶：変更したチェックは保存され、そのサイトではルールより優先
+• 短縮リンクの展開：リダイレクトをたどって本当の行き先を表示
+• http:// のリンクを自動で https:// に
+• きれいになったリンクをコピー、開く、共有
+• Material You デザイン、ライト／ダークテーマ
+• パラメータが重複するリンクも正しく処理し、それぞれにチェックボックスを表示
+
+【プライバシー重視】
+
+• 広告なし
+• アナリティクス、テレメトリ、クラッシュレポートなし
+• アカウント登録やサインインは不要
+• データを収集することは一切ありません
+• 権限はインターネットアクセスのみ。使うのは短縮リンクの展開を指示したときだけ
+• トラッカールールは内蔵で、ダウンロードすることはありません
+• サイトごとの選択は端末に保存され、Android のバックアップがオンならそこにも含まれます
+
+【オープンソース】
+
+アプリ自体のソースコードはパブリックドメインで公開しています。読むのも、ビルドするのも、フォークするのも、販売するのも自由です：
+https://github.com/banasiak/SimpleShare
+
+トラッカールールは ClearURLs プロジェクトの著作物で、GNU LGPL 3.0 のもと無改変で同梱しています。このアプリは ClearURLs とは関係ありません。
+
+英語、スペイン語、フランス語、ドイツ語、イタリア語、ポーランド語、ポルトガル語、トルコ語、タイ語、ヒンディー語、中国語、日本語、韓国語に対応。Android 7.0 以降が必要です。
+
+URL クリーナー、リンククリーナー、トラッカー除去、utm 除去、短縮リンク展開ツールで、アカウントもサブスクリプションも、弁護士が必要なプライバシーポリシーもなしに一つのことだけをこなすアプリを探していたなら、これです。
+    </full_description>
+  </ja-JP>
+
+  <ko-KR>
+    <app_name>URL 클리너: 링크 정리</app_name>
+    <short_description>링크에서 'utm' 등 추적 정보를 지우고, 단축 URL을 확인해 깔끔하게 공유하세요.</short_description>
+    <full_description>
+공유하는 모든 링크에는 꼬리가 따라붙습니다: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. 이런 쿼리 매개변수는 링크가 가리키는 사이트와 링크를 건넨 사람에게 링크를 어디서 찾았는지, 누가 보냈는지, 어떤 캠페인을 클릭했는지 알려 줍니다. “URL 정리”로 보내기 전에 잘라 내세요.
+
+사용 방법
+
+Android 공유 메뉴에서 앱으로 링크를 공유하거나, 앱을 열고 URL이 포함된 텍스트를 붙여 넣으세요. 링크는 쿼리 매개변수별로 나뉘어 체크리스트로 표시되며, 알려진 추적기는 이미 선택 해제되어 있습니다. 그 밖에 넘기고 싶지 않은 항목을 선택 해제한 다음, 정리된 URL을 복사하거나 열거나, 원래 보내려던 앱으로 공유하세요.
+
+ClearURLs 추적 규칙
+
+어떤 매개변수가 추적용일까요? 이 앱에는 같은 이름의 브라우저 확장 프로그램을 만든 오픈소스 프로젝트 ClearURLs의 규칙이 들어 있습니다. ClearURLs는 YouTube의 'si', Amazon의 'ref'처럼 잘 알려진 웹사이트가 사용자를 추적하는 데 쓰는 매개변수와, 'utm_source', 'fbclid'처럼 어디서나 보이는 매개변수를 정리해 둡니다. 이런 항목은 처음부터 선택 해제됩니다. 나머지는 선택된 채로 남아 링크가 원래 가던 곳으로 갑니다. 동영상 링크라면 'v'가 그대로 남습니다.
+
+규칙은 제안일 뿐이고, 결정은 사용자가 합니다. 간단한 앱이라고 했죠? 링크에 무엇이 들어 있는지 그대로 보여 주고 방해하지 않습니다. 몰래 지워지는 것은 없습니다. 모든 매개변수가 목록에 남아 있으며, 규칙이 선택 해제한 항목을 되살리거나 규칙이 놓친 항목을 지우는 데 한 번의 탭이면 됩니다.
+
+변경한 체크박스는 사이트별로 기억되며, 그 뒤로는 규칙보다 우선합니다. 같은 사이트의 다음 링크에는 선택이 이미 적용되어 있으므로, YouTube, Amazon, 뉴스 링크도 한 번의 탭으로 정리됩니다.
+
+먼저 단축 링크 확인
+
+단축 링크가 실제 목적지를 숨기고 있나요? 클라우드 다운로드 아이콘을 탭하면 앱이 리디렉션을 따라가 실제 목적지의 쿼리 매개변수를 보여 줍니다. 누군가에게 보내기 전에 단축 링크가 어디로 데려가려 했는지 확인하고 정리하세요.
+
+기능
+
+• ClearURLs 추적 규칙 내장: 알려진 추적 매개변수는 처음부터 선택 해제, 나머지는 그대로
+• 모든 URL에서 추적 매개변수 제거: 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' 등 사이트가 덧붙인 모든 것
+• 링크를 공유할 수 있는 모든 앱에서 Android 공유 메뉴로 사용
+• URL이나 URL이 포함된 텍스트를 앱에 바로 붙여 넣기도 가능
+• 사이트별 기억: 변경한 체크박스는 저장되며 해당 사이트에서 규칙보다 우선
+• 단축 링크 확인: 리디렉션을 따라가 실제 목적지 표시
+• http:// 링크를 자동으로 https://로 전환
+• 정리된 링크 복사, 열기, 공유
+• Material You 디자인, 라이트 및 다크 테마
+• 매개변수가 반복되는 링크도 올바르게 처리하며 각각 체크박스 제공
+
+기본적으로 비공개
+
+• 광고 없음
+• 분석, 원격 측정, 비정상 종료 보고 없음
+• 계정, 로그인 없음
+• 데이터 수집 일절 없음
+• 권한은 인터넷 액세스 하나뿐이며, 단축 링크 확인을 요청할 때만 사용
+• 추적 규칙은 앱에 내장되어 있으며 다운로드하지 않음
+• 사이트별 선택은 기기에 저장되며, Android 백업이 켜져 있으면 백업에 포함
+
+오픈소스
+
+앱 자체의 소스 코드는 퍼블릭 도메인으로 공개되어 있습니다. 읽고, 빌드하고, 포크하고, 판매해도 됩니다:
+https://github.com/banasiak/SimpleShare
+
+추적 규칙은 ClearURLs 프로젝트의 저작물로, GNU LGPL 3.0에 따라 수정 없이 포함되어 있습니다. 이 앱은 ClearURLs와 제휴 관계가 없습니다.
+
+영어, 스페인어, 프랑스어, 독일어, 이탈리아어, 폴란드어, 포르투갈어, 터키어, 태국어, 힌디어, 중국어, 일본어, 한국어를 지원합니다. Android 7.0 이상이 필요합니다.
+
+계정도, 구독도, 변호사가 필요한 개인정보처리방침도 없이 한 가지 일만 하는 URL 클리너, 링크 클리너, 추적기 제거 도구, utm 제거 도구, 단축 링크 확인 도구를 찾고 있었다면, 바로 이 앱입니다.
+    </full_description>
+  </ko-KR>
+
+  <pl-PL>
+    <app_name>Czyszczenie URL: czyste linki</app_name>
+    <short_description>Usuń 'utm' i śledzenie z linków, rozwiń skrócone adresy, udostępnij czysto.</short_description>
+    <full_description>
+Każdy udostępniany link ciągnie za sobą ogon: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Te parametry zapytania mówią witrynie docelowej — i temu, kto przekazał ci link — skąd go masz, kto go wysłał i w którą kampanię kliknięto. „Wyczyść adres URL” odcina je przed wysłaniem.
+
+JAK TO DZIAŁA
+
+Udostępnij link aplikacji z menu udostępniania Androida albo wklej w aplikacji dowolny tekst z adresem URL. Link zostaje rozłożony na parametry zapytania i pokazany jako lista pól do zaznaczenia, a znane elementy śledzące są już odznaczone. Odznacz wszystko inne, czego nie chcesz przekazać, a potem skopiuj czysty adres, otwórz go albo udostępnij aplikacji, do której i tak chcesz go wysłać.
+
+REGUŁY CLEARURLS
+
+Które parametry służą do śledzenia? Aplikacja zawiera reguły ClearURLs, projektu open source stojącego za rozszerzeniem przeglądarki o tej samej nazwie. ClearURLs wymienia parametry, którymi znane witryny cię śledzą, takie jak 'si' w YouTube i 'ref' w Amazonie, a także te, które pojawiają się wszędzie, jak 'utm_source' i 'fbclid'. One są na starcie odznaczone. Reszta pozostaje zaznaczona, więc link nadal prowadzi tam, gdzie miał — link do filmu zachowuje swoje 'v'.
+
+Reguły to sugestia, decyzja należy do ciebie. Ta aplikacja jest prosta, pamiętasz? Pokazuje dokładnie, co jest w linku, i nie przeszkadza. Nic nie znika za twoimi plecami: każdy parametr zostaje na liście, a jedno dotknięcie przywraca to, co reguły odznaczyły, albo usuwa to, co przeoczyły.
+
+Aplikacja zapamiętuje dla każdej witryny pola, które zmienisz, i od tej pory twój wybór ma pierwszeństwo przed regułami. Kolejny link z tej samej witryny ma już twoje ustawienia, więc wyczyszczenie linku z YouTube, Amazona czy serwisu informacyjnego to jedno dotknięcie.
+
+NAJPIERW ROZWIŃ SKRÓCONE LINKI
+
+Skrócony link ukrywa, dokąd naprawdę prowadzi? Dotknij ikony pobierania z chmury: aplikacja podąży za przekierowaniem i pokaże parametry zapytania prawdziwego celu. Sprawdź, dokąd skrócony link miał cię zabrać — i wyczyść go — zanim go wyślesz.
+
+FUNKCJE
+
+• Wbudowane reguły ClearURLs: znane parametry śledzące są na starcie odznaczone, reszta zostaje
+• Usuwa parametry śledzące z dowolnego adresu URL — 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' i wszystko, co doklei witryna
+• Działa z menu udostępniania Androida w każdej aplikacji, która udostępnia linki
+• Możesz też wkleić do aplikacji adres URL lub tekst, który go zawiera
+• Pamięć dla każdej witryny: zmienione pola są zapisywane i mają tam pierwszeństwo przed regułami
+• Rozwijanie skróconych linków: podąża za przekierowaniami do prawdziwego celu
+• Automatycznie zmienia linki http:// na https://
+• Kopiuj, otwieraj lub udostępniaj wyczyszczony link
+• Wygląd Material You, motyw jasny i ciemny
+• Poprawnie obsługuje powtórzone parametry, z osobnym polem dla każdego
+
+DOMYŚLNIE PRYWATNA
+
+• Bez reklam
+• Bez analityki, telemetrii i raportów o awariach
+• Bez konta i logowania
+• Żadnego zbierania danych, nigdy
+• Jedno uprawnienie: dostęp do internetu, używany tylko wtedy, gdy poprosisz o rozwinięcie skróconego linku
+• Reguły są wbudowane i nigdy nie są pobierane
+• Twoje wybory dla witryn są przechowywane na urządzeniu i trafiają do kopii zapasowej Androida, jeśli jest włączona
+
+OPEN SOURCE
+
+Własny kod źródłowy aplikacji jest w domenie publicznej. Czytaj go, kompiluj, forkuj, sprzedawaj:
+https://github.com/banasiak/SimpleShare
+
+Reguły są dziełem projektu ClearURLs i są dołączone bez zmian na licencji GNU LGPL 3.0. Ta aplikacja nie jest powiązana z ClearURLs.
+
+Dostępna w językach: angielskim, hiszpańskim, francuskim, niemieckim, włoskim, polskim, portugalskim, tureckim, tajskim, hindi, chińskim, japońskim i koreańskim. Wymaga Androida 7.0 lub nowszego.
+
+Czyściciel adresów URL i linków, usuwacz trackerów i utm, rozwijacz skróconych linków: aplikacja, która robi jedną rzecz — bez konta, bez subskrypcji i bez polityki prywatności dla prawników.
+    </full_description>
+  </pl-PL>
+
+  <pt-BR>
+    <app_name>Limpar URL: links limpos</app_name>
+    <short_description>Tire 'utm' e o rastreamento dos links, resolva URLs curtas e compartilhe limpo.</short_description>
+    <full_description>
+Todo link que você compartilha arrasta uma cauda: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Esses parâmetros de consulta contam ao site de destino — e a quem passou o link para você — onde você o encontrou, quem o enviou e em qual campanha você clicou. O “Limpar URL” corta tudo isso antes do envio.
+
+COMO FUNCIONA
+
+Compartilhe um link com o app pelo menu de compartilhamento do Android, ou cole no app qualquer texto que contenha uma URL. O link é dividido em seus parâmetros de consulta e mostrado como uma lista de caixas, com os rastreadores conhecidos já desmarcados. Desmarque o que mais você não quiser passar adiante e depois copie a URL limpa, abra ou compartilhe com o app para onde você já ia.
+
+REGRAS DE RASTREAMENTO DO CLEARURLS
+
+Quais parâmetros são de rastreamento? O app vem com as regras do ClearURLs, o projeto de código aberto por trás da extensão de navegador de mesmo nome. O ClearURLs lista os parâmetros que sites conhecidos usam para rastrear você, como o 'si' do YouTube e o 'ref' da Amazon, além de outros que aparecem em todo lugar, como 'utm_source' e 'fbclid'. Esses começam desmarcados. O resto continua marcado, para que o link ainda leve aonde deveria: um link de vídeo mantém o 'v'.
+
+As regras são uma sugestão; a decisão é sua. Este app é simples, lembra? Ele mostra exatamente o que há no link e sai do caminho. Nada é removido pelas suas costas: todo parâmetro continua na lista, e um toque traz de volta o que as regras desmarcaram ou remove o que elas deixaram passar.
+
+O app lembra, por site, as caixas que você muda, e a partir daí a sua escolha prevalece sobre as regras. O próximo link do mesmo site chega com as suas escolhas aplicadas, então limpar um link do YouTube, da Amazon ou de notícias é questão de um toque.
+
+RESOLVA OS LINKS CURTOS PRIMEIRO
+
+Um link encurtado esconde para onde vai de verdade? Toque no ícone de download na nuvem: o app segue o redirecionamento e mostra os parâmetros de consulta do destino real. Veja para onde um link curto ia levar você — e limpe-o — antes de enviá-lo.
+
+RECURSOS
+
+• Regras do ClearURLs integradas: parâmetros de rastreamento conhecidos começam desmarcados, e o resto fica
+• Remova parâmetros de rastreamento de qualquer URL — 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' e o que mais um site acrescentar
+• Funciona pelo menu de compartilhamento do Android, em qualquer app que compartilhe links
+• Ou cole direto no app uma URL, ou qualquer texto que contenha uma
+• Memória por site: as caixas que você muda são salvas e prevalecem sobre as regras naquele site
+• Resolução de links curtos: segue redirecionamentos até o destino real
+• Converte links http:// em https:// automaticamente
+• Copie, abra ou compartilhe o link limpo
+• Design Material You, temas claro e escuro
+• Lida corretamente com parâmetros repetidos, uma caixa para cada
+
+PRIVADO POR PADRÃO
+
+• Sem anúncios
+• Sem análises, sem telemetria, sem relatórios de falhas
+• Sem conta, sem login
+• Nenhum dado coletado, nunca
+• Uma única permissão: acesso à internet, usado só quando você pede para resolver um link curto
+• As regras de rastreamento vêm integradas e nunca são baixadas
+• Suas escolhas por site ficam salvas no dispositivo e entram no seu backup do Android, se ele estiver ativado
+
+CÓDIGO ABERTO
+
+O código-fonte próprio do app está em domínio público. Leia, compile, faça um fork, venda:
+https://github.com/banasiak/SimpleShare
+
+As regras de rastreamento são obra do projeto ClearURLs, incluídas sem modificações sob a GNU LGPL 3.0. Este app não é afiliado ao ClearURLs.
+
+Disponível em inglês, espanhol, francês, alemão, italiano, polonês, português, turco, tailandês, hindi, chinês, japonês e coreano. Requer Android 7.0 ou mais recente.
+
+Limpador de URL e de links, removedor de rastreadores e de utm, expansor de links curtos: um app que faz uma coisa só, sem conta, sem assinatura e sem uma política de privacidade que exige advogado.
+    </full_description>
+  </pt-BR>
+
+  <th>
+    <app_name>ล้าง URL: ลิงก์สะอาด</app_name>
+    <short_description>ลบ 'utm' และตัวติดตามออกจากลิงก์ ขยาย URL แบบสั้น แล้วแชร์ลิงก์ที่สะอาด</short_description>
+    <full_description>
+ทุกลิงก์ที่คุณแชร์มีหางติดมาด้วย: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref' พารามิเตอร์คิวรีเหล่านี้บอกเว็บไซต์ปลายทาง — และคนที่ส่งลิงก์ให้คุณ — ว่าคุณเจอลิงก์จากที่ไหน ใครส่งมา และคุณคลิกแคมเปญไหน "ล้าง URL" ช่วยตัดมันทิ้งก่อนที่คุณจะกดส่ง
+
+วิธีใช้งาน
+
+แชร์ลิงก์เข้าแอปจากเมนูแชร์ของ Android หรือเปิดแอปแล้ววางข้อความใดก็ได้ที่มี URL ลิงก์จะถูกแยกเป็นพารามิเตอร์คิวรีและแสดงเป็นรายการช่องเลือก โดยตัวติดตามที่รู้จักจะถูกยกเลิกการเลือกไว้แล้ว ยกเลิกการเลือกอย่างอื่นที่คุณไม่อยากส่งต่อ จากนั้นคัดลอก URL ที่สะอาด เปิด หรือแชร์ต่อไปยังแอปที่คุณตั้งใจจะส่งอยู่แล้ว
+
+กฎตัวติดตามจาก ClearURLs
+
+พารามิเตอร์ไหนใช้ติดตาม? แอปนี้มาพร้อมกฎจาก ClearURLs โปรเจกต์โอเพนซอร์สที่อยู่เบื้องหลังส่วนเสริมเบราว์เซอร์ชื่อเดียวกัน ClearURLs รวบรวมพารามิเตอร์ที่เว็บไซต์ที่รู้จักกันดีใช้ติดตามคุณ เช่น 'si' ของ YouTube และ 'ref' ของ Amazon รวมถึงพารามิเตอร์ที่เจอได้ทุกที่อย่าง 'utm_source' และ 'fbclid' พารามิเตอร์เหล่านี้จะไม่ถูกเลือกตั้งแต่แรก ส่วนที่เหลือยังถูกเลือกไว้ ลิงก์จึงยังพาไปถึงที่หมายเดิม — ลิงก์วิดีโอยังเก็บ 'v' ไว้
+
+กฎเป็นเพียงคำแนะนำ คุณเป็นคนตัดสินใจ แอปนี้เรียบง่าย จำได้ไหม? แอปแสดงให้เห็นว่ามีอะไรอยู่ในลิงก์บ้าง แล้วก็ไม่เข้าไปยุ่ง ไม่มีอะไรถูกลบลับหลังคุณ: ทุกพารามิเตอร์ยังอยู่ในรายการ และแตะครั้งเดียวก็นำสิ่งที่กฎยกเลิกการเลือกกลับมา หรือเอาสิ่งที่กฎมองข้ามออกได้
+
+แอปจะจดจำช่องที่คุณเปลี่ยนแยกตามเว็บไซต์ และหลังจากนั้นตัวเลือกของคุณจะมีผลเหนือกฎ ลิงก์ถัดไปจากเว็บไซต์เดียวกันจะมาพร้อมตัวเลือกของคุณ การล้างลิงก์ YouTube, Amazon หรือลิงก์ข่าวจึงใช้แค่แตะเดียว
+
+ขยายลิงก์แบบสั้นก่อน
+
+ลิงก์แบบสั้นซ่อนปลายทางจริงไว้ใช่ไหม? แตะไอคอนดาวน์โหลดจากคลาวด์ แอปจะตามการเปลี่ยนเส้นทาง แล้วแสดงพารามิเตอร์คิวรีของปลายทางจริง ดูว่าลิงก์แบบสั้นจะพาคุณไปที่ไหน — แล้วล้างมัน — ก่อนส่งให้ใคร
+
+ฟีเจอร์
+
+• มีกฎตัวติดตามจาก ClearURLs ในตัว: พารามิเตอร์ติดตามที่รู้จักจะไม่ถูกเลือกตั้งแต่แรก ส่วนที่เหลือคงไว้
+• ลบพารามิเตอร์ติดตามจาก URL ใดก็ได้ — 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' และอะไรก็ตามที่เว็บไซต์แปะมา
+• ใช้งานผ่านเมนูแชร์ของ Android ได้ในทุกแอปที่แชร์ลิงก์ได้
+• หรือวาง URL หรือข้อความใดก็ได้ที่มี URL ลงในแอปโดยตรง
+• จดจำแยกตามเว็บไซต์: ช่องที่คุณเปลี่ยนจะถูกบันทึก และมีผลเหนือกฎสำหรับเว็บไซต์นั้น
+• ขยายลิงก์แบบสั้น: ตามการเปลี่ยนเส้นทางไปจนถึงปลายทางจริง
+• เปลี่ยนลิงก์ http:// เป็น https:// ให้อัตโนมัติ
+• คัดลอก เปิด หรือแชร์ลิงก์ที่ล้างแล้ว
+• ดีไซน์ Material You มีธีมสว่างและมืด
+• จัดการลิงก์ที่มีพารามิเตอร์ซ้ำได้ถูกต้อง โดยแยกช่องให้ทีละตัว
+
+เป็นส่วนตัวตั้งแต่ต้น
+
+• ไม่มีโฆษณา
+• ไม่มีการวิเคราะห์ ไม่มีการส่งข้อมูลการใช้งาน ไม่มีรายงานข้อขัดข้อง
+• ไม่ต้องมีบัญชี ไม่ต้องลงชื่อเข้าใช้
+• ไม่เก็บข้อมูลใด ๆ เลย
+• สิทธิ์เดียว: การเข้าถึงอินเทอร์เน็ต ใช้เฉพาะเมื่อคุณสั่งให้ขยายลิงก์แบบสั้น
+• กฎตัวติดตามมีอยู่ในแอป และไม่มีการดาวน์โหลด
+• ตัวเลือกของคุณสำหรับแต่ละเว็บไซต์เก็บไว้ในอุปกรณ์ และรวมอยู่ในข้อมูลสำรอง Android หากคุณเปิดไว้
+
+โอเพนซอร์ส
+
+ซอร์สโค้ดของแอปเองเผยแพร่เป็นสาธารณสมบัติ จะอ่าน บิลด์ ฟอร์ก หรือขายก็ได้:
+https://github.com/banasiak/SimpleShare
+
+กฎตัวติดตามเป็นผลงานของโปรเจกต์ ClearURLs ซึ่งรวมไว้โดยไม่แก้ไขภายใต้สัญญาอนุญาต GNU LGPL 3.0 แอปนี้ไม่มีส่วนเกี่ยวข้องกับ ClearURLs
+
+รองรับภาษาอังกฤษ สเปน ฝรั่งเศส เยอรมัน อิตาลี โปแลนด์ โปรตุเกส ตุรกี ไทย ฮินดี จีน ญี่ปุ่น และเกาหลี ต้องใช้ Android 7.0 ขึ้นไป
+
+หากคุณกำลังมองหาตัวล้าง URL ตัวล้างลิงก์ ตัวลบตัวติดตาม ตัวลบ utm หรือตัวขยายลิงก์แบบสั้นที่ทำแค่งานเดียว โดยไม่ต้องมีบัญชี ไม่ต้องสมัครสมาชิก และไม่มีนโยบายความเป็นส่วนตัวที่ต้องให้ทนายอ่าน — นี่แหละคือแอปนั้น
+    </full_description>
+  </th>
+
+  <tr-TR>
+    <app_name>URL Temizleyici: Temiz Linkler</app_name>
+    <short_description>Linklerden 'utm' ve izleme çöpünü silin, kısa URL'leri açın, temiz paylaşın.</short_description>
+    <full_description>
+Paylaştığınız her link arkasında bir kuyruk sürükler: 'utm_source', 'fbclid', 'igshid', 'gclid', 'si', 'ref'. Bu sorgu parametreleri hedef siteye — ve linki size verene — linki nerede bulduğunuzu, kimin gönderdiğini ve hangi kampanyaya tıkladığınızı söyler. "URL'yi temizle", göndermeden önce onları kesip atar.
+
+NASIL ÇALIŞIR
+
+Android paylaşım menüsünden bir linki uygulamaya paylaşın ya da uygulamayı açıp URL içeren herhangi bir metni yapıştırın. Link, sorgu parametrelerine ayrılır ve bir onay listesi olarak gösterilir; bilinen izleyicilerin işareti zaten kaldırılmıştır. Aktarmak istemediğiniz başka ne varsa işaretini kaldırın, ardından temiz URL'yi kopyalayın, açın ya da zaten göndereceğiniz uygulamaya paylaşın.
+
+CLEARURLS İZLEYİCİ KURALLARI
+
+Hangi parametreler izleme amaçlı? Uygulama, aynı adlı tarayıcı eklentisinin arkasındaki açık kaynak proje ClearURLs tarafından hazırlanan kurallarla gelir. ClearURLs, bilinen sitelerin sizi izlemek için kullandığı parametreleri listeler: YouTube'un 'si' ve Amazon'un 'ref' parametresi gibi, ayrıca her yerde karşınıza çıkan 'utm_source' ve 'fbclid' gibi. Bunlar işaretsiz başlar. Geri kalanı işaretli kalır, böylece link yine gitmesi gereken yere gider; video linki 'v' parametresini korur.
+
+Kurallar bir öneridir, karar sizindir. Bu uygulama basit, hatırladınız mı? Linkte tam olarak ne olduğunu gösterir ve yolunuzdan çekilir. Hiçbir şey arkanızdan silinmez: her parametre listede kalır ve tek dokunuşla kuralların işaretini kaldırdığını geri getirir ya da gözden kaçırdığını kaldırırsınız.
+
+Uygulama, değiştirdiğiniz kutuları site başına hatırlar ve bundan sonra seçiminiz kurallardan önce gelir. Aynı sitenin sonraki linki seçimlerinizle gelir; bir YouTube, Amazon ya da haber linkini temizlemek tek dokunuşluk iştir.
+
+ÖNCE KISA LİNKLERİ ÇÖZÜMLEYİN
+
+Kısaltılmış bir link gerçekte nereye gittiğini mi gizliyor? Bulut indirme simgesine dokunun; uygulama yönlendirmeyi takip eder ve gerçek hedefin sorgu parametrelerini gösterir. Kısa linkin sizi nereye götüreceğini görün ve göndermeden önce temizleyin.
+
+ÖZELLİKLER
+
+• Yerleşik ClearURLs izleyici kuralları: bilinen izleme parametreleri işaretsiz başlar, geri kalanı korunur
+• Herhangi bir URL'den izleme parametrelerini kaldırın — 'utm_source', 'utm_medium', 'utm_campaign', 'fbclid', 'gclid', 'igshid', 'si', 'ref' ve bir sitenin eklediği diğer her şey
+• Android paylaşım menüsüyle, link paylaşabilen her uygulamada çalışır
+• Ya da bir URL'yi veya URL içeren bir metni doğrudan uygulamaya yapıştırın
+• Site başına hafıza: değiştirdiğiniz kutular kaydedilir ve o sitede kurallardan önce gelir
+• Kısa link çözümleme: yönlendirmeleri gerçek hedefe kadar takip eder
+• http:// linklerini otomatik olarak https:// yapar
+• Temizlenmiş linki kopyalayın, açın veya paylaşın
+• Material You tasarımı, açık ve koyu tema
+• Tekrarlanan parametreleri doğru işler, her biri için ayrı kutu
+
+VARSAYILAN OLARAK GİZLİ
+
+• Reklam yok
+• Analiz yok, telemetri yok, çökme raporu yok
+• Hesap yok, oturum açma yok
+• Hiçbir veri toplanmaz, asla
+• Tek izin: internet erişimi, yalnızca kısa bir linki çözümlemenizi istediğinizde kullanılır
+• İzleyici kuralları yerleşiktir ve asla indirilmez
+• Site başına seçimleriniz cihazınızda saklanır ve açıksa Android yedeğinize dahil edilir
+
+AÇIK KAYNAK
+
+Uygulamanın kendi kaynak kodu kamu malı olarak yayımlanmıştır. Okuyabilir, derleyebilir, fork'layabilir, hatta satabilirsiniz:
+https://github.com/banasiak/SimpleShare
+
+İzleyici kuralları ClearURLs projesinin eseridir ve GNU LGPL 3.0 kapsamında değiştirilmeden dahil edilmiştir. Bu uygulamanın ClearURLs ile bir bağlantısı yoktur.
+
+İngilizce, İspanyolca, Fransızca, Almanca, İtalyanca, Lehçe, Portekizce, Türkçe, Tayca, Hintçe, Çince, Japonca ve Korece olarak kullanılabilir. Android 7.0 veya üzeri gerekir.
+
+URL temizleyici, link temizleyici, izleyici kaldırıcı, utm temizleyici ya da kısa link açıcı: hesap, abonelik veya avukat gerektiren bir gizlilik politikası olmadan tek bir işi yapan uygulama.
+    </full_description>
+  </tr-TR>
+
+  <zh-CN>
+    <app_name>网址清理器：净化链接</app_name>
+    <short_description>去除链接中的 'utm' 等跟踪参数，还原短网址，干净地分享。</short_description>
+    <full_description>
+你分享的每个链接都拖着一条尾巴：'utm_source'、'fbclid'、'igshid'、'gclid'、'si'、'ref'。这些查询参数会告诉目标网站——以及把链接发给你的人——你在哪里看到这个链接、是谁发的、你点了哪个推广活动。“清理网址”让你在发送前把它们剪掉。
+
+【使用方法】
+
+从 Android 分享菜单把链接分享到本应用，或者打开应用粘贴任何包含网址的文本。链接会被拆分成查询参数，以勾选列表的形式显示，已知的跟踪参数已经取消勾选。把其他不想传出去的也取消勾选，然后复制清理后的网址、打开它，或者分享到你本来就要去的应用。
+
+【来自 ClearURLs 的跟踪规则】
+
+哪些参数是用来跟踪的？本应用内置了 ClearURLs 的规则。ClearURLs 是同名浏览器扩展背后的开源项目，它列出了知名网站用来跟踪你的参数，例如 YouTube 的 'si' 和 Amazon 的 'ref'，以及 'utm_source'、'fbclid' 这类到处都有的参数。这些参数一开始就不勾选。其余参数保持勾选，所以链接依然能到达原本的目的地——视频链接会保留它的 'v'。
+
+规则只是建议，决定权在你。这个应用很简单，记得吗？它把链接里有什么原原本本地展示给你，然后就不再打扰。不会背着你删掉任何东西：每个参数都留在列表里，轻点一下就能恢复规则取消勾选的参数，或去掉规则漏掉的参数。
+
+应用会按网站记住你更改过的勾选，此后你的选择优先于规则。同一网站的下一个链接会自动套用你的选择，所以清理 YouTube、Amazon 或新闻链接只需轻点一下。
+
+【先还原短链接】
+
+短链接藏着它真正要去的地方？点按云端下载图标，应用会跟随重定向，然后显示真实目的地的查询参数。在发给任何人之前，先看看短链接本来要把你带到哪里——再把它清理干净。
+
+【功能】
+
+• 内置 ClearURLs 跟踪规则：已知跟踪参数一开始就不勾选，其余保留
+• 清除任何网址中的跟踪参数——'utm_source'、'utm_medium'、'utm_campaign'、'fbclid'、'gclid'、'igshid'、'si'、'ref'，以及网站附加的任何其他内容
+• 通过 Android 分享菜单使用，适用于任何能分享链接的应用
+• 也可以把网址或包含网址的任何文本直接粘贴到应用中
+• 按网站记忆：你更改过的勾选会被保存，并在该网站上优先于规则
+• 短链接还原：跟随重定向，显示真实目的地
+• 自动把 http:// 链接升级为 https://
+• 复制、打开或分享清理后的链接
+• Material You 设计，浅色和深色主题
+• 正确处理带有重复参数的链接，每个参数各有一个勾选框
+
+【默认保护隐私】
+
+• 无广告
+• 无分析、无遥测、无崩溃报告
+• 无需账号，无需登录
+• 从不收集任何数据
+• 只有一项权限：网络访问，仅在你要求还原短链接时使用
+• 跟踪规则内置于应用中，从不下载
+• 你按网站做出的选择保存在设备上；如果开启了 Android 备份，也会包含在备份中
+
+【开源】
+
+应用自身的源代码已发布到公有领域。可以阅读、构建、复刻，甚至出售：
+https://github.com/banasiak/SimpleShare
+
+跟踪规则是 ClearURLs 项目的作品，依据 GNU LGPL 3.0 原样附带。本应用与 ClearURLs 无关联。
+
+支持英语、西班牙语、法语、德语、意大利语、波兰语、葡萄牙语、土耳其语、泰语、印地语、中文、日语和韩语。需要 Android 7.0 或更高版本。
+
+如果你一直在找一款网址清理器、链接清理工具、跟踪参数清除工具、utm 清除工具或短链接还原工具，只做一件事，不需要账号、不需要订阅，也没有需要律师才能看懂的隐私政策——就是它了。
+    </full_description>
+  </zh-CN>
+</store_listing>
