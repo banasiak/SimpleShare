@@ -16,6 +16,21 @@ Run `format` and `check` as two commands, `format` first: nothing orders them in
 
 Lint is expected to report **zero** findings; treat a new one as a regression rather than noise. It
 also reports every dependency that has a newer release, so a clean run needs the catalog current.
+Read the verdict from the last line of `share/build/reports/lint-results-debug.txt`. A grep for
+`<issue ` in the XML report finds nothing, because lint writes `<issue` at the end of a line.
+
+Lint learns about newer releases from data it caches in
+`share/build/intermediates/lint-cache/lintAnalyzeDebug/`, and a build directory keeps that data
+across runs, `--rerun` and `--no-build-cache` included. So before calling the catalog current, run
+lint in a fresh worktree or after deleting that directory. On 2026-11-19 a worktree whose cache
+dated from the evening before reported no findings, while a fresh one warned about five newer
+releases, one of them a Gradle security release.
+
+Lint says only that a release is newer, not whether it fixes anything. To find the security fixes,
+follow the `supply-chain-hardening` skill: run `./gradlew dependencyUpdates`, look each coordinate
+up in GitHub's advisory database, and look Gradle up with
+`gh api repos/gradle/gradle/security-advisories`. Gradle's four advisories of 2026-11-19 were there
+that day, while GitHub's global database still listed none of them.
 
 The Gradle version and `distributionSha256Sum` in `gradle/wrapper/gradle-wrapper.properties` are
 bumped together, with the sum taken from the `.sha256` file Gradle publishes beside the
