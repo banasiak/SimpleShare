@@ -19,10 +19,12 @@ also reports every dependency that has a newer release, so a clean run needs the
 
 The Gradle version and `distributionSha256Sum` in `gradle/wrapper/gradle-wrapper.properties` are
 bumped together, with the sum taken from the `.sha256` file Gradle publishes beside the
-distribution. Run `./gradlew wrapper --gradle-version <version>` twice, because the first run
-rewrites only the properties, then check `gradle-wrapper.jar` against Gradle's published
-`gradle-<version>-wrapper.jar.sha256`. Until 9.9.1 the jar had never been regenerated and was still
-the one from the 6.6 to 7.0.2 line.
+distribution. That URL redirects to `downloads.gradle.org`, so fetch it with `curl -L`. Run
+`./gradlew wrapper --gradle-version <version> --gradle-distribution-sha256-sum <sum>` twice. The
+first run rewrites only the properties. The second downloads the new version against the new sum,
+then, running under it, regenerates the jar and scripts. Then check `gradle-wrapper.jar` against
+Gradle's published `gradle-<version>-wrapper.jar.sha256`. Until 9.9.1 the jar had never been
+regenerated and was still the one from the 6.6 to 7.0.2 line.
 
 `assembleRelease` produces `share-release-unsigned.apk`. To run it on a device, sign it with the
 debug keystore -- that matches the debug build's signature, so it installs over an existing debug
