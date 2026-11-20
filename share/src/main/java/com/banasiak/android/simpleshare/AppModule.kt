@@ -47,36 +47,33 @@ object AppModule {
 
   @Provides
   @Reusable
-  fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo {
-    return BuildInfo(
+  fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo =
+    BuildInfo(
       Build.VERSION.SDK_INT,
       context.packageName,
       BuildConfig.VERSION_NAME,
       BuildConfig.VERSION_CODE
     )
-  }
 
   @Provides
   @Singleton
-  fun provideClipboardManager(@ApplicationContext context: Context): ClipboardManager {
-    return context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-  }
+  fun provideClipboardManager(@ApplicationContext context: Context): ClipboardManager =
+    context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
   @Provides
   @Singleton
-  fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
-    return PreferenceDataStoreFactory.create(
+  fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+    PreferenceDataStoreFactory.create(
       corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
       migrations = listOf(SharedPreferencesMigration(context, DATASTORE_NAME), EmptySetMigration),
       scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
       produceFile = { context.preferencesDataStoreFile(DATASTORE_NAME) }
     )
-  }
 
   @Provides
   @Singleton
-  fun provideOkHttpClient(): OkHttpClient {
-    return OkHttpClient.Builder()
+  fun provideOkHttpClient(): OkHttpClient =
+    OkHttpClient.Builder()
       .callTimeout(10, TimeUnit.SECONDS)
       .followRedirects(true)
       .addNetworkInterceptor { chain ->
@@ -88,29 +85,20 @@ object AppModule {
         )
       }
       .build()
-  }
 
   @Provides
   @Singleton
-  fun provideDurationClock(): DurationClock {
-    return DurationClock(DurationUnit.MILLISECONDS)
-  }
+  fun provideDurationClock(): DurationClock = DurationClock(DurationUnit.MILLISECONDS)
 
   @Provides
   @DefaultDispatcher
-  fun provideDefaultDispatcher(): CoroutineDispatcher {
-    return Dispatchers.Default
-  }
+  fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
   @Provides
   @IoDispatcher
-  fun provideIoDispatcher(): CoroutineDispatcher {
-    return Dispatchers.IO
-  }
+  fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
   @Provides
   @Singleton
-  fun provideRuleSource(@ApplicationContext context: Context): RuleSource {
-    return RuleSource { context.assets.open(RULES_ASSET) }
-  }
+  fun provideRuleSource(@ApplicationContext context: Context): RuleSource = RuleSource { context.assets.open(RULES_ASSET) }
 }

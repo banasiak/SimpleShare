@@ -10,7 +10,5 @@ object HttpUrlParceler : Parceler<HttpUrl?> {
     parcel.writeString(this?.toString())
   }
 
-  override fun create(parcel: Parcel): HttpUrl? {
-    return parcel.readString()?.toHttpUrlOrNull()
-  }
+  override fun create(parcel: Parcel): HttpUrl? = parcel.readString()?.toHttpUrlOrNull()
 }

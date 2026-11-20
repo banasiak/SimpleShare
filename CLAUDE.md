@@ -156,9 +156,12 @@ add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all ca
 - **`toHttpsUrlOrNull` upgrades every URL to https** before anything else touches it.
 - `.editorconfig` is the house style's copy, unchanged, from the `android-house-style` skill. It
   disables the ktlint rules that reflow working code rather than catch a defect, so do not re-enable
-  them to "tidy up". Three more that this file used to disable (`function-expression-body`,
-  `value-parameter-comment` and `when-entry-bracing`) found nothing to change when they came back on
-  2026-11-18.
+  them to "tidy up". It starts with `root = true`, because a Claude Code worktree sits inside the
+  main checkout, under `.claude/worktrees/`, and without that line ktlint there also reads the main
+  checkout's `.editorconfig`, whatever version of it that checkout is on. Until it went in, an older
+  copy there kept `function-expression-body` and `when-entry-bracing` off in every worktree, and the
+  16 block bodies and unbraced `when` branches they report in a checkout outside the main one went
+  unseen.
 - `no-unused-imports` is enabled by name in `.editorconfig`, which is the only way it runs: ktlint
   1.7.0 stopped running it by default. It is deprecated and goes in ktlint 2.0.0.
 - `.editorconfig` sets `insert_final_newline = false`, and ktlint holds Kotlin sources to it, so
