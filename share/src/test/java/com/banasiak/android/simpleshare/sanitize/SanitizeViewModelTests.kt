@@ -282,15 +282,67 @@ class SanitizeViewModelTests {
     }
 
   @Test
+  fun `given a kept value holding an apostrophe, when sanitizing, then the apostrophe stays escaped`() =
+    runTest {
+      // decoded, it would close a single-quoted attribute in a page that pastes the link in unescaped,
+      // and the parentheses beside it would then read as script
+      val vm = viewModel()
+
+      vm.postAction(SanitizeAction.IntentReceived("https://www.banasiak.com/s?q=don%27t+(stop)&r=x'y"))
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/s?q=don%27t+(stop)&r=x%27y"
+    }
+
+  @Test
+  fun `given a kept value holding a link to a lookalike host, when sanitizing, then the nested host's non-ASCII stays escaped`() =
+    runTest {
+      // decoded, the Cyrillic a and the ideographic full stop would read as apple.com; the rest of the
+      // nested link, and the value beside it, still read decoded
+      val vm = viewModel()
+
+      vm.postAction(
+        SanitizeAction.IntentReceived(
+          "https://www.banasiak.com/r?next=https%3A%2F%2F%D0%B0pple%E3%80%82com%2Fcaf%C3%A9%3Fq%3Dcaf%C3%A9" +
+            "&u=%2F%2Fb%C3%BCcher.de&q=caf%C3%A9"
+        )
+      )
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo
+        "https://www.banasiak.com/r?next=https://%D0%B0pple%E3%80%82com/café?q=café&u=//b%C3%BCcher.de&q=café"
+    }
+
+  @Test
+  fun `given a nested link written another way a browser follows, when sanitizing, then its host's non-ASCII stays escaped`() =
+    runTest {
+      // a browser skips any run of slashes and backslashes before the host, drops tabs and line breaks
+      // anywhere, and reads http: with no slashes at all as a host when the page is https
+      val vm = viewModel()
+
+      vm.postAction(
+        SanitizeAction.IntentReceived(
+          "https://www.banasiak.com/r?a=https%3A%2F%2F%2F%D0%B0pple.com%2Flogin&b=https%3A%5C%5C%D0%B0pple.com" +
+            "&c=%2F%5C%D0%B0pple.com&d=https%3A%2F%09%2F%D0%B0pple.com&e=https%3A%2F%2Fa%09%D1%80ple.com" +
+            "&f=http%3A%D0%B0pple.com&g=HTTP%3A%2F%D0%B0pple.com&h=note%3Acaf%C3%A9"
+        )
+      )
+
+      vm.stateFlow.value.sanitizedUrl shouldBeEqualTo
+        "https://www.banasiak.com/r?a=https:///%D0%B0pple.com/login&b=https:%5C%5C%D0%B0pple.com" +
+        "&c=/%5C%D0%B0pple.com&d=https:/%09/%D0%B0pple.com&e=https://a%09%D1%80ple.com" +
+        "&f=http:%D0%B0pple.com&g=HTTP:/%D0%B0pple.com&h=note:café"
+    }
+
+  @Test
   fun `given values that decoding could corrupt, when sanitizing, then the result parses back to the same parameters`() =
     runTest {
-      val names = listOf("a", "b", "c", "d", "e=name", "f", "g", "h", "i", "j", "k")
+      val names = listOf("a", "b", "c", "d", "e=name", "f", "g", "h", "i", "j", "k", "l", "m", "n")
       val vm = viewModel()
 
       vm.postAction(
         SanitizeAction.IntentReceived(
           "https://www.banasiak.com/p?a=1%2B1%3D2&b=x%26y%23z&c=100%25&d=%22q%22+and+%3Ctag%3E" +
-            "&e%3Dname=v&f=%E2%80%AEevil&g=nb%C2%A0sp&h=%F0%9F%98%80&i=%00&j=&k"
+            "&e%3Dname=v&f=%E2%80%AEevil&g=nb%C2%A0sp&h=%F0%9F%98%80&i=%00&j=&k" +
+            "&l=%27&m=https%3A%2F%2F%D0%B0pple.com%2F%2F%2F%D0%B0&n=http%3A%2F%5C%09%D0%B0"
         )
       )
 

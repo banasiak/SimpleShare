@@ -152,7 +152,9 @@ add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all ca
 - **The sanitized query is written decoded, so it reads as text.** `sanitizeUrl` joins the kept
   parameters by hand, because `HttpUrl.Builder` would escape every value again. What stays escaped,
   and why, is at `readableQueryComponent`; the round-trip test in `SanitizeViewModelTests` fails if
-  the output ever parses back to different parameters.
+  the output ever parses back to different parameters. A nested link's lookalike host is kept
+  escaped rather than rewritten as punycode, which would change the value the site receives and
+  break any signature the site put over it.
 - **`toHttpsUrlOrNull` upgrades every URL to https** before anything else touches it.
 - `.editorconfig` is the house style's copy, unchanged, from the `android-house-style` skill. It
   disables the ktlint rules that reflow working code rather than catch a defect, so do not re-enable

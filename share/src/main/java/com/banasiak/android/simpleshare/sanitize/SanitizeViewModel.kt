@@ -194,23 +194,29 @@ class SanitizeViewModel @Inject constructor(
     return if (value == null) readableName else "$readableName=${readableQueryComponent(value, isName = false)}"
   }
 
-  // decoded for reading, except where that would change the query once it is parsed again: a space is
-  // written as +, so a literal + stays escaped, & would end the pair, # would start the fragment, % an
-  // escape, and = would end a name. Characters a URL cannot hold stay escaped so the result still pastes
-  // as one link, and so do invisible and bidi characters, which would make the displayed link misleading
-  private fun readableQueryComponent(text: String, isName: Boolean): String =
-    buildString {
+  // decoded so the link reads as text, except for what has to stay escaped:
+  // - what would parse back as something else: + (a space is written as +), & (it would end the pair),
+  //   # (start the fragment), % (start an escape), and = in a name (end the name)
+  // - ', which would close a single-quoted attribute in a page that pastes the link in unescaped
+  // - the rest of QUERY_ESCAPED, which a URL cannot hold, so the result still pastes as one link
+  // - invisible and bidi characters, which would make the displayed link misleading
+  // - non-ASCII in a nested link's host, where a lookalike letter would read as another site
+  private fun readableQueryComponent(text: String, isName: Boolean): String {
+    val inNestedHost = BooleanArray(text.length)
+    NESTED_HOST.findAll(text).forEach { match -> match.groups[1]?.range?.forEach { inNestedHost[it] = true } }
+    return buildString {
       var i = 0
       while (i < text.length) {
         val codePoint = text.codePointAt(i)
         when {
           codePoint == ' '.code -> append('+')
-          mustEscape(codePoint, isName) -> appendEscaped(codePoint)
+          mustEscape(codePoint, isName) || (codePoint >= 0x80 && inNestedHost[i]) -> appendEscaped(codePoint)
           else -> appendCodePoint(codePoint)
         }
         i += Character.charCount(codePoint)
       }
     }
+  }
 
   private fun mustEscape(codePoint: Int, isName: Boolean): Boolean =
     (codePoint < 0x80 && codePoint.toChar() in QUERY_ESCAPED) ||
@@ -265,7 +271,15 @@ class SanitizeViewModel @Inject constructor(
 private const val HEX_DIGITS = "0123456789ABCDEF"
 
 // ASCII that readableQueryComponent keeps escaped
-private const val QUERY_ESCAPED = "%+&#\"<>\\^`{|}"
+private const val QUERY_ESCAPED = "%+&#\"'<>\\^`{|}"
+
+// the host of a nested link, with any user info and port, wherever a browser would read one: after two
+// or more slashes or backslashes, or after a scheme a browser follows to a host even without slashes,
+// such as http: on an https page. A browser drops tabs and line breaks anywhere in a link, so they neither
+// separate the slashes nor end the host. Character classes only: a repeated group recurses in
+// java.util.regex and overflows the stack on a long enough run of slashes and tabs
+private val NESTED_HOST =
+  Regex("""(?:[/\\][\t\n\r]*[/\\]|(?<![a-z0-9+.-])(?:https?|ftp|wss?):)[/\\\t\n\r]*([^/?#\\ ]*)""", RegexOption.IGNORE_CASE)
 
 private val INVISIBLE_CHARACTER_TYPES =
   setOf(
