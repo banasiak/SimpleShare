@@ -10,7 +10,7 @@ Got a shortened link that hides where it actually goes? Tap the cloud icon and t
 
 Requires Android 7.0 or later.
 
-It is available via the [Google Play Store](https://play.google.com/store/apps/details?id=com.banasiak.android.simpleshare).
+It is available via the [Google Play Store](https://play.google.com/store/apps/details?id=com.banasiak.android.simpleshare). The listing itself lives in [`store/`](store/README.md): its description, the release notes in every language, the feature graphic, and the screenshots, which a script retakes from a phone.
 
 ## Building
 

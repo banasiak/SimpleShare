@@ -9,6 +9,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.banasiak.android.simpleshare.BuildConfig
 
 private val LightColors =
   lightColorScheme(
@@ -79,7 +80,7 @@ private val DarkColors =
 @Composable
 fun SimpleShareTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
-  dynamicColor: Boolean = true,
+  dynamicColor: Boolean = BuildConfig.DYNAMIC_COLOR,
   content: @Composable () -> Unit
 ) {
   val colorScheme =
