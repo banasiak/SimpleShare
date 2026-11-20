@@ -267,3 +267,27 @@ things in the app reach into it:
 - It taps Feeling Lucky until the demo link `a.co/d/0ZV7xf0` comes up, so that link has to stay in
   `Constants.DEMO_URL_LIST`.
 - It starts `main.MainActivity` and `sanitize.SanitizeActivity` by class name.
+
+## Promo video
+
+`promo/` renders the Google Play promo video with Node, Playwright and ffmpeg, outside the Gradle
+build and CI. Read **[promo/README.md](promo/README.md)** before changing it. Nothing fails when the
+app drifts from it, so after changing any of these, render it again and look:
+
+- the dark scheme's colors in `ui/theme/Color.kt`, which `promo/render.mjs` reads by name
+- the strings, the `sanitize` and `cloud_download` drawables and the demo link `a.co/d/0ZV7xf0` in
+  `Constants.DEMO_URL_LIST`, which it reads too, stopping if one is missing
+- the layouts in `MainScreen.kt` and `SanitizeScreen.kt`, whose dp values `promo/screens.js` copies.
+  `node render.mjs --screens` draws the store screenshots' five screens, to compare with them
+- which parameters the ClearURLs rules flag on the video's YouTube and Amazon links, which
+  `promo/sizzle.js` lists
+- the dependencies and permissions, which the captions and the end card make claims about
+
+The short-link section departs from the app on purpose: the expanded link's boxes come up checked
+and are unchecked one at a time, where the app would bring its trackers up unchecked. That was the
+owner's choice on 2026-11-20, for the demonstration, so don't bring it into line with the app.
+
+Playwright is the one npm package, pinned with its hash in `promo/package-lock.json` and installed
+with `npm ci --ignore-scripts`. The fonts and the Pixel 9a frame come from Android Studio. The
+soundtrack is this video's own, by the owner's choice on 2026-11-20: nothing in `promo/synth.mjs`
+or `promo/audio.mjs` comes from CoinFlip2's promo, and nothing should.

@@ -1,0 +1,12 @@
+{
+  "name": "simpleshare-promo",
+  "private": true,
+  "type": "module",
+  "description": "Renders the Google Play promo video from the app's own colors, strings and artwork",
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

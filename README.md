@@ -21,6 +21,10 @@ It is a single Gradle module, `share`, written in Kotlin with Jetpack Compose, H
 ./gradlew check            # ktlint, Android lint and the unit tests
 ```
 
+## The promo video
+
+[`promo/`](promo/) renders the Google Play promo video, outside the Gradle build, with Node, Playwright and ffmpeg. Its phone screens are redrawn from the app's own layouts, colors and strings, and its soundtrack is synthesized for it. [`promo/README.md`](promo/README.md) says how to render it and what it needs.
+
 ## License
 
 This repository holds two works under two licenses.
