@@ -17,8 +17,8 @@ android {
     applicationId = "com.banasiak.android.simpleshare"
     minSdk = 24
     targetSdk = 37
-    versionCode = 9
-    versionName = "NINE"
+    versionCode = 10
+    versionName = "TEN"
     // store/scripts/side-copy.init.gradle sets this false by name, so the store screenshots show the
     // app's own colors rather than the test phone's wallpaper
     buildConfigField("boolean", "DYNAMIC_COLOR", "true")
