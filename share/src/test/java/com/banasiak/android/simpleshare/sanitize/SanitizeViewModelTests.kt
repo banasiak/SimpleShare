@@ -589,5 +589,68 @@ class SanitizeViewModelTests {
       }
     }
 
+  @Test
+  fun `given a box unchecked on a short link, when it is decoded, then the box stays unchecked on the link it led to`() =
+    runTest {
+      // the decoded link's boxes were built afresh from its own host, so a parameter unchecked on
+      // youtu.be came back checked on www.youtube.com the moment the cloud was tapped
+      coEvery { repository.fetchRedirectUrl(any(), any()) } returns
+        RedirectResult.Redirected("https://www.banasiak.com/watch?is=x&v=1".toHttpUrl())
+      val vm = viewModel()
+      vm.postAction(SanitizeAction.IntentReceived("https://ban.co/abc?is=x"))
+      vm.postAction(SanitizeAction.ParamToggled(index = 0, enabled = false))
+
+      vm.postAction(SanitizeAction.FetchRedirect)
+
+      val state = vm.stateFlow.value
+      state.parameters shouldBeEqualTo listOf(QueryParam("is", "x", enabled = false), QueryParam("v", "1"))
+      state.sanitizedUrl shouldBeEqualTo "https://www.banasiak.com/watch?v=1"
+    }
+
+  @Test
+  fun `given a box unchecked on a short link, when it is decoded, then the choice is saved for the host it led to`() =
+    runTest {
+      // otherwise the next link shared straight from that host would come up with the box checked
+      coEvery { repository.fetchRedirectUrl(any(), any()) } returns
+        RedirectResult.Redirected("https://www.banasiak.com/watch?is=x&v=1".toHttpUrl())
+      val vm = viewModel()
+      vm.postAction(SanitizeAction.IntentReceived("https://ban.co/abc?is=x"))
+      vm.postAction(SanitizeAction.ParamToggled(index = 0, enabled = false))
+
+      vm.postAction(SanitizeAction.FetchRedirect)
+
+      coVerify {
+        repository.updateParamPreferencesForHost("www.banasiak.com", enabled = setOf("v"), disabled = setOf("is"), flagged = emptySet())
+      }
+    }
+
+  @Test
+  fun `given a tracker kept on a short link, when it is decoded, then it stays kept on the link it led to`() =
+    runTest {
+      coEvery { repository.fetchRedirectUrl(any(), any()) } returns
+        RedirectResult.Redirected("https://www.banasiak.com/full?utm_source=a&id=1".toHttpUrl())
+      val vm = viewModel()
+      vm.postAction(SanitizeAction.IntentReceived("https://ban.co/abc?utm_source=a"))
+      vm.postAction(SanitizeAction.ParamToggled(index = 0, enabled = true))
+
+      vm.postAction(SanitizeAction.FetchRedirect)
+
+      vm.stateFlow.value.parameters shouldBeEqualTo
+        listOf(QueryParam("utm_source", "a", enabled = true, flagged = true), QueryParam("id", "1"))
+    }
+
+  @Test
+  fun `given a short link whose boxes are never touched, when it is decoded, then nothing is written`() =
+    runTest {
+      coEvery { repository.fetchRedirectUrl(any(), any()) } returns
+        RedirectResult.Redirected("https://www.banasiak.com/full?utm_source=a&id=1".toHttpUrl())
+      val vm = viewModel()
+      vm.postAction(SanitizeAction.IntentReceived("https://ban.co/abc?utm_source=a"))
+
+      vm.postAction(SanitizeAction.FetchRedirect)
+
+      coVerify(exactly = 0) { repository.updateParamPreferencesForHost(any(), any(), any(), any()) }
+    }
+
   // endregion
 }

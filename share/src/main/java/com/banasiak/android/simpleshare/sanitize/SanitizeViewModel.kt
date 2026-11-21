@@ -106,9 +106,11 @@ class SanitizeViewModel @Inject constructor(
 
   private suspend fun onParamToggle(index: Int, enabled: Boolean) {
     Timber.d("onParamToggle: index=$index, enabled=$enabled")
+    val name = state.parameters.getOrNull(index)?.name ?: return
     val updatedParams = state.parameters.mapIndexed { i, param -> if (i == index) param.copy(enabled = enabled) else param }
     state =
       state.copy(
+        choices = state.choices + (name to enabled),
         parameters = updatedParams,
         sanitizedUrl = sanitizeUrl(state.originalUrl, updatedParams)
       )
@@ -120,11 +122,17 @@ class SanitizeViewModel @Inject constructor(
 
     state = state.copy(loading = true)
 
+    val result = repository.fetchRedirectUrl(originalUrl, minimumDuration = 1.seconds)
     state =
-      when (val result = repository.fetchRedirectUrl(originalUrl, minimumDuration = 1.seconds)) {
+      when (result) {
         is RedirectResult.Redirected -> {
           Timber.d("URL redirect detected: ${result.url}")
-          val parameters = buildParameterList(result.url)
+          // the boxes changed in this sheet outrank the new host's saved choices and the rules, by name
+          val parameters =
+            buildParameterList(result.url).map { param ->
+              val choice = state.choices[param.name]
+              if (choice == null) param else param.copy(enabled = choice)
+            }
           val sanitizedUrl = sanitizeUrl(result.url, parameters)
           // the new URL may redirect again, so leave the action available and clear any stale error
           state.copy(
@@ -144,6 +152,9 @@ class SanitizeViewModel @Inject constructor(
           state.copy(hint = R.string.hint_redirect_failed, loading = false)
         }
       }
+    // saved for the new host too, but only when a box changed in this sheet reached it: a link whose
+    // boxes were never touched writes nothing
+    if (result is RedirectResult.Redirected && state.parameters.any { it.name in state.choices }) persistParamPreferences()
   }
 
   private suspend fun onButtonTapped(type: ButtonType, sanitizedUrl: String) {
