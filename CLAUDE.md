@@ -79,8 +79,9 @@ Reading that file first explains most of the rest.
 - `effectFlow` is backed by a **`Channel`, not a `SharedFlow`**. Effects are one-shot and the
   Activity subscribes asynchronously; a shared flow silently drops anything emitted before the
   collector attaches.
-- The user's choices are written out when a box is toggled, and at no other time. A link whose boxes
-  are never touched writes nothing.
+- The user's choices are written out when a box is toggled, and when the cloud carries them to the
+  link a short one led to (see "A choice made in the sheet survives the cloud" below), and at no
+  other time. A link whose boxes are never touched writes nothing.
 - The saved preferences and the rules are looked up concurrently. Each lookup returns on the main
   thread, which is busy drawing the sheet's first frame, so one after the other costs a second wait.
 
@@ -119,6 +120,21 @@ add-on matches it (`removeFieldsFormURL` in the add-on's `clearurls.js`), all ca
     more.
   - Saving merges rather than replaces: a link updates only the names it carries, so one that lacks
     a parameter (or has no query at all) cannot erase a choice made on an earlier link.
+- **A choice made in the sheet survives the cloud.** `SanitizeState.choices` holds, by name, every
+  box the user changed in this sheet. When the cloud expands a short link, those choices outrank the
+  new host's saved ones and the rules, and they are saved for the new host as well.
+  - Without this, a box unchecked on `youtu.be` came back checked on `www.youtube.com` as soon as
+    the cloud was tapped, and a link shared straight from `www.youtube.com` never learned it.
+  - The gap went back to 2024, when the expanded link's list was first built afresh from its own
+    host. Through release EIGHT every box started unchecked, so it showed only for a box checked to
+    keep. NINE's checked boxes (`df738c5`) made it show for the common case, a box unchecked.
+  - Choices are still per host, so a box changed only after expanding is saved for the expanded host
+    alone, and the short link shows it as before until the cloud is tapped again. Saving it back
+    for the short link's host too, for the names that link carried, was considered on 2026-11-20
+    and left out by the owner: carrying forward was enough.
+  - Checked on a Pixel 9a running Android 17 on 2026-11-20, in an R8 release build: a `youtu.be`
+    link with `is` unchecked kept it unchecked through the cloud, and the expanded link shared
+    afresh came up with `is` unchecked too.
 - **The DataStore schema is load-bearing for upgrades.** Preferences written by older installs must
   keep reading; changing key types or entry meaning orphans real user data.
   - A host's kept names are under the bare host, the only key that releases through EIGHT wrote.

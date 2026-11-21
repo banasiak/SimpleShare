@@ -6,7 +6,7 @@ Anyway, this app gives you a simple way to remove query parameters from any URL.
 
 The tracking parameters it recognizes start out unchecked, courtesy of the rules from the [ClearURLs](https://github.com/ClearURLs/Rules) project. Everything else stays checked, so the link still goes where it was going. If it guesses wrong, check or uncheck the box yourself, and it will remember your choice for that site next time.
 
-Got a shortened link that hides where it actually goes? Tap the cloud icon and the app will follow the redirect first, then sanitize wherever it lands. That tap is the only time the app makes a network request of its own: the rules ship inside it and are never downloaded.
+Got a shortened link that hides where it actually goes? Tap the cloud icon and the app will follow the redirect first, then sanitize wherever it lands, keeping any boxes you already changed. That tap is the only time the app makes a network request of its own: the rules ship inside it and are never downloaded.
 
 Requires Android 7.0 or later.
 

@@ -19,7 +19,8 @@ data class SanitizeState(
   @IgnoredOnParcel val loading: Boolean = false,
   val originalUrl: HttpUrl? = null,
   val parameters: List<QueryParam> = emptyList(),
-  val sanitizedUrl: String = ""
+  val sanitizedUrl: String = "",
+  val choices: Map<String, Boolean> = emptyMap()
 ) : Parcelable
 
 sealed class SanitizeAction {
