@@ -1,128 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <release_notes>
   <en-US>
-• Parameters now start checked, and the built-in ClearURLs rules uncheck known trackers.
-• Boxes you change are remembered per site and override the rules.
-• Upgrading? Boxes you had left unchecked now start checked, unless they are trackers.
-• Kept parameters stay readable: commas and accents are no longer escaped.
-• The Share button no longer lists this app.
-• Tidier spacing, especially in landscape, and security updates.
+• Decoding a short URL with the Cloud Download icon now keeps the boxes you already changed, and remembers them for the site it leads to.
   </en-US>
 
   <de-DE>
-• Parameter sind jetzt anfangs ausgewählt, und die integrierten ClearURLs-Regeln wählen bekannte Tracker ab.
-• Geänderte Kästchen werden pro Website gespeichert und haben Vorrang vor den Regeln.
-• Nach dem Update: Bisher nicht ausgewählte Kästchen sind ausgewählt, außer bei Trackern.
-• Beibehaltene Parameter bleiben lesbar: Kommas und Akzente werden nicht mehr kodiert.
-• „Teilen“ zeigt diese App nicht mehr an.
-• Bessere Abstände, vor allem im Querformat, und Sicherheitsupdates.
+• Beim Auflösen einer Kurz-URL über das Cloud-Download-Symbol bleiben bereits geänderte Kästchen jetzt erhalten und werden für die Ziel-Website gespeichert.
   </de-DE>
 
   <es-ES>
-• Los parámetros ahora empiezan marcados y las reglas integradas de ClearURLs desmarcan los rastreadores conocidos.
-• Las casillas que cambias se recuerdan por sitio y prevalecen sobre las reglas.
-• Al actualizar: las casillas que dejaste sin marcar ahora empiezan marcadas, salvo los rastreadores.
-• Los parámetros conservados siguen legibles: comas y acentos ya no se codifican.
-• Compartir ya no muestra esta app.
-• Mejor espaciado, sobre todo en horizontal, y actualizaciones de seguridad.
+• Al resolver una URL corta con el icono de descarga en la nube, las casillas que ya has cambiado ahora se mantienen y se recuerdan para el sitio de destino.
   </es-ES>
 
   <es-419>
-• Los parámetros ahora empiezan marcados y las reglas integradas de ClearURLs desmarcan los rastreadores conocidos.
-• Las casillas que cambias se recuerdan por sitio y prevalecen sobre las reglas.
-• Al actualizar: las casillas que dejaste sin marcar ahora empiezan marcadas, excepto los rastreadores.
-• Los parámetros conservados siguen legibles: comas y acentos ya no se codifican.
-• Compartir ya no muestra esta app.
-• Mejor espaciado, sobre todo en horizontal, y actualizaciones de seguridad.
+• Al resolver una URL corta con el ícono de descarga en la nube, las casillas que ya cambiaste ahora se mantienen y se recuerdan para el sitio de destino.
   </es-419>
 
   <fr-FR>
-• Les paramètres sont désormais cochés par défaut, et les règles ClearURLs intégrées décochent les traceurs connus.
-• Les cases modifiées sont mémorisées par site et priment sur les règles.
-• Après la mise à jour : les cases laissées décochées sont cochées, sauf pour les traceurs.
-• Les paramètres conservés restent lisibles : virgules et accents ne sont plus encodés.
-• Partager ne propose plus cette application.
-• Meilleurs espacements, surtout en paysage, et mises à jour de sécurité.
+• Lorsque vous résolvez une URL courte avec l'icône de téléchargement cloud, les cases déjà modifiées sont désormais conservées et mémorisées pour le site de destination.
   </fr-FR>
 
   <hi-IN>
-• पैरामीटर अब शुरू से चेक रहते हैं, और ऐप में शामिल ClearURLs नियम जाने-माने ट्रैकर अनचेक कर देते हैं।
-• आपके बदले हुए चेकबॉक्स हर साइट के लिए याद रहते हैं और नियमों से ऊपर माने जाते हैं।
-• अपडेट के बाद: पहले अनचेक छोड़े गए चेकबॉक्स अब चेक रहते हैं, ट्रैकर को छोड़कर।
-• रखे गए पैरामीटर पढ़ने में आसान रहते हैं: कॉमा और ऐक्सेंट अब एन्कोड नहीं होते।
-• शेयर में अब यह ऐप नहीं दिखता।
-• बेहतर स्पेसिंग, ख़ासकर लैंडस्केप में, और सुरक्षा अपडेट।
+• क्लाउड डाउनलोड आइकॉन से शॉर्ट URL डिकोड करने पर अब आपके पहले से बदले हुए चेकबॉक्स बने रहते हैं, और जिस साइट पर लिंक जाता है उसके लिए याद रखे जाते हैं।
   </hi-IN>
 
   <it-IT>
-• I parametri ora partono selezionati, e le regole ClearURLs integrate deselezionano i tracker noti.
-• Le caselle che modifichi vengono ricordate per sito e prevalgono sulle regole.
-• Dopo l'aggiornamento: le caselle lasciate deselezionate ora partono selezionate, tranne i tracker.
-• I parametri mantenuti restano leggibili: virgole e accenti non vengono più codificati.
-• Condividi non mostra più questa app.
-• Spaziature migliori, soprattutto in orizzontale, e aggiornamenti di sicurezza.
+• Quando risolvi un URL breve con l'icona di download dal cloud, le caselle che hai già modificato ora restano tali e vengono ricordate per il sito di destinazione.
   </it-IT>
 
   <ja-JP>
-• パラメータは最初からチェックされた状態になり、内蔵の ClearURLs ルールが既知のトラッカーのチェックを外します。
-• 変更したチェックはサイトごとに記憶され、ルールより優先されます。
-• アップデート後：チェックしていなかった項目は、トラッカーを除きチェックされた状態で始まります。
-• 残したパラメータが読みやすくなりました。カンマやアクセント記号はエンコードされません。
-• 共有ボタンにこのアプリが表示されなくなりました。
-• 余白を改善し（特に横向き）、セキュリティを更新しました。
+• クラウドダウンロードのアイコンで短縮 URL を展開しても、変更済みのチェックがそのまま保たれ、展開先のサイトにも記憶されるようになりました。
   </ja-JP>
 
   <ko-KR>
-• 매개변수가 이제 기본적으로 선택되며, 내장된 ClearURLs 규칙이 알려진 추적기의 선택을 해제합니다.
-• 변경한 체크박스는 사이트별로 기억되며 규칙보다 우선합니다.
-• 업데이트 후: 선택하지 않았던 체크박스는 추적기를 제외하고 선택된 상태로 시작됩니다.
-• 유지한 매개변수가 읽기 쉬워졌습니다. 쉼표와 악센트가 인코딩되지 않습니다.
-• 공유 버튼에 이 앱이 더 이상 표시되지 않습니다.
-• 여백 개선(특히 가로 모드) 및 보안 업데이트.
+• 클라우드 다운로드 아이콘으로 단축 URL을 확인해도 이미 변경한 체크박스가 이제 그대로 유지되며, 연결되는 사이트에도 기억됩니다.
   </ko-KR>
 
   <pl-PL>
-• Parametry są teraz domyślnie zaznaczone, a wbudowane reguły ClearURLs odznaczają znane elementy śledzące.
-• Zmienione pola są zapamiętywane dla każdej witryny i mają pierwszeństwo przed regułami.
-• Po aktualizacji: pola pozostawione bez zaznaczenia są zaznaczone, z wyjątkiem elementów śledzących.
-• Zachowane parametry są czytelne: przecinki i akcenty nie są już kodowane.
-• Udostępnij nie pokazuje już tej aplikacji.
-• Lepsze odstępy, zwłaszcza w poziomie, i aktualizacje zabezpieczeń.
+• Po rozwinięciu skróconego adresu URL ikoną pobierania z chmury zmienione wcześniej pola pozostają teraz bez zmian i są zapamiętywane dla witryny docelowej.
   </pl-PL>
 
   <pt-BR>
-• Os parâmetros agora começam marcados e as regras integradas do ClearURLs desmarcam os rastreadores conhecidos.
-• As caixas que você muda são lembradas por site e prevalecem sobre as regras.
-• Ao atualizar: caixas que você deixou desmarcadas agora começam marcadas, exceto rastreadores.
-• Os parâmetros mantidos ficam legíveis: vírgulas e acentos não são mais codificados.
-• Compartilhar não mostra mais este app.
-• Espaçamento melhor, principalmente na horizontal, e atualizações de segurança.
+• Ao resolver uma URL curta com o ícone de download na nuvem, as caixas que você já mudou agora continuam como estão e são lembradas para o site de destino.
   </pt-BR>
 
   <th>
-• พารามิเตอร์จะถูกเลือกไว้ตั้งแต่แรก และกฎ ClearURLs ในตัวแอปจะยกเลิกการเลือกตัวติดตามที่รู้จัก
-• ช่องที่คุณเปลี่ยนจะถูกจดจำแยกตามเว็บไซต์และมีผลเหนือกฎ
-• หลังอัปเดต: ช่องที่เคยไม่ได้เลือกจะถูกเลือกไว้ ยกเว้นตัวติดตาม
-• พารามิเตอร์ที่เก็บไว้อ่านง่าย: จุลภาคและเครื่องหมายเน้นเสียงไม่ถูกเข้ารหัสอีกต่อไป
-• ปุ่มแชร์ไม่แสดงแอปนี้อีกต่อไป
-• ปรับระยะห่าง โดยเฉพาะในแนวนอน และอัปเดตความปลอดภัย
+• เมื่อขยาย URL แบบสั้นด้วยไอคอนดาวน์โหลดจากคลาวด์ ช่องที่คุณเปลี่ยนไว้แล้วจะคงอยู่เหมือนเดิม และจะถูกจดจำไว้สำหรับเว็บไซต์ปลายทาง
   </th>
 
   <tr-TR>
-• Parametreler artık işaretli başlar ve yerleşik ClearURLs kuralları bilinen izleyicilerin işaretini kaldırır.
-• Değiştirdiğiniz kutular site başına hatırlanır ve kurallardan önce gelir.
-• Güncellemeden sonra: işaretsiz bıraktığınız kutular, izleyiciler hariç, işaretli başlar.
-• Korunan parametreler okunaklı kalır: virgüller ve aksanlar artık kodlanmaz.
-• Paylaş düğmesi artık bu uygulamayı göstermez.
-• Özellikle yatay modda daha iyi boşluklar ve güvenlik güncellemeleri.
+• Kısa URL'yi bulut indirme simgesiyle çözümlediğinizde, değiştirdiğiniz kutular artık olduğu gibi kalır ve hedef site için hatırlanır.
   </tr-TR>
 
   <zh-CN>
-• 参数现在默认勾选，内置的 ClearURLs 规则会取消勾选已知的跟踪参数。
-• 你更改的勾选会按网站记住，并优先于规则。
-• 升级后：之前未勾选的参数现在默认勾选，跟踪参数除外。
-• 保留的参数更易读：逗号和重音字母不再被编码。
-• “分享”按钮不再列出本应用。
-• 优化间距（尤其是横屏），并包含安全更新。
+• 点按云端下载图标还原短网址时，你已更改的勾选现在会保持不变，并为目标网站记住。
   </zh-CN>
 </release_notes>
